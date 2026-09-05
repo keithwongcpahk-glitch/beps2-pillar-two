@@ -1,0 +1,22 @@
+{
+  "version": "oecd-hk-simplified-v0.1",
+  "minEtr": 0.15,
+  "revenueThresholdEur": 750000000,
+  "features": {
+    "substanceCarveOut": true,
+    "transitionalSafeHarbour": true
+  },
+  "jurisdictions": {
+    "HK": { "code": "HK", "label": "Hong Kong", "hasQdmtt": true, "qdmttLabel": "HKMTT" },
+    "SG": { "code": "SG", "label": "Singapore", "hasQdmtt": true, "qdmttLabel": "QDMTT" },
+    "CN": { "code": "CN", "label": "Mainland China", "hasQdmtt": false, "qdmttLabel": null },
+    "GB": { "code": "GB", "label": "United Kingdom", "hasQdmtt": true, "qdmttLabel": "QDMTT" },
+    "IE": { "code": "IE", "label": "Ireland", "hasQdmtt": true, "qdmttLabel": "QDMTT" },
+    "US": { "code": "US", "label": "United States", "hasQdmtt": false, "qdmttLabel": null },
+    "OTHER": { "code": "OTHER", "label": "Other", "hasQdmtt": false, "qdmttLabel": null }
+  },
+  "notes": {
+    "disclaimer": "Simplified projection for demo / FP&A planning. Not tax advice. Not a GloBE Information Return (GIR).",
+    "notModelled": ["deferred tax detail", "ownership percentage chains", "UTPR allocation", "full CbCR transitional safe harbour numeric tests", "special entities", "Pillar One"]
+  }
+}
