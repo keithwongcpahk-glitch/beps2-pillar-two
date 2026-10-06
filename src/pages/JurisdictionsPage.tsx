@@ -5,6 +5,8 @@ import type { JurisdictionPack, PackCode, RuleKind, RuleStatus, SourcedFact } fr
 import { computeFilingCalendar } from '../rules/jurisdictions/calendar'
 import { Callout, EmptyState, formatDate, JurBadge, PageHeader, SourceLink, SourceTypeTag, Tag, VerifiedTag } from '../components/ui'
 import { href } from '../router'
+import { calendarCsvRows, toCsv, withBom } from '../export/csv'
+import { downloadText } from '../export/download'
 
 const STATUS_TEXT: Record<RuleStatus, string> = { 'in-force': 'In force', deferred: 'Deferred', 'not-implemented': 'Not implemented' }
 const RULE_KINDS: RuleKind[] = ['QDMTT', 'IIR', 'UTPR']
@@ -259,7 +261,12 @@ function CalendarView() {
           <input type="checkbox" checked={firstYear} onChange={(e) => setFirstYear(e.target.checked)} />
           First in-scope (transition) year
         </label>
-        {cal && <div className="filter-summary fine"><span>FY {formatDate(cal.fiscalYearStart)} – {formatDate(cal.fiscalYearEnd)}</span></div>}
+        {cal && (
+          <div className="filter-summary fine">
+            <span>FY {formatDate(cal.fiscalYearStart)} – {formatDate(cal.fiscalYearEnd)}</span>
+            <button type="button" className="secondary" onClick={() => downloadText(`pillar-two-filing-calendar-FYE-${cal.fiscalYearEnd}.csv`, withBom(toCsv(calendarCsvRows(cal))))}>Export CSV</button>
+          </div>
+        )}
       </div>
       {!cal ? (
         <EmptyState title="Enter a valid fiscal year end date" />

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { GLOBE_VERSION, projectGlobe } from './calc/globe'
 import type { GroupInputV3 } from './calc/globe'
 import { buildAsiaRuleset, RULESET_VERSION, projectPillarTwo } from './calc/pillarTwo'
-import { GROUP_STORAGE_KEY, parseStoredGroup, SAMPLE_GROUP } from './calc/sampleGroup'
+import { GROUP_STORAGE_KEY, parseStoredGroup, SAMPLE_GROUP, SCENARIO_A_KEY } from './calc/sampleGroup'
 import { DEFAULT_FY_START, DEFAULT_GROUP_REVENUE, DEFAULT_JURISDICTIONS, DISCLAIMER, type EditableJurisdiction } from './defaults'
 import { INTEL_ITEMS, INTEL_META } from './intel/types'
 import { calendarDateAt, filterByWindow, windowFor } from './intel/window'
@@ -54,6 +54,29 @@ export default function App() {
       return projectGlobe({ ...group, fiscalYearStart: SAMPLE_GROUP.fiscalYearStart })
     }
   }, [group])
+  const [scenarioAGroup, setScenarioAGroup] = useState<GroupInputV3 | null>(() => {
+    try {
+      return parseStoredGroup(window.localStorage.getItem(SCENARIO_A_KEY))
+    } catch {
+      return null
+    }
+  })
+  useEffect(() => {
+    try {
+      if (scenarioAGroup) window.localStorage.setItem(SCENARIO_A_KEY, JSON.stringify(scenarioAGroup))
+      else window.localStorage.removeItem(SCENARIO_A_KEY)
+    } catch {
+      /* storage unavailable */
+    }
+  }, [scenarioAGroup])
+  const scenarioAResult = useMemo(() => {
+    if (!scenarioAGroup) return null
+    try {
+      return projectGlobe(scenarioAGroup)
+    } catch {
+      return null
+    }
+  }, [scenarioAGroup])
   const setGroup = (updater: (g: GroupInputV3) => GroupInputV3) => setGroupState((g) => updater(g))
   const [revenue, setRevenue] = useState(DEFAULT_GROUP_REVENUE)
   const [fiscalYearStart, setFiscalYearStart] = useState(DEFAULT_FY_START)
@@ -112,7 +135,7 @@ export default function App() {
         </div>
       </aside>
       <main className="main">
-        {route.page === 'results' && <ResultsPage result={globeResult} />}
+        {route.page === 'results' && <ResultsPage result={globeResult} input={group} importA={setScenarioAGroup} scenarioA={scenarioAResult} saveA={() => setScenarioAGroup(group)} clearA={() => setScenarioAGroup(null)} />}
         {route.page === 'group' && <GroupPage group={group} setGroup={setGroup} resetSample={() => setGroupState(SAMPLE_GROUP)} savedLocally={savedLocally} />}
         {route.page === 'overview' && <OverviewPage result={result} ruleset={ruleset} fiscalYearStart={fiscalYearStart} />}
         {route.page === 'inputs' && (

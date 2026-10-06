@@ -43,6 +43,8 @@ Ground rules for every phase:
 
 ## Phase 4: Scenarios, exports, polish
 
+**Status (6 Oct 2026): partly shipped.** 4.1 shipped as one saved scenario A compared with the current inputs, with a delta table by jurisdiction and by collector (domestic / IIR / UTPR residual), CSV export, and JSON export/import of inputs. Multiple named scenarios are not done yet. 4.2 shipped as CSV only: results with the ruleset version, FY, disclaimer and explanation trail; a round-trip test is included. XLSX is deliberately not added, because no small dependency could be justified and Excel opens the UTF-8 BOM CSV directly. The CSV half of 4.3 shipped; ICS is still open. 4.4 and 4.5 are still open. Tests: `src/export/export.test.ts`.
+
 | # | Work item | Acceptance criteria |
 |---|---|---|
 | 4.1 | **Scenario A/B.** Two (or more) named scenarios (e.g. "Base FY2026" and "JP FY2026-04 start / incentive change") with a side-by-side delta view. | Scenarios persist in localStorage and can be exported/imported as JSON. The delta table shows top-up by jurisdiction and by rule (QDMTT / IIR / UTPR). A golden test covers the delta calculation. |

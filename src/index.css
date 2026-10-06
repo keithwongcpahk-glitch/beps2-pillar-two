@@ -241,3 +241,8 @@ details.trail[open] summary { margin-bottom: 0.6rem; }
 .check-field span:first-child { display: flex; gap: 0.4rem; align-items: center; }
 @media (max-width: 960px) { .kpi-grid.five { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 640px) { .kpi-grid.five { grid-template-columns: 1fr; } .wf-row { grid-template-columns: 100px 1fr 90px; } }
+
+/* Phase 4: file import styled as a secondary button */
+label.file-btn { display: inline-flex; align-items: center; background: var(--accent-soft); color: var(--accent); border: 1px solid #b7e0cf; border-radius: 8px; padding: 0.35rem 0.75rem; cursor: pointer; font-size: 0.85rem; }
+label.file-btn input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+label.file-btn:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }

@@ -22,6 +22,7 @@ export const SAMPLE_GROUP: GroupInputV3 = {
 }
 
 export const GROUP_STORAGE_KEY = 'p2-group-v1'
+export const SCENARIO_A_KEY = 'p2-scenario-a-v1'
 
 const ROLES = ['UPE', 'IPE', 'CE']
 const isNum = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v)

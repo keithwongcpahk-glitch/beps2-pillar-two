@@ -54,8 +54,9 @@ npm run build   # tsc -b && vite build
 
 ## Tests
 
-82 Vitest tests:
+91 Vitest tests:
 - Entity-level GloBE engine goldens (27; hand-worked in CALC_ASSUMPTIONS.md)
+- CSV export / scenario comparison / round-trip / inputs JSON (9)
 - Legacy v0.1 engine path (13)
 - v0.2 Asia routing golden tests (10)
 - Pack loader / validation / filing-calendar goldens (19)

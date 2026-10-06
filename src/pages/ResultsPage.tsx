@@ -1,8 +1,11 @@
 import type { ReactNode } from 'react'
 import { GLOBE_PARAMS, SOURCE_URLS } from '../calc/globe'
-import type { JurisdictionResultV3, ProjectionV3, TestOutcome } from '../calc/globe'
+import type { GroupInputV3, JurisdictionResultV3, ProjectionV3, TestOutcome } from '../calc/globe'
 import { Callout, formatDate, JurBadge, PageHeader, SourceLink, Tag } from '../components/ui'
 import { href } from '../router'
+import { ScenarioPanel } from '../components/ScenarioPanel'
+import { resultsCsvRows, toCsv, withBom } from '../export/csv'
+import { downloadText, safeFilePart } from '../export/download'
 
 const eur = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n)
 const pct = (n: number | null, dp = 2) => (n === null ? '—' : `${(n * 100).toFixed(dp)}%`)
@@ -43,7 +46,17 @@ function Waterfall({ j }: { j: JurisdictionResultV3 }) {
   )
 }
 
-export function ResultsPage({ result }: { result: ProjectionV3 }) {
+export interface ResultsPageProps {
+  result: ProjectionV3
+  input: GroupInputV3
+  importA: (g: GroupInputV3) => void
+  scenarioA: ProjectionV3 | null
+  saveA: () => void
+  clearA: () => void
+}
+
+export function ResultsPage({ result, input, importA, scenarioA, saveA, clearA }: ResultsPageProps) {
+  const exportCsv = () => downloadText(`pillar-two-results-${safeFilePart(result.groupName)}-${result.fiscalYearStart}.csv`, withBom(toCsv(resultsCsvRows(result))))
   const rows: { label: string; cell: (j: JurisdictionResultV3) => ReactNode; strong?: boolean }[] = [
     { label: 'Entities (excluded)', cell: (j) => `${j.entityCount}${j.excludedEntities.length ? ` (${j.excludedEntities.length} inv. entity)` : ''}` },
     { label: 'Net GloBE income', cell: (j) => eur(j.netGlobeIncome) },
@@ -81,7 +94,12 @@ export function ResultsPage({ result }: { result: ProjectionV3 }) {
         eyebrow="Calculator"
         title="GloBE results"
         subtitle={`${result.groupName}: fiscal year ${formatDate(result.fiscalYearStart)} – ${formatDate(result.fiscalYearEnd)}. Jurisdictional blending, SBIE, transitional safe harbour, then domestic top-up tax → IIR → UTPR residual.`}
-        actions={<a className="btn" href={href('group')}>Edit group</a>}
+        actions={
+          <>
+            <button type="button" className="secondary" onClick={exportCsv}>Export CSV</button>
+            <a className="btn" href={href('group')}>Edit group</a>
+          </>
+        }
       />
       <div className="kpi-grid five">
         <div className="kpi accent"><span className="kpi-label">Total top-up</span><strong>{eur(t.topUp)}</strong></div>
@@ -137,6 +155,8 @@ export function ResultsPage({ result }: { result: ProjectionV3 }) {
           </section>
         ))}
       </div>
+
+      <ScenarioPanel current={result} currentInput={input} importA={importA} scenarioA={scenarioA} saveA={saveA} clearA={clearA} />
 
       <section className="panel">
         <h3>Explanation trail</h3>
