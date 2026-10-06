@@ -1,0 +1,37 @@
+{
+  "version": "oecd-asia-v0.2",
+  "minEtr": 0.15,
+  "revenueThresholdEur": 750000000,
+  "features": {
+    "substanceCarveOut": true,
+    "transitionalSafeHarbour": true
+  },
+  "packs": [
+    "hk.v1",
+    "sg.v1",
+    "jp.v1"
+  ],
+  "jurisdictions": {
+    "OTHER": {
+      "code": "OTHER",
+      "label": "Other (non-QDMTT)",
+      "hasQdmtt": false,
+      "qdmttLabel": null
+    }
+  },
+  "notes": {
+    "disclaimer": "Simplified projection for planning only. Not tax advice. Not a GloBE Information Return (GIR). Not a claim of full OECD / IRD / IRAS / NTA compliance.",
+    "jurisdictionPresets": "HK / SG / JP presets (hasQdmtt, labels, effective dates) are derived from src/rules/jurisdictions/*.v1.json for the selected fiscal-year start.",
+    "notModelled": [
+      "deferred tax detail",
+      "ownership percentage chains",
+      "UTPR allocation",
+      "QDMTT → IIR → UTPR ordering across multiple parents",
+      "full CbCR transitional safe harbour numeric tests",
+      "SBIE computation (carve-out is a direct input)",
+      "Side-by-Side / UPE safe harbour",
+      "special entities",
+      "Pillar One"
+    ]
+  }
+}

@@ -1,12 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import { defaultRuleset, projectPillarTwo, type Ruleset } from './pillarTwo'
+import { legacyRulesetV01, projectPillarTwo, type Ruleset } from './pillarTwo'
+
+// Legacy v0.1 engine path: every case passes the v0.1 ruleset explicitly to prove it still works.
+const defaultRuleset = legacyRulesetV01
 
 const IN_SCOPE = 900_000_000
 
-describe('projectPillarTwo v0.1', () => {
+describe('projectPillarTwo — legacy oecd-hk-simplified-v0.1 path', () => {
   it('HK low ETR → all top-up to QDMTT / HKMTT', () => {
     const r = projectPillarTwo({
       consolidatedRevenueEur: IN_SCOPE,
+      ruleset: legacyRulesetV01,
       jurisdictions: [{ code: 'HK', globeIncome: 100, coveredTaxes: 5, carveOut: 0 }],
     })
     expect(r.inScope).toBe(true)
@@ -21,6 +25,7 @@ describe('projectPillarTwo v0.1', () => {
   it('Non-QDMTT jurisdiction → IIR residual to UPE', () => {
     const r = projectPillarTwo({
       consolidatedRevenueEur: IN_SCOPE,
+      ruleset: legacyRulesetV01,
       jurisdictions: [{ code: 'US', globeIncome: 200, coveredTaxes: 10 }],
     })
     expect(r.jurisdictions[0].hasQdmtt).toBe(false)
@@ -32,6 +37,7 @@ describe('projectPillarTwo v0.1', () => {
   it('ETR ≥ 15% → zero top-up', () => {
     const r = projectPillarTwo({
       consolidatedRevenueEur: IN_SCOPE,
+      ruleset: legacyRulesetV01,
       jurisdictions: [{ code: 'IE', globeIncome: 100, coveredTaxes: 16 }],
     })
     expect(r.jurisdictions[0].etr).toBeCloseTo(0.16)
@@ -41,10 +47,12 @@ describe('projectPillarTwo v0.1', () => {
   it('Substance carve-out reduces Excess Profit', () => {
     const without = projectPillarTwo({
       consolidatedRevenueEur: IN_SCOPE,
+      ruleset: legacyRulesetV01,
       jurisdictions: [{ code: 'HK', globeIncome: 100, coveredTaxes: 5, carveOut: 0 }],
     })
     const withCarve = projectPillarTwo({
       consolidatedRevenueEur: IN_SCOPE,
+      ruleset: legacyRulesetV01,
       jurisdictions: [{ code: 'HK', globeIncome: 100, coveredTaxes: 5, carveOut: 40 }],
     })
     expect(withCarve.jurisdictions[0].excessProfit).toBe(60)
@@ -55,6 +63,7 @@ describe('projectPillarTwo v0.1', () => {
   it('Transitional safe harbour flag → zero top-up', () => {
     const r = projectPillarTwo({
       consolidatedRevenueEur: IN_SCOPE,
+      ruleset: legacyRulesetV01,
       jurisdictions: [{ code: 'HK', globeIncome: 100, coveredTaxes: 5, transitionalSafeHarbour: true }],
     })
     expect(r.totalTopUp).toBe(0)
@@ -63,6 +72,7 @@ describe('projectPillarTwo v0.1', () => {
   it('Out of scope revenue → zero top-up', () => {
     const r = projectPillarTwo({
       consolidatedRevenueEur: 100_000_000,
+      ruleset: legacyRulesetV01,
       jurisdictions: [{ code: 'HK', globeIncome: 100, coveredTaxes: 5 }],
     })
     expect(r.inScope).toBe(false)
@@ -72,6 +82,7 @@ describe('projectPillarTwo v0.1', () => {
   it('Multi-jurisdiction mix HK + SG + IE', () => {
     const r = projectPillarTwo({
       consolidatedRevenueEur: IN_SCOPE,
+      ruleset: legacyRulesetV01,
       jurisdictions: [
         { code: 'HK', globeIncome: 100, coveredTaxes: 5 },
         { code: 'SG', globeIncome: 80, coveredTaxes: 4 },
@@ -89,6 +100,7 @@ describe('projectPillarTwo v0.1', () => {
   it('CN without QDMTT contributes IIR in a multi-jur mix', () => {
     const r = projectPillarTwo({
       consolidatedRevenueEur: IN_SCOPE,
+      ruleset: legacyRulesetV01,
       jurisdictions: [
         { code: 'HK', globeIncome: 100, coveredTaxes: 5 },
         { code: 'CN', globeIncome: 100, coveredTaxes: 5 },
@@ -102,6 +114,7 @@ describe('projectPillarTwo v0.1', () => {
   it('ETR exactly 15% → zero top-up', () => {
     const r = projectPillarTwo({
       consolidatedRevenueEur: IN_SCOPE,
+      ruleset: legacyRulesetV01,
       jurisdictions: [{ code: 'GB', globeIncome: 100, coveredTaxes: 15 }],
     })
     expect(r.totalTopUp).toBe(0)
@@ -110,6 +123,7 @@ describe('projectPillarTwo v0.1', () => {
   it('Zero GloBE income → ETR null and zero top-up', () => {
     const r = projectPillarTwo({
       consolidatedRevenueEur: IN_SCOPE,
+      ruleset: legacyRulesetV01,
       jurisdictions: [{ code: 'HK', globeIncome: 0, coveredTaxes: 0 }],
     })
     expect(r.jurisdictions[0].etr).toBeNull()
@@ -148,6 +162,7 @@ describe('projectPillarTwo v0.1', () => {
   it('Ruleset version is surfaced on the result', () => {
     const r = projectPillarTwo({
       consolidatedRevenueEur: IN_SCOPE,
+      ruleset: legacyRulesetV01,
       jurisdictions: [{ code: 'HK', globeIncome: 100, coveredTaxes: 15 }],
     })
     expect(r.rulesetVersion).toBe('oecd-hk-simplified-v0.1')

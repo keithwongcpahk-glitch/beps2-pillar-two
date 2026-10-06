@@ -1,0 +1,211 @@
+{
+  "packId": "jp.v1",
+  "jurisdiction": "JP",
+  "name": "Japan",
+  "packVersion": "1.0.0",
+  "researchedAsOf": "2026-10-06",
+  "legislation": {
+    "value": "Corporation Tax Act, Part II Chapter II (IIR: 各対象会計年度の国際最低課税額に対する法人税; UTPR: 国際最低課税残余額に対する法人税; QDMTT: 国内最低課税額に対する法人税), plus the Local Corporation Tax Act",
+    "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf",
+    "verified": true,
+    "note": "Statute references as listed in the OECD Central Record. UTPR name per the MOF FY2025 reform outline."
+  },
+  "enactment": {
+    "value": "IIR: Act No. 3 of 2023 (promulgated March 2023), from FYs beginning on or after 1 April 2024. UTPR and QDMTT: FY2025 tax reform, from FYs beginning on or after 1 April 2026.",
+    "sourceUrl": "https://www.nta.go.jp/taxes/shiraberu/kokusai/global-minimum/pdf/01.pdf",
+    "verified": true,
+    "note": "IIR enactment per the NTA GIR completion guide (June 2026 rev.). UTPR/QDMTT timing per the MOF FY2025 outline: https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2025/07taikou_05.htm"
+  },
+  "headlineCitRate": {
+    "value": "National corporation tax 23.2% (large ordinary corporations). Combined national + local effective rate 29.74%, or 30.64% where the Defense Special Corporate Tax (from April 2026) applies.",
+    "sourceUrl": "https://www.mof.go.jp/tax_policy/summary/corporation/c01.htm",
+    "verified": true
+  },
+  "domesticTopUpTax": {
+    "localName": "各対象会計年度の国内最低課税額に対する法人税 (Japanese QDMTT)",
+    "shortName": "JP QDMTT",
+    "value": "Domestic minimum top-up tax on Japanese constituent entities. Introduced by the FY2025 reform for FYs beginning on or after 1 April 2026.",
+    "sourceUrl": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2025/07taikou_05.htm",
+    "verified": true
+  },
+  "rules": {
+    "QDMTT": {
+      "localName": "国内最低課税額に対する法人税",
+      "status": "in-force",
+      "effectiveFrom": "2026-04-01",
+      "value": "Fiscal years (対象会計年度) beginning on or after 1 April 2026",
+      "sourceUrl": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2025/07taikou_05.htm",
+      "verified": true
+    },
+    "IIR": {
+      "localName": "国際最低課税額に対する法人税",
+      "status": "in-force",
+      "effectiveFrom": "2024-04-01",
+      "value": "Fiscal years beginning on or after 1 April 2024",
+      "sourceUrl": "https://www.nta.go.jp/taxes/shiraberu/kokusai/global-minimum/pdf/01.pdf",
+      "verified": true
+    },
+    "UTPR": {
+      "localName": "国際最低課税残余額に対する法人税",
+      "status": "in-force",
+      "effectiveFrom": "2026-04-01",
+      "value": "Fiscal years beginning on or after 1 April 2026",
+      "sourceUrl": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2025/07taikou_05.htm",
+      "verified": true
+    }
+  },
+  "qualifiedStatus": {
+    "asAt": "2026-05-01",
+    "IIR": {
+      "value": "Transitional qualified status from 1 April 2024",
+      "effectiveFrom": "2024-04-01",
+      "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf",
+      "verified": true
+    },
+    "QDMTT": {
+      "value": "Transitional qualified status (QDMTT) from 1 April 2026",
+      "effectiveFrom": "2026-04-01",
+      "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf",
+      "verified": true
+    },
+    "QDMTTSafeHarbour": {
+      "value": "QDMTT Safe Harbour: Yes, from 1 April 2026",
+      "effectiveFrom": "2026-04-01",
+      "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf",
+      "verified": true
+    }
+  },
+  "filing": [
+    {
+      "id": "jp-gir",
+      "obligation": "GIR (特定多国籍企業グループ等報告事項等) via e-Tax",
+      "who": "Japanese constituent entity (one may file as representative)",
+      "value": "Within 1 year 3 months from the day after FYE (1 year 6 months for the first filing). If that falls before 30 June 2026, the deadline is 30 June 2026. Deadlines on weekends/holidays roll to the next business day.",
+      "kind": "filing",
+      "appliesTo": "GloBE",
+      "effectiveFrom": "2024-04-01",
+      "monthsAfterFye": 15,
+      "firstYearMonthsAfterFye": 18,
+      "floorDate": "2026-06-30",
+      "sourceUrl": "https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/global-minimum/annai/03.htm",
+      "verified": true
+    },
+    {
+      "id": "jp-iir-return",
+      "obligation": "IIR return (国際最低課税額に対する法人税等の申告), only if there is a taxable amount",
+      "who": "Japanese constituent entity (parent)",
+      "value": "Within 1 year 3 months from the day after FYE (1 year 6 months in the first case). Floor of 30 June 2026. Corporations with capital over ¥100m must file electronically.",
+      "kind": "filing",
+      "appliesTo": "IIR",
+      "effectiveFrom": "2024-04-01",
+      "monthsAfterFye": 15,
+      "firstYearMonthsAfterFye": 18,
+      "floorDate": "2026-06-30",
+      "sourceUrl": "https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/global-minimum/annai/01.htm",
+      "verified": true
+    },
+    {
+      "id": "jp-qdmtt-info",
+      "obligation": "QDMTT information return (グループ国内最低課税額報告事項等) via e-Tax",
+      "who": "Japanese constituent entities / JVs (exempt if received via exchange from the UPE / designated filer jurisdiction)",
+      "value": "Within 1 year 3 months from the day after FYE ('1 year 6 months in certain cases')",
+      "kind": "filing",
+      "appliesTo": "QDMTT",
+      "effectiveFrom": "2026-04-01",
+      "monthsAfterFye": 15,
+      "firstYearMonthsAfterFye": 18,
+      "sourceUrl": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2025/07taikou_05.htm",
+      "verified": true
+    },
+    {
+      "id": "jp-qdmtt-return",
+      "obligation": "QDMTT return and payment (国内最低課税額に対する法人税), only if there is a taxable amount",
+      "who": "Japanese constituent entity",
+      "value": "Return and payment within 1 year 3 months from the day after FYE ('1 year 6 months in certain cases')",
+      "kind": "filing",
+      "appliesTo": "QDMTT",
+      "effectiveFrom": "2026-04-01",
+      "monthsAfterFye": 15,
+      "firstYearMonthsAfterFye": 18,
+      "sourceUrl": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2025/07taikou_05.htm",
+      "verified": true
+    },
+    {
+      "id": "jp-utpr-return",
+      "obligation": "UTPR return and payment (国際最低課税残余額に対する法人税), only if there is a taxable amount",
+      "who": "Japanese constituent entity",
+      "value": "Return and payment within 1 year 3 months from the day after FYE ('1 year 6 months in certain cases')",
+      "kind": "filing",
+      "appliesTo": "UTPR",
+      "effectiveFrom": "2026-04-01",
+      "monthsAfterFye": 15,
+      "firstYearMonthsAfterFye": 18,
+      "sourceUrl": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2025/07taikou_05.htm",
+      "verified": true
+    }
+  ],
+  "registration": [
+    {
+      "value": "No separate Pillar Two registration identified. Filings go through e-Tax's 'Multinational Enterprise Information Reporting Corner', which requires a one-off e-Tax setup (user ID, preparation setup).",
+      "sourceUrl": "https://www.e-tax.nta.go.jp/e-taxtp/e-taxtp.htm",
+      "verified": false,
+      "note": "Absence of a registration step is an inference from the NTA procedure pages reviewed. Confirm with an adviser."
+    }
+  ],
+  "safeHarbours": {
+    "value": "FY2026 reform: Side-by-Side exemption (group IIR top-up set to zero where the UPE jurisdiction is designated by the Finance Minister) for FYs beginning on or after 1 Jan 2026. Transitional CbCR safe harbour extended by one year to 31 Dec 2027, with the same change for the QDMTT. A UTPR exemption for the UPE jurisdiction portion where designated.",
+    "sourceUrl": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2026/20260123kokusai.htm",
+    "verified": true
+  },
+  "portal": {
+    "value": "e-Tax – 多国籍企業情報の報告コーナー (GIR as XML/CSV; IIR return 別表二十)",
+    "sourceUrl": "https://www.e-tax.nta.go.jp/e-taxtp/e-taxtp.htm",
+    "verified": true
+  },
+  "localFeatures": [
+    {
+      "title": "Staggered timing: IIR first, QDMTT/UTPR from April 2026",
+      "value": "The IIR applies from FYs beginning on or after 1 April 2024. The QDMTT and UTPR apply from FYs beginning on or after 1 April 2026. For a calendar-year group, Japan's QDMTT first applies to FY2027 (beginning 1 Jan 2027). For a March year-end group, it first applies to the FY beginning 1 April 2026.",
+      "sourceUrl": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2025/07taikou_05.htm",
+      "verified": true,
+      "note": "The calendar-year and March-year-end illustrations are our arithmetic on the 'beginning on or after 1 April 2026' rule."
+    },
+    {
+      "title": "QDMTT split into national and local tax",
+      "value": "QDMTT national tax = 75.3% × domestic minimum top-up amount. A local corporation tax at 247/753 of that national tax brings the total to 100% of the top-up amount. The UTPR national rate is 90.7%.",
+      "sourceUrl": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2025/07taikou_05.htm",
+      "verified": true
+    },
+    {
+      "title": "Side-by-Side designation (US)",
+      "value": "Reported: the US is currently the only jurisdiction designated for the SbS exemption (MOF Notice No. 89, 31 March 2026). The exemption does not switch off Japan's QDMTT.",
+      "sourceUrl": "https://kmp.or.jp/global-minimum-tax-shokai-shinkoku-2026/",
+      "verified": true,
+      "note": "Secondary source (Japanese tax firm article). MOF notice text not fetched."
+    },
+    {
+      "title": "Tax-credit special measure",
+      "value": "From FYs beginning on or after 1 Jan 2026, part of qualifying investment-promotion tax credits can be added to adjusted covered taxes. The cap is generally the greater of 5.5% of eligible payroll and 5.5% of depreciation on eligible tangible assets.",
+      "sourceUrl": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2026/20260123kokusai.htm",
+      "verified": true
+    },
+    {
+      "title": "High statutory rate",
+      "value": "With a combined effective rate of about 29.74%–30.64%, Japanese entities are less likely to have QDMTT exposure, but incentives and GloBE adjustments can still lower the GloBE ETR.",
+      "sourceUrl": "https://www.mof.go.jp/tax_policy/summary/corporation/c01.htm",
+      "verified": false,
+      "note": "The rates are sourced. The exposure comment is our qualitative inference."
+    }
+  ],
+  "sources": [
+    { "name": "MOF – FY2025 reform outline (UTPR / QDMTT)", "url": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2025/07taikou_05.htm", "type": "official" },
+    { "name": "MOF – FY2026 reform outline (global minimum tax)", "url": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2026/20260123kokusai.htm", "type": "official" },
+    { "name": "MOF – Basic data on corporate taxation", "url": "https://www.mof.go.jp/tax_policy/summary/corporation/c01.htm", "type": "official" },
+    { "name": "NTA – C8-1 IIR return procedure", "url": "https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/global-minimum/annai/01.htm", "type": "official" },
+    { "name": "NTA – C8-3 GIR procedure", "url": "https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/global-minimum/annai/03.htm", "type": "official" },
+    { "name": "NTA – GIR completion guide (June 2026 rev.)", "url": "https://www.nta.go.jp/taxes/shiraberu/kokusai/global-minimum/pdf/01.pdf", "type": "official" },
+    { "name": "NTA e-Tax – Multinational Enterprise Information Reporting Corner", "url": "https://www.e-tax.nta.go.jp/e-taxtp/e-taxtp.htm", "type": "official" },
+    { "name": "OECD – Central Record (as at 1 May 2026)", "url": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf", "type": "official" },
+    { "name": "Koyama Mikata Partners – first filing article (Aug 2026)", "url": "https://kmp.or.jp/global-minimum-tax-shokai-shinkoku-2026/", "type": "secondary" }
+  ]
+}

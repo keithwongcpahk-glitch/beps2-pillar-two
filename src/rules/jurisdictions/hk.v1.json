@@ -1,0 +1,217 @@
+{
+  "packId": "hk.v1",
+  "jurisdiction": "HK",
+  "name": "Hong Kong SAR",
+  "packVersion": "1.0.0",
+  "researchedAsOf": "2026-10-06",
+  "legislation": {
+    "value": "Inland Revenue (Amendment) (Minimum Tax for Multinational Enterprise Groups) Ordinance 2025 (Ord. No. 21 of 2025), adding Part 4AA and Schedules 61–64 to the Inland Revenue Ordinance (Cap. 112)",
+    "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+    "verified": true
+  },
+  "enactment": {
+    "value": "Enacted 6 June 2025 (per IRD). Comes into operation on the day of publication in the Gazette.",
+    "sourceUrl": "https://www.ird.gov.hk/eng/pdf/iro/gazette/ord_112_21_2025.pdf",
+    "verified": true,
+    "note": "The Gazette copy shows the Chief Executive's signature dated 5 June 2025."
+  },
+  "headlineCitRate": {
+    "value": "16.5% (corporations). Two-tiered: 8.25% on the first HK$2m of assessable profits.",
+    "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_pft.htm",
+    "verified": true
+  },
+  "domesticTopUpTax": {
+    "localName": "Hong Kong minimum top-up tax",
+    "shortName": "HKMTT",
+    "value": "HKMTT, designed as a QDMTT. It charges top-up tax on low-taxed HK constituent entities in priority to the IIR and UTPR.",
+    "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+    "verified": true
+  },
+  "rules": {
+    "QDMTT": {
+      "localName": "Hong Kong minimum top-up tax (HKMTT)",
+      "status": "in-force",
+      "effectiveFrom": "2025-01-01",
+      "value": "Payable for fiscal years beginning on or after 1 January 2025",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    },
+    "IIR": {
+      "localName": "IIR top-up tax",
+      "status": "in-force",
+      "effectiveFrom": "2025-01-01",
+      "value": "Payable for fiscal years beginning on or after 1 January 2025",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    },
+    "UTPR": {
+      "localName": "UTPR top-up tax",
+      "status": "deferred",
+      "effectiveFrom": null,
+      "value": "Not yet in force. Starts for fiscal years beginning on or after a date the Secretary for Financial Services and the Treasury will specify by Gazette notice.",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    }
+  },
+  "qualifiedStatus": {
+    "asAt": "2026-05-01",
+    "IIR": {
+      "value": "Transitional qualified status from 1 January 2025",
+      "effectiveFrom": "2025-01-01",
+      "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf",
+      "verified": true
+    },
+    "QDMTT": {
+      "value": "Transitional qualified status (QDMTT) from 1 January 2025",
+      "effectiveFrom": "2025-01-01",
+      "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf",
+      "verified": true
+    },
+    "QDMTTSafeHarbour": {
+      "value": "QDMTT Safe Harbour: Yes, from 1 January 2025",
+      "effectiveFrom": "2025-01-01",
+      "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf",
+      "verified": true
+    }
+  },
+  "filing": [
+    {
+      "id": "hk-notification",
+      "obligation": "Top-up tax notification",
+      "who": "Each HK constituent entity, or one designated local entity (appointed annually)",
+      "value": "Within 6 months after the last day of the reporting fiscal year, filed electronically via the Pillar Two Portal",
+      "kind": "filing",
+      "appliesTo": "GloBE",
+      "effectiveFrom": "2025-01-01",
+      "monthsAfterFye": 6,
+      "firstYearMonthsAfterFye": null,
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    },
+    {
+      "id": "hk-return",
+      "obligation": "Top-up tax return (GloBE + HKMTT, including GIR information)",
+      "who": "Each HK constituent entity, or one designated local entity. The GIR section is relieved if the GIR is filed in a jurisdiction that exchanges it with HK under a qualifying competent authority agreement.",
+      "value": "Within 15 months after the last day of the reporting fiscal year (18 months for the first transition year)",
+      "kind": "filing",
+      "appliesTo": "GloBE",
+      "effectiveFrom": "2025-01-01",
+      "monthsAfterFye": 15,
+      "firstYearMonthsAfterFye": 18,
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    },
+    {
+      "id": "hk-payment",
+      "obligation": "Payment of top-up tax (per notice of assessment)",
+      "who": "Assessed entity / designated paying entity",
+      "value": "One month after the later of the return filing deadline or the date of the notice of assessment. No provisional top-up tax.",
+      "kind": "payment",
+      "appliesTo": "GloBE",
+      "effectiveFrom": "2025-01-01",
+      "relativeTo": "hk-return",
+      "monthsAfterRelated": 1,
+      "earliestOnly": true,
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    }
+  ],
+  "registration": [
+    {
+      "value": "Apply for a group code (MNE code / JV code) on paper Form IR1485, needed to file the top-up tax notification",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    },
+    {
+      "value": "The notifying entity registers a dedicated Business Tax Portal (BTP) business account to access the Pillar Two Portal",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    },
+    {
+      "value": "Authorised signers must use an e-Cert (Organisational) with AEOI Functions",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    }
+  ],
+  "safeHarbours": {
+    "value": "Transitional CbCR Safe Harbour, Transitional UTPR Safe Harbour, QDMTT Safe Harbour, and Simplified Calculations Safe Harbour for non-material constituent entities",
+    "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+    "verified": true
+  },
+  "portal": {
+    "value": "Pillar Two Portal Phase 1 (notifications) launched 19 Jan 2026. Phase 2 (top-up tax returns, e-assessments) stated for Q4 2026.",
+    "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+    "verified": true
+  },
+  "localFeatures": [
+    {
+      "title": "Designated local entity (filing)",
+      "value": "HK constituent entities can designate one HK constituent entity, appointed annually, to file the notification and the top-up tax return for all of them.",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    },
+    {
+      "title": "Designated paying entity and joint liability",
+      "value": "By default, HKMTT is allocated across HK constituent entities in proportion to GloBE income. A group can designate one or more paying entities. If a designated payer does not pay, all HK constituent entities become jointly and severally liable.",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    },
+    {
+      "title": "Territorial (source-based) profits tax",
+      "value": "Profits tax is charged only on profits arising in or derived from Hong Kong. No tax is levied on profits arising abroad, even if remitted to Hong Kong.",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_pft.htm",
+      "verified": true
+    },
+    {
+      "title": "Territorial regime × HKMTT (analysis)",
+      "value": "HKMTT follows GloBE mechanics: jurisdictional ETR is computed on aggregate GloBE income and adjusted covered taxes. Offshore-sourced profits that bear no HK profits tax can therefore lower the HK GloBE ETR and create HKMTT exposure.",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": false,
+      "note": "Our inference from IRD's description of the GloBE/HKMTT mechanics, not an IRD statement. Confirm against IRD guidance and the facts of the group."
+    },
+    {
+      "title": "Investment entities excluded from HKMTT",
+      "value": "Investment entities and insurance investment entities are excluded from HKMTT to preserve their tax neutrality.",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    },
+    {
+      "title": "Top-up tax deemed profits tax",
+      "value": "Top-up tax is deemed profits tax, so existing collection and objection/appeal machinery applies and CDTA mutual agreement procedures can be used. The objection period is 2 months from the notice of assessment.",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    },
+    {
+      "title": "HK resident entity definition (retrospective)",
+      "value": "A new 'Hong Kong resident entity' definition (incorporated in HK, or normally managed or controlled in HK) applies retrospectively from 1 January 2024.",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    },
+    {
+      "title": "Mandatory e-filing of profits tax returns",
+      "value": "Entities of in-scope MNE groups must e-file profits tax returns (BIR51/BIR52) for years of assessment beginning on or after 1 April 2025 ('once-in, always-in').",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    },
+    {
+      "title": "No QRTC regime (yet)",
+      "value": "On submissions asking for a qualified refundable tax credit regime, the Government said it needs to carefully consider feasibility given the policy and fiscal implications.",
+      "sourceUrl": "https://www.legco.gov.hk/yr2024/english/panels/fa/papers/facb1-1409-1-e.pdf",
+      "verified": true,
+      "note": "LegCo Panel on Financial Affairs paper, October 2024. Check for later announcements."
+    },
+    {
+      "title": "GIR MCAA signed",
+      "value": "Hong Kong signed the GIR MCAA on 21 April 2026, enabling central GIR filing and exchange.",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": true
+    }
+  ],
+  "sources": [
+    { "name": "IRD – Global minimum tax and HKMTT", "url": "https://www.ird.gov.hk/eng/tax/bus_beps.htm", "type": "official" },
+    { "name": "Gazette – Ord. No. 21 of 2025", "url": "https://www.ird.gov.hk/eng/pdf/iro/gazette/ord_112_21_2025.pdf", "type": "official" },
+    { "name": "IRD – Profits Tax", "url": "https://www.ird.gov.hk/eng/tax/bus_pft.htm", "type": "official" },
+    { "name": "OECD – Central Record (as at 1 May 2026)", "url": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf", "type": "official" },
+    { "name": "LegCo FA Panel – Consultation outcome (Oct 2024)", "url": "https://www.legco.gov.hk/yr2024/english/panels/fa/papers/facb1-1409-1-e.pdf", "type": "official" }
+  ]
+}

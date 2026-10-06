@@ -1,0 +1,221 @@
+{
+  "packId": "sg.v1",
+  "jurisdiction": "SG",
+  "name": "Singapore",
+  "packVersion": "1.0.0",
+  "researchedAsOf": "2026-10-06",
+  "legislation": {
+    "value": "Multinational Enterprise (Minimum Tax) Act 2024 ('MMT Act'), with the Multinational Enterprise (Minimum Tax) Regulations 2024 and related regulations",
+    "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/registration-for-multinational-enterprise-top-up-tax-and-domestic-top-up-tax",
+    "verified": true
+  },
+  "enactment": {
+    "value": "Bill read a second time and passed in Parliament on 15 October 2024 (first reading 9 September 2024)",
+    "sourceUrl": "https://www.allenandgledhill.com/sg/publication/articles/29231/multinational-enterprise-minimum-tax-bill-passed-to-implement-two-new-top-up-taxes-under-beps-20",
+    "verified": true,
+    "note": "Secondary source (Allen & Gledhill). Presidential assent date not verified in this run."
+  },
+  "headlineCitRate": {
+    "value": "17% flat rate on chargeable income",
+    "sourceUrl": "https://www.iras.gov.sg/quick-links/tax-rates/corporate-income-tax-rates",
+    "verified": true
+  },
+  "domesticTopUpTax": {
+    "localName": "Domestic Top-up Tax",
+    "shortName": "DTT",
+    "value": "DTT applies to low-taxed profits of group entities located in Singapore. It is recognised as a QDMTT.",
+    "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/registration-for-multinational-enterprise-top-up-tax-and-domestic-top-up-tax",
+    "verified": true
+  },
+  "rules": {
+    "QDMTT": {
+      "localName": "Domestic Top-up Tax (DTT)",
+      "status": "in-force",
+      "effectiveFrom": "2025-01-01",
+      "value": "Financial years beginning on or after 1 January 2025",
+      "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/registration-for-multinational-enterprise-top-up-tax-and-domestic-top-up-tax",
+      "verified": true
+    },
+    "IIR": {
+      "localName": "Multinational Enterprise Top-up Tax (MTT)",
+      "status": "in-force",
+      "effectiveFrom": "2025-01-01",
+      "value": "Financial years beginning on or after 1 January 2025. Applies to low-taxed profits of group entities located outside Singapore.",
+      "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/registration-for-multinational-enterprise-top-up-tax-and-domestic-top-up-tax",
+      "verified": true
+    },
+    "UTPR": {
+      "localName": "UTPR",
+      "status": "not-implemented",
+      "effectiveFrom": null,
+      "value": "Not implemented. 'The implementation of the UTPR will be considered at a later stage.'",
+      "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/global-anti-base-erosion-(globe)-rules-and-domestic-top-up-tax-(dtt)",
+      "verified": true
+    }
+  },
+  "qualifiedStatus": {
+    "asAt": "2026-05-01",
+    "IIR": {
+      "value": "Transitional qualified status from 1 January 2025",
+      "effectiveFrom": "2025-01-01",
+      "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf",
+      "verified": true
+    },
+    "QDMTT": {
+      "value": "Transitional qualified status (QDMTT) from 1 January 2025",
+      "effectiveFrom": "2025-01-01",
+      "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf",
+      "verified": true
+    },
+    "QDMTTSafeHarbour": {
+      "value": "QDMTT Safe Harbour: Yes, from 1 January 2025",
+      "effectiveFrom": "2025-01-01",
+      "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf",
+      "verified": true
+    }
+  },
+  "filing": [
+    {
+      "id": "sg-registration",
+      "obligation": "One-time registration for MTT, DTT and GIR filing",
+      "who": "UPE (or an authorised representative: a Singapore CE or local tax agent)",
+      "value": "Within 6 months after the end of the group's first financial year to which the MMT Act applies (online form, available since May 2026)",
+      "kind": "filing",
+      "appliesTo": "GloBE",
+      "effectiveFrom": "2025-01-01",
+      "monthsAfterFye": 6,
+      "firstYearMonthsAfterFye": null,
+      "firstYearOnly": true,
+      "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/registration-for-multinational-enterprise-top-up-tax-and-domestic-top-up-tax",
+      "verified": true
+    },
+    {
+      "id": "sg-gir",
+      "obligation": "GIR or GIR notification",
+      "who": "Designated Local GIR Filing Entity (GFE)",
+      "value": "Within 15 months from FYE (18 months if the FY is a transition year)",
+      "kind": "filing",
+      "appliesTo": "GloBE",
+      "effectiveFrom": "2025-01-01",
+      "monthsAfterFye": 15,
+      "firstYearMonthsAfterFye": 18,
+      "sourceUrl": "https://www.iras.gov.sg/docs/default-source/uploadedfiles/pdf/module-9---globe-and-dtt-related-compliance-obligations.pdf",
+      "verified": true
+    },
+    {
+      "id": "sg-dtt-return",
+      "obligation": "DTT return",
+      "who": "Designated Local DTT Filing Entity (DFE)",
+      "value": "Within 15 months from FYE (18 months if the FY is a transition year)",
+      "kind": "filing",
+      "appliesTo": "QDMTT",
+      "effectiveFrom": "2025-01-01",
+      "monthsAfterFye": 15,
+      "firstYearMonthsAfterFye": 18,
+      "sourceUrl": "https://www.iras.gov.sg/docs/default-source/uploadedfiles/pdf/module-9---globe-and-dtt-related-compliance-obligations.pdf",
+      "verified": true
+    },
+    {
+      "id": "sg-mtt-return",
+      "obligation": "MTT return (only if a responsible member is located in Singapore)",
+      "who": "Responsible member (e.g. Singapore UPE / IPE / POPE)",
+      "value": "Within 15 months from FYE (18 months if the FY is a transition year)",
+      "kind": "filing",
+      "appliesTo": "IIR",
+      "effectiveFrom": "2025-01-01",
+      "monthsAfterFye": 15,
+      "firstYearMonthsAfterFye": 18,
+      "sourceUrl": "https://www.iras.gov.sg/docs/default-source/uploadedfiles/pdf/module-9---globe-and-dtt-related-compliance-obligations.pdf",
+      "verified": true
+    },
+    {
+      "id": "sg-payment",
+      "obligation": "Payment of DTT / MTT (in SGD, in full)",
+      "who": "DFE (DTT) / responsible member (MTT)",
+      "value": "Within one month from the filing due date of the DTT / MTT return",
+      "kind": "payment",
+      "appliesTo": "GloBE",
+      "effectiveFrom": "2025-01-01",
+      "relativeTo": "sg-dtt-return",
+      "monthsAfterRelated": 1,
+      "earliestOnly": false,
+      "sourceUrl": "https://www.iras.gov.sg/docs/default-source/uploadedfiles/pdf/module-9---globe-and-dtt-related-compliance-obligations.pdf",
+      "verified": true
+    }
+  ],
+  "registration": [
+    {
+      "value": "Required where the group meets the EUR 750m test (2 of the 4 preceding FYs) and has at least one CE or JV located in Singapore, or a reverse hybrid entity incorporated or registered there. Not required if all Singapore entities are excluded entities.",
+      "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/registration-for-multinational-enterprise-top-up-tax-and-domestic-top-up-tax",
+      "verified": true
+    },
+    {
+      "value": "Appoint one Singapore CE as both the Designated Local GIR Filing Entity (GFE) and the Designated Local DTT Filing Entity (DFE)",
+      "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/registration-for-multinational-enterprise-top-up-tax-and-domestic-top-up-tax",
+      "verified": true
+    },
+    {
+      "value": "A 10% surcharge on DTT and MTT may be imposed for failure to notify registration liability",
+      "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/registration-for-multinational-enterprise-top-up-tax-and-domestic-top-up-tax",
+      "verified": true
+    },
+    {
+      "value": "After registration a Group ID is assigned. DTT returns and GIRs are filed in myTax Portal using the Group ID (access authorisations from January 2027).",
+      "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/registration-for-multinational-enterprise-top-up-tax-and-domestic-top-up-tax",
+      "verified": true
+    }
+  ],
+  "safeHarbours": {
+    "value": "Singapore will implement the Side-by-Side package. The MMT Act and Regulations are to be amended by end-2026: extended Transitional CbCR Safe Harbour, and the Substance-based Tax Incentive and Side-by-Side Safe Harbours for FYs commencing on or after 1 Jan 2026. Simplified ETR Safe Harbour from FYs commencing on or after 31 Dec 2026. No UPE Safe Harbour (no UTPR).",
+    "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/global-anti-base-erosion-(globe)-rules-and-domestic-top-up-tax-(dtt)",
+    "verified": true
+  },
+  "portal": {
+    "value": "myTax Portal (Group ID for DTT/GIR; UEN of responsible member for MTT)",
+    "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/registration-for-multinational-enterprise-top-up-tax-and-domestic-top-up-tax",
+    "verified": true
+  },
+  "localFeatures": [
+    {
+      "title": "Refundable Investment Credit (RIC)",
+      "value": "Introduced in Budget 2024 and awarded by EDB/EnterpriseSG. Credits offset CIT, DTT and MTT of the RIC company and approved nominated group companies. Unutilised credits are refunded in cash within four years. Support of up to 50% per qualifying expenditure category, over a qualifying period of up to 10 years.",
+      "sourceUrl": "https://www.iras.gov.sg/schemes/disbursement-schemes/refundable-investment-credit-(ric)",
+      "verified": true,
+      "note": "Whether a specific RIC award is treated as a Qualified Refundable Tax Credit under GloBE is not modelled and was not verified."
+    },
+    {
+      "title": "US-parented groups and the SbS Safe Harbour",
+      "value": "IRAS: the SbS Safe Harbour for US-headquartered groups applies from FY2026 and does not affect the DTT. Registration requirements are unchanged.",
+      "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/registration-for-multinational-enterprise-top-up-tax-and-domestic-top-up-tax",
+      "verified": true
+    },
+    {
+      "title": "DTT accounting standard choice (Simplified ETR SH)",
+      "value": "For DTT purposes, groups may elect either Singapore local FRS or the Acceptable Financial Accounting Standard used in the consolidated financial statements, subject to the Simplified ETR Safe Harbour election requirements.",
+      "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/global-anti-base-erosion-(globe)-rules-and-domestic-top-up-tax-(dtt)",
+      "verified": true
+    },
+    {
+      "title": "Transition year determined worldwide",
+      "value": "The 'transition year' used for the 18-month deadline is determined across all jurisdictions: the first FY the group comes within any qualified IIR/UTPR, or the first FY it must register under the MMT Act, whichever is earlier.",
+      "sourceUrl": "https://www.iras.gov.sg/docs/default-source/uploadedfiles/pdf/module-9---globe-and-dtt-related-compliance-obligations.pdf",
+      "verified": true
+    },
+    {
+      "title": "Pending amendments: Finance (Income Taxes) Bill 2026",
+      "value": "Bill No. 22/2026 (first reading 8 Sep 2026) amends the MMT Act for the SbS Safe Harbour and the GIR exchange framework.",
+      "sourceUrl": "https://sso.agc.gov.sg/Bills-Supp/22-2026/Published/20260908?DocDate=20260908",
+      "verified": true
+    }
+  ],
+  "sources": [
+    { "name": "IRAS – Registration for MTT and DTT", "url": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/registration-for-multinational-enterprise-top-up-tax-and-domestic-top-up-tax", "type": "official" },
+    { "name": "IRAS – GloBE Rules and DTT", "url": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/global-anti-base-erosion-(globe)-rules-and-domestic-top-up-tax-(dtt)", "type": "official" },
+    { "name": "IRAS – Module 9: GloBE and DTT compliance obligations (May 2026)", "url": "https://www.iras.gov.sg/docs/default-source/uploadedfiles/pdf/module-9---globe-and-dtt-related-compliance-obligations.pdf", "type": "official" },
+    { "name": "IRAS – Corporate Income Tax Rates", "url": "https://www.iras.gov.sg/quick-links/tax-rates/corporate-income-tax-rates", "type": "official" },
+    { "name": "IRAS – Refundable Investment Credit", "url": "https://www.iras.gov.sg/schemes/disbursement-schemes/refundable-investment-credit-(ric)", "type": "official" },
+    { "name": "SSO – Finance (Income Taxes) Bill 2026", "url": "https://sso.agc.gov.sg/Bills-Supp/22-2026/Published/20260908?DocDate=20260908", "type": "official" },
+    { "name": "OECD – Central Record (as at 1 May 2026)", "url": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf", "type": "official" },
+    { "name": "Allen & Gledhill – MMT Bill passed (Oct 2024)", "url": "https://www.allenandgledhill.com/sg/publication/articles/29231/multinational-enterprise-minimum-tax-bill-passed-to-implement-two-new-top-up-taxes-under-beps-20", "type": "secondary" }
+  ]
+}
