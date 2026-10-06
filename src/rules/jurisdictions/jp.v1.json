@@ -2,7 +2,7 @@
   "packId": "jp.v1",
   "jurisdiction": "JP",
   "name": "Japan",
-  "packVersion": "1.0.0",
+  "packVersion": "1.1.0",
   "researchedAsOf": "2026-10-06",
   "legislation": {
     "value": "Corporation Tax Act, Part II Chapter II (IIR: 各対象会計年度の国際最低課税額に対する法人税; UTPR: 国際最低課税残余額に対する法人税; QDMTT: 国内最低課税額に対する法人税), plus the Local Corporation Tax Act",
@@ -157,6 +157,36 @@
     "sourceUrl": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2026/20260123kokusai.htm",
     "verified": true
   },
+  "transitionalCbcrSafeHarbour": {
+    "appliesToIir": {
+      "applies": true,
+      "value": "Enacted. TCSH for the IIR (国際最低課税額), 2023 amendment law supplementary provisions Art. 14.",
+      "sourceUrl": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2026/explanation/PDF/p0739-0799.pdf",
+      "verified": true
+    },
+    "appliesToDomestic": {
+      "applies": true,
+      "value": "Enacted. TCSH for the QDMTT (国内最低課税額), 2025 amendment law supplementary provisions Art. 18 (FYs beginning 1 Apr 2026 to 31 Dec 2026, ending by 30 Jun 2028, before the extension).",
+      "sourceUrl": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2026/explanation/PDF/p0739-0799.pdf",
+      "verified": true
+    },
+    "enactedPeriod": {
+      "fyBeginsOnOrBefore": "2026-12-31",
+      "fyEndsOnOrBefore": "2028-06-30",
+      "value": "Before the FY2026 reform: FYs beginning 1 Apr 2024 to 31 Dec 2026 and ending by 30 Jun 2028 (MOF explanation of the FY2026 reform, p.756ff).",
+      "sourceUrl": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2026/explanation/PDF/p0739-0799.pdf",
+      "verified": true
+    },
+    "extension": {
+      "status": "enacted",
+      "fyBeginsOnOrBefore": "2027-12-31",
+      "fyEndsOnOrBefore": "2029-06-30",
+      "value": "Enacted. Act No. 12 of 31 Mar 2026 (所得税法等の一部を改正する法律), in force 1 Apr 2026, extends the TCSH by one year to FYs beginning by end-2027, for both the IIR and the QDMTT.",
+      "sourceUrl": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2026/explanation/PDF/p0739-0799.pdf",
+      "verified": true,
+      "note": "The MOF explanation states the begin limb (by end-2027) only. The end limb (30 Jun 2029) follows the OECD SbS Package and is not quoted from Japanese law."
+    }
+  },
   "portal": {
     "value": "e-Tax – 多国籍企業情報の報告コーナー (GIR as XML/CSV; IIR return 別表二十)",
     "sourceUrl": "https://www.e-tax.nta.go.jp/e-taxtp/e-taxtp.htm",
@@ -198,14 +228,55 @@
     }
   ],
   "sources": [
-    { "name": "MOF – FY2025 reform outline (UTPR / QDMTT)", "url": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2025/07taikou_05.htm", "type": "official" },
-    { "name": "MOF – FY2026 reform outline (global minimum tax)", "url": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2026/20260123kokusai.htm", "type": "official" },
-    { "name": "MOF – Basic data on corporate taxation", "url": "https://www.mof.go.jp/tax_policy/summary/corporation/c01.htm", "type": "official" },
-    { "name": "NTA – C8-1 IIR return procedure", "url": "https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/global-minimum/annai/01.htm", "type": "official" },
-    { "name": "NTA – C8-3 GIR procedure", "url": "https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/global-minimum/annai/03.htm", "type": "official" },
-    { "name": "NTA – GIR completion guide (June 2026 rev.)", "url": "https://www.nta.go.jp/taxes/shiraberu/kokusai/global-minimum/pdf/01.pdf", "type": "official" },
-    { "name": "NTA e-Tax – Multinational Enterprise Information Reporting Corner", "url": "https://www.e-tax.nta.go.jp/e-taxtp/e-taxtp.htm", "type": "official" },
-    { "name": "OECD – Central Record (as at 1 May 2026)", "url": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf", "type": "official" },
-    { "name": "Koyama Mikata Partners – first filing article (Aug 2026)", "url": "https://kmp.or.jp/global-minimum-tax-shokai-shinkoku-2026/", "type": "secondary" }
+    {
+      "name": "MOF – FY2025 reform outline (UTPR / QDMTT)",
+      "url": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2025/07taikou_05.htm",
+      "type": "official"
+    },
+    {
+      "name": "MOF – FY2026 reform outline (global minimum tax)",
+      "url": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2026/20260123kokusai.htm",
+      "type": "official"
+    },
+    {
+      "name": "MOF – Basic data on corporate taxation",
+      "url": "https://www.mof.go.jp/tax_policy/summary/corporation/c01.htm",
+      "type": "official"
+    },
+    {
+      "name": "NTA – C8-1 IIR return procedure",
+      "url": "https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/global-minimum/annai/01.htm",
+      "type": "official"
+    },
+    {
+      "name": "NTA – C8-3 GIR procedure",
+      "url": "https://www.nta.go.jp/taxes/tetsuzuki/shinsei/annai/global-minimum/annai/03.htm",
+      "type": "official"
+    },
+    {
+      "name": "NTA – GIR completion guide (June 2026 rev.)",
+      "url": "https://www.nta.go.jp/taxes/shiraberu/kokusai/global-minimum/pdf/01.pdf",
+      "type": "official"
+    },
+    {
+      "name": "NTA e-Tax – Multinational Enterprise Information Reporting Corner",
+      "url": "https://www.e-tax.nta.go.jp/e-taxtp/e-taxtp.htm",
+      "type": "official"
+    },
+    {
+      "name": "OECD – Central Record (as at 1 May 2026)",
+      "url": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf",
+      "type": "official"
+    },
+    {
+      "name": "Koyama Mikata Partners – first filing article (Aug 2026)",
+      "url": "https://kmp.or.jp/global-minimum-tax-shokai-shinkoku-2026/",
+      "type": "secondary"
+    },
+    {
+      "name": "MOF: Explanation of the FY2026 international tax amendments (改正税法のすべて, 国際課税関係)",
+      "url": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2026/explanation/PDF/p0739-0799.pdf",
+      "type": "official"
+    }
   ]
 }

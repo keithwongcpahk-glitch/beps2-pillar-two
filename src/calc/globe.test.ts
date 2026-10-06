@@ -23,7 +23,7 @@ const J = (r: ReturnType<typeof projectGlobe>, code: string) => r.jurisdictions.
 
 describe('GloBE params (sourced JSON)', () => {
   it('version and every parameter block carries an OECD source', () => {
-    expect(GLOBE_VERSION).toBe('oecd-asia-v0.3')
+    expect(GLOBE_VERSION).toBe('oecd-asia-v0.4')
     for (const k of ['minimumRate', 'revenueThresholdEur', 'sbie', 'transitionalCbcrSafeHarbour', 'deferredTax', 'ordering', 'investmentEntities'] as const) {
       expect(GLOBE_PARAMS[k].sourceUrl).toMatch(/^https:\/\/www\.oecd\.org\//)
       expect(GLOBE_PARAMS[k].verified).toBe(true)

@@ -2,7 +2,7 @@
   "packId": "hk.v1",
   "jurisdiction": "HK",
   "name": "Hong Kong SAR",
-  "packVersion": "1.0.0",
+  "packVersion": "1.1.0",
   "researchedAsOf": "2026-10-06",
   "legislation": {
     "value": "Inland Revenue (Amendment) (Minimum Tax for Multinational Enterprise Groups) Ordinance 2025 (Ord. No. 21 of 2025), adding Part 4AA and Schedules 61–64 to the Inland Revenue Ordinance (Cap. 112)",
@@ -138,6 +138,37 @@
     "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
     "verified": true
   },
+  "transitionalCbcrSafeHarbour": {
+    "appliesToIir": {
+      "applies": true,
+      "value": "Enacted. Under Sch. 61 Pt 3 Div. 2 s.4 IRO, the group's jurisdictional top-up tax under the GloBE rules (IIR/UTPR) is taken to be zero if a test is met in the transition period.",
+      "sourceUrl": "https://www.ird.gov.hk/eng/pdf/iro/gazette/ord_112_21_2025.pdf",
+      "verified": true
+    },
+    "appliesToDomestic": {
+      "applies": null,
+      "value": "Not expressly stated. The TCSH in Sch. 61 Pt 3 deems the top-up tax under the GloBE rules to be zero. Sch. 62 s.4 computes HKMTT by applying the GloBE rules (Chapter 2 excepted), and 'GloBE rules' is defined as Parts 1–2 of Sch. 61. Whether the Part 3 TCSH also zeroes HKMTT is not stated in the Ordinance or on the IRD page.",
+      "sourceUrl": "https://www.ird.gov.hk/eng/pdf/iro/gazette/ord_112_21_2025.pdf",
+      "verified": false,
+      "note": "The engine assumes the TCSH also applies to HKMTT (consistent with OECD guidance for QDMTTs) and flags this in the trail. Confirm against IRD guidance or the HKMTT return when published."
+    },
+    "enactedPeriod": {
+      "fyBeginsOnOrBefore": "2026-12-31",
+      "fyEndsOnOrBefore": "2028-06-30",
+      "value": "Transition period: all FYs beginning on or before 31 Dec 2026, excluding any FY ending after 30 Jun 2028 (Sch. 61 Pt 3 Div. 2 s.2(1)).",
+      "sourceUrl": "https://www.ird.gov.hk/eng/pdf/iro/gazette/ord_112_21_2025.pdf",
+      "verified": true
+    },
+    "extension": {
+      "status": "not-announced",
+      "fyBeginsOnOrBefore": "2027-12-31",
+      "fyEndsOnOrBefore": "2029-06-30",
+      "value": "OECD one-year extension (SbS Package, Jan 2026) not yet adopted in Hong Kong law. Schedules 61/64 can be amended by notice under s.26AG; no such notice or IRD announcement was found.",
+      "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "verified": false,
+      "note": "Absence of evidence as at 2026-10-06 (IRD GMT page and Ord. No. 21 of 2025 checked). Re-check the Gazette and the IRD page."
+    }
+  },
   "portal": {
     "value": "Pillar Two Portal Phase 1 (notifications) launched 19 Jan 2026. Phase 2 (top-up tax returns, e-assessments) stated for Q4 2026.",
     "sourceUrl": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
@@ -208,10 +239,30 @@
     }
   ],
   "sources": [
-    { "name": "IRD – Global minimum tax and HKMTT", "url": "https://www.ird.gov.hk/eng/tax/bus_beps.htm", "type": "official" },
-    { "name": "Gazette – Ord. No. 21 of 2025", "url": "https://www.ird.gov.hk/eng/pdf/iro/gazette/ord_112_21_2025.pdf", "type": "official" },
-    { "name": "IRD – Profits Tax", "url": "https://www.ird.gov.hk/eng/tax/bus_pft.htm", "type": "official" },
-    { "name": "OECD – Central Record (as at 1 May 2026)", "url": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf", "type": "official" },
-    { "name": "LegCo FA Panel – Consultation outcome (Oct 2024)", "url": "https://www.legco.gov.hk/yr2024/english/panels/fa/papers/facb1-1409-1-e.pdf", "type": "official" }
+    {
+      "name": "IRD – Global minimum tax and HKMTT",
+      "url": "https://www.ird.gov.hk/eng/tax/bus_beps.htm",
+      "type": "official"
+    },
+    {
+      "name": "Gazette – Ord. No. 21 of 2025",
+      "url": "https://www.ird.gov.hk/eng/pdf/iro/gazette/ord_112_21_2025.pdf",
+      "type": "official"
+    },
+    {
+      "name": "IRD – Profits Tax",
+      "url": "https://www.ird.gov.hk/eng/tax/bus_pft.htm",
+      "type": "official"
+    },
+    {
+      "name": "OECD – Central Record (as at 1 May 2026)",
+      "url": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf",
+      "type": "official"
+    },
+    {
+      "name": "LegCo FA Panel – Consultation outcome (Oct 2024)",
+      "url": "https://www.legco.gov.hk/yr2024/english/panels/fa/papers/facb1-1409-1-e.pdf",
+      "type": "official"
+    }
   ]
 }

@@ -1,8 +1,12 @@
 /**
  * Indicative filing calendar built from jurisdiction packs. Pure functions.
- * Limitations: assumes a 12-month fiscal year, does NOT roll weekends/public holidays,
- * and does not model group-specific exemptions (e.g. filing via UPE jurisdiction exchange).
+ * dueDate is the statutory date (months after FYE). adjustedDate rolls it forward under the
+ * jurisdiction's sourced computation-of-time rule (see businessDays.ts). Payments are computed from the
+ * statutory filing date, then rolled themselves.
+ * Limitations: assumes a 12-month fiscal year; holiday lists cover 2026–2027 only; gale / black rainstorm
+ * days (HK) are not modelled; group-specific exemptions are not modelled.
  */
+import { rollForward } from './businessDays'
 import type { FilingObligation, JurisdictionPack, PackCode } from './index'
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/
@@ -58,7 +62,14 @@ export interface CalendarRow {
   kind: 'filing' | 'payment'
   appliesTo: FilingObligation['appliesTo']
   applicable: boolean
+  /** Statutory due date (before any weekend / holiday roll). */
   dueDate: string | null
+  /** Due date after rolling forward under the local computation-of-time rule. */
+  adjustedDate: string | null
+  rolled: boolean
+  rollReasons: string[]
+  /** False when the official holiday list did not cover the dates checked (weekend rule only). */
+  holidaysChecked: boolean
   reason: string | null
   /** Human-readable basis copied from the pack. */
   basis: string
@@ -102,7 +113,7 @@ export function computeFilingCalendar(
     // Filings first so payments can reference them.
     const ordered = [...pack.filing].sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'filing' ? -1 : 1))
     for (const o of ordered) {
-      const base: Omit<CalendarRow, 'applicable' | 'dueDate' | 'reason' | 'floorApplied'> = {
+      const base: Omit<CalendarRow, 'applicable' | 'dueDate' | 'adjustedDate' | 'rolled' | 'rollReasons' | 'holidaysChecked' | 'reason' | 'floorApplied'> = {
         jurisdiction: pack.jurisdiction,
         obligationId: o.id,
         obligation: o.obligation,
@@ -117,7 +128,7 @@ export function computeFilingCalendar(
       let reason = ruleActive(pack, o, fyStart)
       if (!reason && o.firstYearOnly && !options.firstYear) reason = 'One-off: only for the first in-scope fiscal year'
       if (reason) {
-        rows.push({ ...base, applicable: false, dueDate: null, reason, floorApplied: false })
+        rows.push({ ...base, applicable: false, dueDate: null, adjustedDate: null, rolled: false, rollReasons: [], holidaysChecked: true, reason, floorApplied: false })
         continue
       }
       let date: string | null = null
@@ -134,10 +145,15 @@ export function computeFilingCalendar(
         floorApplied = true
       }
       if (date) due.set(o.id, date)
+      const roll = date ? rollForward(pack.jurisdiction, date) : null
       rows.push({
         ...base,
         applicable: date !== null,
         dueDate: date,
+        adjustedDate: roll ? roll.adjusted : null,
+        rolled: roll ? roll.rolled : false,
+        rollReasons: roll ? roll.reasons : [],
+        holidaysChecked: roll ? roll.holidaysChecked : true,
         reason: date ? null : 'Could not compute (related deadline not applicable)',
         floorApplied,
       })

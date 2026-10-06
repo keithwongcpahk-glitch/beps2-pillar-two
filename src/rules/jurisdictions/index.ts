@@ -55,6 +55,23 @@ export interface PackSource {
   type: 'official' | 'secondary'
 }
 
+export interface TcshPeriod {
+  fyBeginsOnOrBefore: string
+  fyEndsOnOrBefore: string
+}
+
+/** Local adoption of the OECD Transitional CbCR Safe Harbour (TCSH). */
+export interface PackTcsh {
+  /** Does the TCSH zero the jurisdiction's IIR (GloBE) top-up? */
+  appliesToIir: SourcedFact & { applies: boolean }
+  /** Does the TCSH zero the domestic top-up tax? null = not expressly stated (engine assumes yes and flags it). */
+  appliesToDomestic: SourcedFact & { applies: boolean | null }
+  /** Transition period as originally enacted locally. */
+  enactedPeriod: SourcedFact & TcshPeriod
+  /** OECD one-year extension (SbS Package, Jan 2026) and its local status. */
+  extension: SourcedFact & TcshPeriod & { status: 'enacted' | 'announced' | 'not-announced' }
+}
+
 export interface JurisdictionPack {
   packId: string
   jurisdiction: PackCode
@@ -70,6 +87,7 @@ export interface JurisdictionPack {
   filing: FilingObligation[]
   registration: SourcedFact[]
   safeHarbours: SourcedFact
+  transitionalCbcrSafeHarbour: PackTcsh
   portal: SourcedFact
   localFeatures: LocalFeature[]
   sources: PackSource[]
@@ -156,6 +174,11 @@ export function listFacts(pack: JurisdictionPack): FactRef[] {
   pack.filing.forEach((f) => push(`filing.${f.id}`, f))
   pack.registration.forEach((r, i) => push(`registration[${i}]`, r))
   push('safeHarbours', pack.safeHarbours)
+  const t = pack.transitionalCbcrSafeHarbour
+  push('transitionalCbcrSafeHarbour.appliesToIir', t.appliesToIir)
+  push('transitionalCbcrSafeHarbour.appliesToDomestic', t.appliesToDomestic)
+  push('transitionalCbcrSafeHarbour.enactedPeriod', t.enactedPeriod)
+  push('transitionalCbcrSafeHarbour.extension', t.extension)
   push('portal', pack.portal)
   pack.localFeatures.forEach((f) => push(`localFeatures.${f.title}`, f))
   return out
@@ -181,6 +204,12 @@ export function validatePack(pack: JurisdictionPack): string[] {
     if (r.status === 'in-force' && (!r.effectiveFrom || !ISO_DATE.test(r.effectiveFrom))) errors.push(`rules.${k}: in-force needs effectiveFrom`)
     if (r.status !== 'in-force' && r.effectiveFrom !== null) errors.push(`rules.${k}: only in-force rules carry effectiveFrom`)
   }
+  const t = pack.transitionalCbcrSafeHarbour
+  if (!t) errors.push('transitionalCbcrSafeHarbour missing')
+  else
+    for (const [k, per] of [['enactedPeriod', t.enactedPeriod], ['extension', t.extension]] as const) {
+      if (!ISO_DATE.test(per.fyBeginsOnOrBefore) || !ISO_DATE.test(per.fyEndsOnOrBefore)) errors.push(`transitionalCbcrSafeHarbour.${k}: dates must be YYYY-MM-DD`)
+    }
   const ids = new Set<string>()
   for (const f of pack.filing) {
     if (ids.has(f.id)) errors.push(`duplicate filing id ${f.id}`)
@@ -192,4 +221,21 @@ export function validatePack(pack: JurisdictionPack): string[] {
     if (f.relativeTo && !ids.has(f.relativeTo)) errors.push(`filing.${f.id}: unknown relativeTo ${f.relativeTo}`)
   }
   return errors
+}
+
+export type TcshBasis = 'enacted' | 'announced' | 'oecd'
+
+/**
+ * Local TCSH transition period for a pack under a given basis:
+ * - enacted: the extension counts only if enacted locally;
+ * - announced: also counts an officially announced (not yet enacted) extension;
+ * - oecd: callers should use the OECD period instead (returns null).
+ */
+export function localTcshPeriod(pack: JurisdictionPack, basis: TcshBasis): (TcshPeriod & { source: 'enacted' | 'extension-enacted' | 'extension-announced' }) | null {
+  if (basis === 'oecd') return null
+  const t = pack.transitionalCbcrSafeHarbour
+  const ext = t.extension
+  if (ext.status === 'enacted') return { fyBeginsOnOrBefore: ext.fyBeginsOnOrBefore, fyEndsOnOrBefore: ext.fyEndsOnOrBefore, source: 'extension-enacted' }
+  if (basis === 'announced' && ext.status === 'announced') return { fyBeginsOnOrBefore: ext.fyBeginsOnOrBefore, fyEndsOnOrBefore: ext.fyEndsOnOrBefore, source: 'extension-announced' }
+  return { fyBeginsOnOrBefore: t.enactedPeriod.fyBeginsOnOrBefore, fyEndsOnOrBefore: t.enactedPeriod.fyEndsOnOrBefore, source: 'enacted' }
 }

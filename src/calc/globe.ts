@@ -1,11 +1,13 @@
 /**
- * Entity-level GloBE engine (oecd-asia-v0.3). Pure functions only.
- * OECD parameters: src/rules/globe-params.v0.3.json. HK / SG / JP rule timing: jurisdiction packs.
+ * Entity-level GloBE engine (oecd-asia-v0.4). Pure functions only.
+ * OECD parameters: src/rules/globe-params.v0.4.json. HK / SG / JP rule timing and local TCSH adoption: jurisdiction packs.
  * Simplified projection: not tax advice, not a GIR, not a claim of full OECD / IRD / IRAS / NTA compliance.
  */
-import paramsJson from '../rules/globe-params.v0.3.json'
-import { getPack, ruleAppliesForFy } from '../rules/jurisdictions'
-import type { JurisdictionPack } from '../rules/jurisdictions'
+import paramsJson from '../rules/globe-params.v0.4.json'
+import { getPack, localTcshPeriod, ruleAppliesForFy } from '../rules/jurisdictions'
+import type { JurisdictionPack, TcshBasis } from '../rules/jurisdictions'
+
+export type { TcshBasis }
 
 export type GlobeParams = typeof paramsJson
 export const GLOBE_PARAMS: GlobeParams = paramsJson
@@ -46,6 +48,11 @@ export interface GroupInputV3 {
   /** First day of the fiscal year (YYYY-MM-DD). 12-month FY assumed. */
   fiscalYearStart: string
   applyTransitionalSafeHarbour: boolean
+  /**
+   * Which TCSH transition period to apply (v0.4). Default 'enacted': the collecting jurisdiction's enacted law.
+   * 'announced' also counts officially announced extensions; 'oecd' applies the OECD period everywhere.
+   */
+  tcshBasis?: TcshBasis
   entities: EntityInput[]
   cbcr: CbcrInput[]
 }
@@ -70,6 +77,24 @@ export interface SafeHarbourResult {
   simplifiedEtr: number | null
   tests: { deMinimis: TestOutcome; simplifiedEtr: TestOutcome; routineProfits: TestOutcome }
   passed: boolean
+  /** Whose rules decided availability, e.g. "Hong Kong law (HKMTT)" or "OECD terms". */
+  basisLabel: string
+  /** Transition period applied. */
+  period: { fyBeginsOnOrBefore: string; fyEndsOnOrBefore: string }
+  /** Assumption made because local law is silent (flagged in the UI). */
+  assumption: string | null
+  sourceUrl: string
+}
+
+export interface TcshLaw {
+  label: string
+  period: { fyBeginsOnOrBefore: string; fyEndsOnOrBefore: string }
+  /** Set when the collecting jurisdiction does not apply the TCSH at all. */
+  blocked: string | null
+  assumption: string | null
+  /** Extra context when the local period is shorter than the OECD one. */
+  periodNote: string | null
+  sourceUrl: string
 }
 
 export type Collector = 'QDMTT' | 'IIR' | 'UTPR residual' | 'None'
@@ -194,28 +219,87 @@ export function deferredTaxAdjustment(amount: number, bookedRate: number, minimu
   return amount * (minimumRate / bookedRate)
 }
 
+export function oecdTcshLaw(params: GlobeParams = GLOBE_PARAMS, label = 'OECD terms'): TcshLaw {
+  const p = params.transitionalCbcrSafeHarbour.transitionPeriod
+  return { label, period: { fyBeginsOnOrBefore: p.fyBeginsOnOrBefore, fyEndsOnOrBefore: p.fyEndsOnOrBefore }, blocked: null, assumption: null, periodNote: null, sourceUrl: params.transitionalCbcrSafeHarbour.sourceUrl }
+}
+
+/**
+ * Whose TCSH rules decide availability for a jurisdiction (v0.4):
+ * the domestic top-up tax law if one is in force, else the IIR parent's law, else OECD terms.
+ */
+export function resolveTcshLaw(
+  pack: JurisdictionPack | undefined,
+  qdmttInForce: boolean,
+  iirParentJurisdiction: string | null,
+  basis: TcshBasis,
+  params: GlobeParams = GLOBE_PARAMS,
+  iirParentName?: string,
+): TcshLaw {
+  if (basis === 'oecd') return oecdTcshLaw(params, 'OECD terms (basis: OECD for all jurisdictions)')
+  let lawPack: JurisdictionPack | undefined
+  let label = ''
+  let blocked: string | null = null
+  let assumption: string | null = null
+  let factUrl = ''
+  if (qdmttInForce && pack) {
+    lawPack = pack
+    const f = pack.transitionalCbcrSafeHarbour.appliesToDomestic
+    label = `${pack.name} law (${pack.domesticTopUpTax.shortName})`
+    factUrl = f.sourceUrl
+    if (f.applies === false) blocked = `${pack.name} does not apply the TCSH to ${pack.domesticTopUpTax.shortName}`
+    if (f.applies === null) assumption = `Assumed: ${pack.name} law does not expressly state that the TCSH also zeroes ${pack.domesticTopUpTax.shortName} (unverified)`
+  } else if (iirParentJurisdiction) {
+    lawPack = getPack(iirParentJurisdiction)
+    if (lawPack) {
+      const f = lawPack.transitionalCbcrSafeHarbour.appliesToIir
+      label = `${lawPack.name} law (IIR${iirParentName ? ` at ${iirParentName}` : ''})`
+      factUrl = f.sourceUrl
+      if (!f.applies) blocked = `${lawPack.name} does not apply the TCSH to its IIR`
+    }
+  }
+  if (!lawPack) return oecdTcshLaw(params, 'OECD terms (no modelled collecting jurisdiction)')
+  const per = localTcshPeriod(lawPack, basis) as NonNullable<ReturnType<typeof localTcshPeriod>>
+  const ext = lawPack.transitionalCbcrSafeHarbour.extension
+  let periodNote: string | null = null
+  if (per.source === 'enacted') {
+    periodNote = ext.status === 'announced'
+      ? `${lawPack.name} has announced, but not yet enacted, the OECD one-year extension (FYs beginning on or before ${ext.fyBeginsOnOrBefore}). Choose the "enacted + announced" basis to include it.`
+      : `The OECD one-year extension (FYs beginning on or before ${ext.fyBeginsOnOrBefore}) has not been adopted in ${lawPack.name} law (unverified absence of an announcement).`
+  } else if (per.source === 'extension-announced') {
+    periodNote = `Includes the extension ${lawPack.name} has announced but not yet enacted.`
+  }
+  const sourceUrl = per.source === 'enacted' ? lawPack.transitionalCbcrSafeHarbour.enactedPeriod.sourceUrl : ext.sourceUrl
+  return { label, period: { fyBeginsOnOrBefore: per.fyBeginsOnOrBefore, fyEndsOnOrBefore: per.fyEndsOnOrBefore }, blocked, assumption, periodNote, sourceUrl: sourceUrl || factUrl }
+}
+
 export function evaluateTcsh(
   cbcr: CbcrInput | undefined,
   sbie: number,
   fiscalYearStart: string,
   enabled: boolean,
   params: GlobeParams = GLOBE_PARAMS,
+  law: TcshLaw = oecdTcshLaw(params),
 ): SafeHarbourResult {
   const none: SafeHarbourResult['tests'] = { deMinimis: 'n/a', simplifiedEtr: 'n/a', routineProfits: 'n/a' }
   const rate = tcshTransitionRate(fiscalYearStart, params)
-  if (!enabled) return { available: false, reason: 'Transitional CbCR safe harbour not applied (switched off)', hasCbcrData: !!cbcr, transitionRate: rate, simplifiedEtr: null, tests: none, passed: false }
-  if (!inTcshTransitionPeriod(fiscalYearStart, params)) {
-    const p = params.transitionalCbcrSafeHarbour.transitionPeriod
-    return { available: false, reason: `Outside the Transition Period (FYs beginning on or before ${p.fyBeginsOnOrBefore} and ending on or before ${p.fyEndsOnOrBefore})`, hasCbcrData: !!cbcr, transitionRate: rate, simplifiedEtr: null, tests: none, passed: false }
+  const base = { hasCbcrData: !!cbcr, transitionRate: rate, simplifiedEtr: null, tests: none, passed: false, basisLabel: law.label, period: law.period, assumption: law.assumption, sourceUrl: law.sourceUrl }
+  if (!enabled) return { ...base, available: false, reason: 'Transitional CbCR safe harbour not applied (switched off)' }
+  if (law.blocked) return { ...base, available: false, reason: law.blocked }
+  const fyEnd = fiscalYearEndFromStart(fiscalYearStart)
+  const inPeriod = fiscalYearStart <= law.period.fyBeginsOnOrBefore && fyEnd <= law.period.fyEndsOnOrBefore && inTcshTransitionPeriod(fiscalYearStart, params)
+  if (!inPeriod) {
+    const why = `Outside the transition period under ${law.label} (FYs beginning on or before ${law.period.fyBeginsOnOrBefore} and ending on or before ${law.period.fyEndsOnOrBefore})`
+    return { ...base, available: false, reason: law.periodNote ? `${why}. ${law.periodNote}` : why }
   }
-  if (!cbcr) return { available: false, reason: 'No CbCR data entered for this jurisdiction', hasCbcrData: false, transitionRate: rate, simplifiedEtr: null, tests: none, passed: false }
+  if (!cbcr) return { ...base, available: false, reason: 'No CbCR data entered for this jurisdiction' }
   const dm = params.transitionalCbcrSafeHarbour.deMinimis
   const deMinimis: TestOutcome = cbcr.revenue < dm.revenueBelowEur && cbcr.profitBeforeTax < dm.profitBeforeTaxBelowEur ? 'pass' : 'fail'
   const simplifiedEtrValue = cbcr.profitBeforeTax > 0 ? cbcr.simplifiedCoveredTaxes / cbcr.profitBeforeTax : null
   const simplifiedEtr: TestOutcome = simplifiedEtrValue === null ? 'n/a' : simplifiedEtrValue >= (rate as number) ? 'pass' : 'fail'
   const routineProfits: TestOutcome = cbcr.profitBeforeTax <= sbie ? 'pass' : 'fail'
   const tests = { deMinimis, simplifiedEtr, routineProfits }
-  return { available: true, reason: null, hasCbcrData: true, transitionRate: rate, simplifiedEtr: simplifiedEtrValue, tests, passed: Object.values(tests).includes('pass') }
+  return { ...base, available: true, reason: null, simplifiedEtr: simplifiedEtrValue, tests, passed: Object.values(tests).includes('pass') }
 }
 
 function qdmttStatus(pack: JurisdictionPack | undefined, fiscalYearStart: string): { inForce: boolean; safeHarbour: boolean; label: string | null } {
@@ -295,15 +379,19 @@ export function projectGlobe(group: GroupInputV3, params: GlobeParams = GLOBE_PA
     trail.push({ step: 'Jurisdictional top-up', formula: 'Top-up % × Excess profit', value: num(topUpBeforeSafeHarbour), sourceRef: 'Art. 5.2.3 (excl. Additional Current Top-up Tax)', sourceUrl: R('ordering') })
 
     const cb = group.cbcr.find((c) => c.jurisdiction === code)
-    const sh = evaluateTcsh(cb, sbie, fyStart, group.applyTransitionalSafeHarbour, params)
+    const q = qdmttStatus(pack, fyStart)
+    const parentJur = iirParent && iirParent.jurisdiction !== code ? iirParent.jurisdiction : null
+    const law = resolveTcshLaw(pack, q.inForce, parentJur, group.tcshBasis ?? 'enacted', params, iirParent?.name)
+    const sh = evaluateTcsh(cb, sbie, fyStart, group.applyTransitionalSafeHarbour, params, law)
     const shText = sh.available
-      ? `de minimis ${sh.tests.deMinimis}, simplified ETR ${pct(sh.simplifiedEtr)} vs ${pct(sh.transitionRate, 0)} ${sh.tests.simplifiedEtr}, routine profits ${sh.tests.routineProfits}`
+      ? `de minimis ${sh.tests.deMinimis}, simplified ETR ${pct(sh.simplifiedEtr)} vs ${pct(sh.transitionRate, 0)} ${sh.tests.simplifiedEtr}, routine profits ${sh.tests.routineProfits}. Basis: ${sh.basisLabel}, FY beginning ≤ ${sh.period.fyBeginsOnOrBefore} and ending ≤ ${sh.period.fyEndsOnOrBefore}`
       : (sh.reason as string)
     trail.push({ step: 'Transitional CbCR safe harbour', formula: shText, value: sh.passed ? 'Passed: top-up deemed zero' : 'Not passed', sourceRef: 'Safe Harbours (Dec 2022) box 1.1; SbS Package ch. 3', sourceUrl: R('tcsh') })
+    if (sh.basisLabel && !sh.basisLabel.startsWith('OECD')) trail.push({ step: 'TCSH local adoption', formula: `${sh.basisLabel}: transition period FY beginning ≤ ${sh.period.fyBeginsOnOrBefore}, ending ≤ ${sh.period.fyEndsOnOrBefore}${law.periodNote && !sh.available ? `. ${law.periodNote}` : ''}`, value: law.blocked ? 'Not available' : 'Applied', sourceRef: 'Rule pack: transitionalCbcrSafeHarbour', sourceUrl: sh.sourceUrl })
+    if (sh.assumption && group.applyTransitionalSafeHarbour) notes.push(sh.assumption)
     const topUp = sh.passed ? 0 : topUpBeforeSafeHarbour
 
     // 1) Domestic top-up tax
-    const q = qdmttStatus(pack, fyStart)
     let domestic = 0
     let residual = topUp
     if (q.inForce && topUp > 0) {

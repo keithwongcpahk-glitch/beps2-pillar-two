@@ -1,0 +1,474 @@
+{
+ "version": "holidays.v1",
+ "researchedAsOf": "2026-10-06",
+ "coveredYears": [
+  2026,
+  2027
+ ],
+ "note": "Due dates are rolled forward only where the jurisdiction's general computation-of-time rule says so. Holiday lists cover 2026 and 2027 only, taken from official government sources. Dates outside the covered years are rolled for weekly rest days and statutory fixed dates only, and are flagged.",
+ "jurisdictions": {
+  "HK": {
+   "rule": {
+    "value": "Interpretation and General Clauses Ordinance (Cap. 1) s.71(1)(b)/(c): if the last day of a period, or the day on which an act is to be done, is a public holiday (or a gale warning / black rainstorm warning day), it moves to the next day that is not. 'Public holiday' means a general holiday under the General Holidays Ordinance (Cap. 149), which includes every Sunday. Saturdays are not excluded.",
+    "sourceUrl": "https://www.elegislation.gov.hk/hk/cap1!en?xpid=ID_1438402527839_002",
+    "verified": true,
+    "note": "Gale and black rainstorm warning days cannot be known in advance and are not modelled."
+   },
+   "weeklyRestDays": [
+    0
+   ],
+   "fixedMonthDays": [],
+   "holidaySources": [
+    {
+     "name": "GovHK: General holidays for 2026",
+     "url": "https://www.gov.hk/en/about/abouthk/holiday/2026.htm"
+    },
+    {
+     "name": "GovHK: General holidays for 2027",
+     "url": "https://www.gov.hk/en/about/abouthk/holiday/2027.htm"
+    },
+    {
+     "name": "1823 (HKSARG) Hong Kong public holidays data",
+     "url": "https://www.1823.gov.hk/common/ical/en.json"
+    }
+   ],
+   "holidays": [
+    {
+     "date": "2026-01-01",
+     "name": "The first day of January"
+    },
+    {
+     "date": "2026-02-17",
+     "name": "Lunar New Year's Day"
+    },
+    {
+     "date": "2026-02-18",
+     "name": "The second day of Lunar New Year"
+    },
+    {
+     "date": "2026-02-19",
+     "name": "The third day of Lunar New Year"
+    },
+    {
+     "date": "2026-04-03",
+     "name": "Good Friday"
+    },
+    {
+     "date": "2026-04-04",
+     "name": "The day following Good Friday"
+    },
+    {
+     "date": "2026-04-06",
+     "name": "The day following Ching Ming Festival"
+    },
+    {
+     "date": "2026-04-07",
+     "name": "The day following Easter Monday"
+    },
+    {
+     "date": "2026-05-01",
+     "name": "Labour Day"
+    },
+    {
+     "date": "2026-05-25",
+     "name": "The day following the Birthday of the Buddha"
+    },
+    {
+     "date": "2026-06-19",
+     "name": "Tuen Ng Festival"
+    },
+    {
+     "date": "2026-07-01",
+     "name": "Hong Kong Special Administrative Region Establishment Day"
+    },
+    {
+     "date": "2026-09-26",
+     "name": "The day following the Chinese Mid-Autumn Festival"
+    },
+    {
+     "date": "2026-10-01",
+     "name": "National Day"
+    },
+    {
+     "date": "2026-10-19",
+     "name": "The day following Chung Yeung Festival"
+    },
+    {
+     "date": "2026-12-25",
+     "name": "Christmas Day"
+    },
+    {
+     "date": "2026-12-26",
+     "name": "The first weekday after Christmas Day"
+    },
+    {
+     "date": "2027-01-01",
+     "name": "The first day of January"
+    },
+    {
+     "date": "2027-02-06",
+     "name": "Lunar New Year's Day"
+    },
+    {
+     "date": "2027-02-08",
+     "name": "The third day of Lunar New Year"
+    },
+    {
+     "date": "2027-02-09",
+     "name": "The fourth day of Lunar New Year"
+    },
+    {
+     "date": "2027-03-26",
+     "name": "Good Friday"
+    },
+    {
+     "date": "2027-03-27",
+     "name": "The day following Good Friday"
+    },
+    {
+     "date": "2027-03-29",
+     "name": "Easter Monday"
+    },
+    {
+     "date": "2027-04-05",
+     "name": "Ching Ming Festival"
+    },
+    {
+     "date": "2027-05-01",
+     "name": "Labour Day"
+    },
+    {
+     "date": "2027-05-13",
+     "name": "The Birthday of the Buddha"
+    },
+    {
+     "date": "2027-06-09",
+     "name": "Tuen Ng Festival"
+    },
+    {
+     "date": "2027-07-01",
+     "name": "Hong Kong Special Administrative Region Establishment Day"
+    },
+    {
+     "date": "2027-09-16",
+     "name": "The day following the Chinese Mid-Autumn Festival"
+    },
+    {
+     "date": "2027-10-01",
+     "name": "National Day"
+    },
+    {
+     "date": "2027-10-08",
+     "name": "Chung Yeung Festival"
+    },
+    {
+     "date": "2027-12-25",
+     "name": "Christmas Day"
+    },
+    {
+     "date": "2027-12-27",
+     "name": "The first weekday after Christmas Day"
+    }
+   ]
+  },
+  "SG": {
+   "rule": {
+    "value": "Interpretation Act 1965 s.50(b)/(c): if the last day of a period, or the day on which an act is to be done, is a Sunday or a public holiday ('excluded days'), it moves to the next day that is not an excluded day. Saturdays are not excluded. Under Holidays Act 1998 s.4(2), when a scheduled public holiday falls on a Sunday, the next day is a public holiday.",
+    "sourceUrl": "https://sso.agc.gov.sg/Act/IA1965?ProvIds=pr50-",
+    "verified": true
+   },
+   "weeklyRestDays": [
+    0
+   ],
+   "fixedMonthDays": [],
+   "holidaySources": [
+    {
+     "name": "Ministry of Manpower: Public holidays (2025, 2026 and 2027), last updated 19 Jun 2026",
+     "url": "https://www.mom.gov.sg/employment-practices/public-holidays"
+    },
+    {
+     "name": "Holidays Act 1998 s.4(2) (next-day rule)",
+     "url": "https://sso.agc.gov.sg/Act/HA1998"
+    }
+   ],
+   "holidays": [
+    {
+     "date": "2026-01-01",
+     "name": "New Year's Day"
+    },
+    {
+     "date": "2026-02-17",
+     "name": "Chinese New Year"
+    },
+    {
+     "date": "2026-02-18",
+     "name": "Chinese New Year"
+    },
+    {
+     "date": "2026-03-21",
+     "name": "Hari Raya Puasa"
+    },
+    {
+     "date": "2026-04-03",
+     "name": "Good Friday"
+    },
+    {
+     "date": "2026-05-01",
+     "name": "Labour Day"
+    },
+    {
+     "date": "2026-05-27",
+     "name": "Hari Raya Haji"
+    },
+    {
+     "date": "2026-05-31",
+     "name": "Vesak Day"
+    },
+    {
+     "date": "2026-06-01",
+     "name": "Vesak Day (next day; Holidays Act s.4(2))"
+    },
+    {
+     "date": "2026-08-09",
+     "name": "National Day"
+    },
+    {
+     "date": "2026-08-10",
+     "name": "National Day (next day; Holidays Act s.4(2))"
+    },
+    {
+     "date": "2026-11-08",
+     "name": "Deepavali"
+    },
+    {
+     "date": "2026-11-09",
+     "name": "Deepavali (next day; Holidays Act s.4(2))"
+    },
+    {
+     "date": "2026-12-25",
+     "name": "Christmas Day"
+    },
+    {
+     "date": "2027-01-01",
+     "name": "New Year's Day"
+    },
+    {
+     "date": "2027-02-06",
+     "name": "Chinese New Year"
+    },
+    {
+     "date": "2027-02-07",
+     "name": "Chinese New Year"
+    },
+    {
+     "date": "2027-02-08",
+     "name": "Chinese New Year (next day; Holidays Act s.4(2))"
+    },
+    {
+     "date": "2027-03-10",
+     "name": "Hari Raya Puasa"
+    },
+    {
+     "date": "2027-03-26",
+     "name": "Good Friday"
+    },
+    {
+     "date": "2027-05-01",
+     "name": "Labour Day"
+    },
+    {
+     "date": "2027-05-17",
+     "name": "Hari Raya Haji"
+    },
+    {
+     "date": "2027-05-20",
+     "name": "Vesak Day"
+    },
+    {
+     "date": "2027-08-09",
+     "name": "National Day"
+    },
+    {
+     "date": "2027-10-28",
+     "name": "Deepavali"
+    },
+    {
+     "date": "2027-12-25",
+     "name": "Christmas Day"
+    }
+   ]
+  },
+  "JP": {
+   "rule": {
+    "value": "National Tax General Act (国税通則法) Art. 10(2) and Order Art. 2(2): if a filing or payment deadline falls on a Sunday, a national holiday, another general holiday (1 and 2–3 January per NTA circular 10-4), a Saturday or 29–31 December, the deadline is the next day.",
+    "sourceUrl": "https://laws.e-gov.go.jp/law/337AC0000000066",
+    "verified": true,
+    "note": "Order text: https://laws.e-gov.go.jp/law/337CO0000000135 ; NTA basic circular on Art. 10: https://www.nta.go.jp/law/tsutatsu/kihon/tsusoku/01/03/10.htm"
+   },
+   "weeklyRestDays": [
+    0,
+    6
+   ],
+   "fixedMonthDays": [
+    "01-01",
+    "01-02",
+    "01-03",
+    "12-29",
+    "12-30",
+    "12-31"
+   ],
+   "holidaySources": [
+    {
+     "name": "Cabinet Office: National holidays (国民の祝日) CSV",
+     "url": "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"
+    },
+    {
+     "name": "Cabinet Office: National holidays page",
+     "url": "https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html"
+    }
+   ],
+   "holidays": [
+    {
+     "date": "2026-01-01",
+     "name": "元日"
+    },
+    {
+     "date": "2026-01-12",
+     "name": "成人の日"
+    },
+    {
+     "date": "2026-02-11",
+     "name": "建国記念の日"
+    },
+    {
+     "date": "2026-02-23",
+     "name": "天皇誕生日"
+    },
+    {
+     "date": "2026-03-20",
+     "name": "春分の日"
+    },
+    {
+     "date": "2026-04-29",
+     "name": "昭和の日"
+    },
+    {
+     "date": "2026-05-03",
+     "name": "憲法記念日"
+    },
+    {
+     "date": "2026-05-04",
+     "name": "みどりの日"
+    },
+    {
+     "date": "2026-05-05",
+     "name": "こどもの日"
+    },
+    {
+     "date": "2026-05-06",
+     "name": "休日"
+    },
+    {
+     "date": "2026-07-20",
+     "name": "海の日"
+    },
+    {
+     "date": "2026-08-11",
+     "name": "山の日"
+    },
+    {
+     "date": "2026-09-21",
+     "name": "敬老の日"
+    },
+    {
+     "date": "2026-09-22",
+     "name": "休日"
+    },
+    {
+     "date": "2026-09-23",
+     "name": "秋分の日"
+    },
+    {
+     "date": "2026-10-12",
+     "name": "スポーツの日"
+    },
+    {
+     "date": "2026-11-03",
+     "name": "文化の日"
+    },
+    {
+     "date": "2026-11-23",
+     "name": "勤労感謝の日"
+    },
+    {
+     "date": "2027-01-01",
+     "name": "元日"
+    },
+    {
+     "date": "2027-01-11",
+     "name": "成人の日"
+    },
+    {
+     "date": "2027-02-11",
+     "name": "建国記念の日"
+    },
+    {
+     "date": "2027-02-23",
+     "name": "天皇誕生日"
+    },
+    {
+     "date": "2027-03-21",
+     "name": "春分の日"
+    },
+    {
+     "date": "2027-03-22",
+     "name": "休日"
+    },
+    {
+     "date": "2027-04-29",
+     "name": "昭和の日"
+    },
+    {
+     "date": "2027-05-03",
+     "name": "憲法記念日"
+    },
+    {
+     "date": "2027-05-04",
+     "name": "みどりの日"
+    },
+    {
+     "date": "2027-05-05",
+     "name": "こどもの日"
+    },
+    {
+     "date": "2027-07-19",
+     "name": "海の日"
+    },
+    {
+     "date": "2027-08-11",
+     "name": "山の日"
+    },
+    {
+     "date": "2027-09-20",
+     "name": "敬老の日"
+    },
+    {
+     "date": "2027-09-23",
+     "name": "秋分の日"
+    },
+    {
+     "date": "2027-10-11",
+     "name": "スポーツの日"
+    },
+    {
+     "date": "2027-11-03",
+     "name": "文化の日"
+    },
+    {
+     "date": "2027-11-23",
+     "name": "勤労感謝の日"
+    }
+   ]
+  }
+ }
+}

@@ -76,11 +76,12 @@ export function calendarCsvRows(cal: FilingCalendar): Cell[][] {
     ['Pillar Two Asia – indicative filing calendar'],
     ['Fiscal year', `${cal.fiscalYearStart} to ${cal.fiscalYearEnd}`],
     ['First in-scope year', cal.firstYear ? 'yes' : 'no'],
-    ['Note', 'Indicative only. 12-month FY assumed; weekend/holiday roll-forward not applied. Check each date against the source.'],
+    ['Note', 'Indicative only. 12-month FY assumed. Adjusted due date rolls weekends/public holidays forward under each jurisdiction\'s computation-of-time rule; official holiday lists cover 2026–2027 only. Check each date against the source.'],
     ['Disclaimer', DISCLAIMER_ROW],
     [],
-    ['Due date', 'Jurisdiction', 'Obligation', 'Who', 'Kind', 'Applicable', 'Reason if not applicable', 'Earliest only', 'Floor applied', 'Basis', 'Source URL', 'Verified'],
+    ['Statutory due date', 'Adjusted due date', 'Rolled because', 'Holiday list checked', 'Jurisdiction', 'Obligation', 'Who', 'Kind', 'Applicable', 'Reason if not applicable', 'Earliest only', 'Floor applied', 'Basis', 'Source URL', 'Verified'],
   ]
-  for (const r of cal.rows) rows.push([r.dueDate, r.jurisdiction, r.obligation, r.who, r.kind, r.applicable ? 'yes' : 'no', r.reason, r.earliestOnly ? 'yes' : 'no', r.floorApplied ? 'yes' : 'no', r.basis, r.sourceUrl, r.verified ? 'yes' : 'no'])
+  for (const r of cal.rows)
+    rows.push([r.dueDate, r.adjustedDate, r.rollReasons.join('; ') || null, r.dueDate ? (r.holidaysChecked ? 'yes' : 'no (weekend rule only)') : null, r.jurisdiction, r.obligation, r.who, r.kind, r.applicable ? 'yes' : 'no', r.reason, r.earliestOnly ? 'yes' : 'no', r.floorApplied ? 'yes' : 'no', r.basis, r.sourceUrl, r.verified ? 'yes' : 'no'])
   return rows
 }

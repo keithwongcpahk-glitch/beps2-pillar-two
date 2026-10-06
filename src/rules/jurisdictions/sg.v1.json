@@ -2,7 +2,7 @@
   "packId": "sg.v1",
   "jurisdiction": "SG",
   "name": "Singapore",
-  "packVersion": "1.0.0",
+  "packVersion": "1.1.0",
   "researchedAsOf": "2026-10-06",
   "legislation": {
     "value": "Multinational Enterprise (Minimum Tax) Act 2024 ('MMT Act'), with the Multinational Enterprise (Minimum Tax) Regulations 2024 and related regulations",
@@ -170,6 +170,36 @@
     "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/global-anti-base-erosion-(globe)-rules-and-domestic-top-up-tax-(dtt)",
     "verified": true
   },
+  "transitionalCbcrSafeHarbour": {
+    "appliesToIir": {
+      "applies": true,
+      "value": "Enacted. The TCSH applies to both MTT (Singapore's IIR) and DTT (Div. 2 of Part 9, reg. 70, MMT Regulations).",
+      "sourceUrl": "https://www.iras.gov.sg/docs/default-source/uploadedfiles/pdf/module-6-safe-harbours.pdf?sfvrsn=be5da8ef_4",
+      "verified": true
+    },
+    "appliesToDomestic": {
+      "applies": true,
+      "value": "Enacted. The TCSH applies to both MTT and DTT. IRAS e-learning Module 6 (2nd ed., June 2026): 'Applies to: Both the MTT and DTT.'",
+      "sourceUrl": "https://www.iras.gov.sg/docs/default-source/uploadedfiles/pdf/module-6-safe-harbours.pdf?sfvrsn=be5da8ef_4",
+      "verified": true
+    },
+    "enactedPeriod": {
+      "fyBeginsOnOrBefore": "2026-12-31",
+      "fyEndsOnOrBefore": "2028-06-30",
+      "value": "FYs beginning on or before 31 Dec 2026 which end on or before 30 Jun 2028 (reg. 70 MMT Regulations, per IRAS Module 6, June 2026).",
+      "sourceUrl": "https://www.iras.gov.sg/docs/default-source/uploadedfiles/pdf/module-6-safe-harbours.pdf?sfvrsn=be5da8ef_4",
+      "verified": true
+    },
+    "extension": {
+      "status": "announced",
+      "fyBeginsOnOrBefore": "2027-12-31",
+      "fyEndsOnOrBefore": "2029-06-30",
+      "value": "Announced by IRAS: the MMT Act and Regulations will be amended by end-2026, subject to Parliament's approval, to extend the TCSH to FYs beginning on or before 31 Dec 2027 (excluding FYs ending after 30 Jun 2029). Not yet enacted.",
+      "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/global-anti-base-erosion-(globe)-rules-and-domestic-top-up-tax-(dtt)",
+      "verified": true,
+      "note": "The Finance (Income Taxes) Bill (Bill 22/2026, first reading 8 Sep 2026) amends the MMT Act for the SbS Safe Harbour and GIR exchange. The TCSH extension is expected in amending Regulations."
+    }
+  },
   "portal": {
     "value": "myTax Portal (Group ID for DTT/GIR; UEN of responsible member for MTT)",
     "sourceUrl": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/registration-for-multinational-enterprise-top-up-tax-and-domestic-top-up-tax",
@@ -209,13 +239,50 @@
     }
   ],
   "sources": [
-    { "name": "IRAS – Registration for MTT and DTT", "url": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/registration-for-multinational-enterprise-top-up-tax-and-domestic-top-up-tax", "type": "official" },
-    { "name": "IRAS – GloBE Rules and DTT", "url": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/global-anti-base-erosion-(globe)-rules-and-domestic-top-up-tax-(dtt)", "type": "official" },
-    { "name": "IRAS – Module 9: GloBE and DTT compliance obligations (May 2026)", "url": "https://www.iras.gov.sg/docs/default-source/uploadedfiles/pdf/module-9---globe-and-dtt-related-compliance-obligations.pdf", "type": "official" },
-    { "name": "IRAS – Corporate Income Tax Rates", "url": "https://www.iras.gov.sg/quick-links/tax-rates/corporate-income-tax-rates", "type": "official" },
-    { "name": "IRAS – Refundable Investment Credit", "url": "https://www.iras.gov.sg/schemes/disbursement-schemes/refundable-investment-credit-(ric)", "type": "official" },
-    { "name": "SSO – Finance (Income Taxes) Bill 2026", "url": "https://sso.agc.gov.sg/Bills-Supp/22-2026/Published/20260908?DocDate=20260908", "type": "official" },
-    { "name": "OECD – Central Record (as at 1 May 2026)", "url": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf", "type": "official" },
-    { "name": "Allen & Gledhill – MMT Bill passed (Oct 2024)", "url": "https://www.allenandgledhill.com/sg/publication/articles/29231/multinational-enterprise-minimum-tax-bill-passed-to-implement-two-new-top-up-taxes-under-beps-20", "type": "secondary" }
+    {
+      "name": "IRAS – Registration for MTT and DTT",
+      "url": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/registration-for-multinational-enterprise-top-up-tax-and-domestic-top-up-tax",
+      "type": "official"
+    },
+    {
+      "name": "IRAS – GloBE Rules and DTT",
+      "url": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/global-anti-base-erosion-(globe)-rules-and-domestic-top-up-tax-(dtt)",
+      "type": "official"
+    },
+    {
+      "name": "IRAS – Module 9: GloBE and DTT compliance obligations (May 2026)",
+      "url": "https://www.iras.gov.sg/docs/default-source/uploadedfiles/pdf/module-9---globe-and-dtt-related-compliance-obligations.pdf",
+      "type": "official"
+    },
+    {
+      "name": "IRAS – Corporate Income Tax Rates",
+      "url": "https://www.iras.gov.sg/quick-links/tax-rates/corporate-income-tax-rates",
+      "type": "official"
+    },
+    {
+      "name": "IRAS – Refundable Investment Credit",
+      "url": "https://www.iras.gov.sg/schemes/disbursement-schemes/refundable-investment-credit-(ric)",
+      "type": "official"
+    },
+    {
+      "name": "SSO – Finance (Income Taxes) Bill 2026",
+      "url": "https://sso.agc.gov.sg/Bills-Supp/22-2026/Published/20260908?DocDate=20260908",
+      "type": "official"
+    },
+    {
+      "name": "OECD – Central Record (as at 1 May 2026)",
+      "url": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf",
+      "type": "official"
+    },
+    {
+      "name": "Allen & Gledhill – MMT Bill passed (Oct 2024)",
+      "url": "https://www.allenandgledhill.com/sg/publication/articles/29231/multinational-enterprise-minimum-tax-bill-passed-to-implement-two-new-top-up-taxes-under-beps-20",
+      "type": "secondary"
+    },
+    {
+      "name": "IRAS e-learning Module 6: Safe Harbours (2nd ed., June 2026)",
+      "url": "https://www.iras.gov.sg/docs/default-source/uploadedfiles/pdf/module-6-safe-harbours.pdf?sfvrsn=be5da8ef_4",
+      "type": "official"
+    }
   ]
 }

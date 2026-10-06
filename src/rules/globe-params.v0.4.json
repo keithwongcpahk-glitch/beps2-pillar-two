@@ -1,0 +1,148 @@
+{
+  "version": "oecd-asia-v0.4",
+  "description": "OECD GloBE parameters for the entity-level engine (SBIE, transitional CbCR safe harbour, deferred tax recast, ordering). HK / SG / JP rule timing comes from src/rules/jurisdictions/*.v1.json.",
+  "researchedAsOf": "2026-10-06",
+  "minimumRate": {
+    "value": 0.15,
+    "ref": "Model Rules Art. 10.1 (Minimum Rate means fifteen percent)",
+    "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2021/12/tax-challenges-arising-from-digitalisation-of-the-economy-global-anti-base-erosion-model-rules-pillar-two_eed81a23/782bac33-en.pdf",
+    "verified": true
+  },
+  "revenueThresholdEur": {
+    "value": 750000000,
+    "ref": "Model Rules Art. 1.1.1 (annual revenue of EUR 750 million or more in at least two of the four preceding Fiscal Years)",
+    "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2021/12/tax-challenges-arising-from-digitalisation-of-the-economy-global-anti-base-erosion-model-rules-pillar-two_eed81a23/782bac33-en.pdf",
+    "verified": true,
+    "note": "The engine applies the threshold to a single consolidated revenue input; the two-of-four-years test is not modelled."
+  },
+  "sbie": {
+    "ref": "Model Rules Art. 5.3.3 (payroll 5%), Art. 5.3.4 (tangible assets 5%), Art. 9.2 (transitional rates by calendar year in which the Fiscal Year begins)",
+    "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2021/12/tax-challenges-arising-from-digitalisation-of-the-economy-global-anti-base-erosion-model-rules-pillar-two_eed81a23/782bac33-en.pdf",
+    "verified": true,
+    "permanentPayrollRate": 0.05,
+    "permanentTangibleRate": 0.05,
+    "transitionRates": [
+      {
+        "fyBeginsIn": 2023,
+        "payroll": 0.1,
+        "tangible": 0.08
+      },
+      {
+        "fyBeginsIn": 2024,
+        "payroll": 0.098,
+        "tangible": 0.078
+      },
+      {
+        "fyBeginsIn": 2025,
+        "payroll": 0.096,
+        "tangible": 0.076
+      },
+      {
+        "fyBeginsIn": 2026,
+        "payroll": 0.094,
+        "tangible": 0.074
+      },
+      {
+        "fyBeginsIn": 2027,
+        "payroll": 0.092,
+        "tangible": 0.072
+      },
+      {
+        "fyBeginsIn": 2028,
+        "payroll": 0.09,
+        "tangible": 0.07
+      },
+      {
+        "fyBeginsIn": 2029,
+        "payroll": 0.082,
+        "tangible": 0.066
+      },
+      {
+        "fyBeginsIn": 2030,
+        "payroll": 0.074,
+        "tangible": 0.062
+      },
+      {
+        "fyBeginsIn": 2031,
+        "payroll": 0.066,
+        "tangible": 0.058
+      },
+      {
+        "fyBeginsIn": 2032,
+        "payroll": 0.058,
+        "tangible": 0.054
+      }
+    ],
+    "excludesInvestmentEntities": true
+  },
+  "transitionalCbcrSafeHarbour": {
+    "ref": "OECD Safe Harbours and Penalty Relief (Dec 2022), box 1.1 paras 1–2 and para 30; extended by the Side-by-Side Package (Jan 2026), Chapter 3",
+    "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/safe-harbours-and-penalty-relief-global-anti-base-erosion-rules-pillar-two.pdf",
+    "extensionSourceUrl": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/side-by-side-package.pdf",
+    "verified": true,
+    "deMinimis": {
+      "revenueBelowEur": 10000000,
+      "profitBeforeTaxBelowEur": 1000000
+    },
+    "transitionPeriod": {
+      "fyBeginsOnOrBefore": "2027-12-31",
+      "fyEndsOnOrBefore": "2029-06-30",
+      "note": "Originally FYs beginning on or before 31 Dec 2026 and not ending after 30 Jun 2028 (Dec 2022). Extended by one year by the Side-by-Side Package (approved 5 Jan 2026)."
+    },
+    "transitionRates": [
+      {
+        "fyBeginsIn": 2023,
+        "rate": 0.15
+      },
+      {
+        "fyBeginsIn": 2024,
+        "rate": 0.15
+      },
+      {
+        "fyBeginsIn": 2025,
+        "rate": 0.16
+      },
+      {
+        "fyBeginsIn": 2026,
+        "rate": 0.17
+      },
+      {
+        "fyBeginsIn": 2027,
+        "rate": 0.17
+      }
+    ],
+    "lossPassesRoutineProfits": true,
+    "localAdoptionNote": "The OECD terms (tests, rates and the extended transition period) are the reference. From v0.4 the engine also applies each collecting jurisdiction's local transition period from its rule pack (transitionalCbcrSafeHarbour block), on the basis the user selects: enacted law (default), enacted plus officially announced, or OECD terms for all."
+  },
+  "deferredTax": {
+    "ref": "Model Rules Art. 4.4.1 (deferred tax expense recast at the Minimum Rate where the applicable rate exceeds it)",
+    "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2021/12/tax-challenges-arising-from-digitalisation-of-the-economy-global-anti-base-erosion-model-rules-pillar-two_eed81a23/782bac33-en.pdf",
+    "verified": true,
+    "simplification": "One deferred tax expense amount per entity plus the rate it was booked at. Adjustment = amount × min(1, 15% / rate). Exclusions, recapture (Art. 4.4.4) and DTA/loss elections are not modelled."
+  },
+  "ordering": {
+    "verified": true,
+    "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2021/12/tax-challenges-arising-from-digitalisation-of-the-economy-global-anti-base-erosion-model-rules-pillar-two_eed81a23/782bac33-en.pdf",
+    "steps": [
+      {
+        "id": "qdmtt",
+        "ref": "Art. 5.2.3 (Jurisdictional Top-up Tax is reduced by Domestic Top-up Tax); QDMTT Safe Harbour status per OECD Central Record"
+      },
+      {
+        "id": "iir",
+        "ref": "Art. 2.1.1 / 2.1.6 (UPE applies the IIR to Low-Taxed CEs outside its jurisdiction); Art. 2.1.3 (IPE only if UPE does not apply a Qualified IIR); Art. 2.2 (Allocable Share = CE Top-up Tax × Inclusion Ratio); Art. 5.2.4 (allocation of jurisdictional top-up to CEs pro rata to GloBE Income)"
+      },
+      {
+        "id": "utpr",
+        "ref": "Art. 2.5.1–2.5.3 (UTPR Top-up Tax Amount reduced to zero / by amounts brought into charge under a Qualified IIR). UTPR allocation (Art. 2.6) is out of scope."
+      }
+    ]
+  },
+  "investmentEntities": {
+    "ref": "Model Rules Art. 5.1.3 (Investment Entities excluded from the ETR and Net GloBE Income) and Art. 5.3.2 (excluded from SBIE)",
+    "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2021/12/tax-challenges-arising-from-digitalisation-of-the-economy-global-anti-base-erosion-model-rules-pillar-two_eed81a23/782bac33-en.pdf",
+    "verified": true,
+    "simplification": "Investment Entities are excluded from blending; their separate ETR computation (Art. 7.4) is not modelled."
+  },
+  "disclaimer": "Simplified projection for planning only. Not tax advice. Not a GloBE Information Return (GIR). Not a claim of full OECD / IRD / IRAS / NTA compliance."
+}
