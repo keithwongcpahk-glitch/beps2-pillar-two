@@ -8,6 +8,7 @@ describe('hash router', () => {
     expect(parseHash('')).toEqual({ page: 'home', sub: null })
     expect(parseHash('#/scenarios')).toEqual({ page: 'scenarios', sub: null })
     expect(parseHash('#/changes')).toEqual({ page: 'changes', sub: null })
+    expect(parseHash('#/dashboard')).toEqual({ page: 'dashboard', sub: null })
     expect(parseHash('#/group')).toEqual({ page: 'group', sub: null })
     expect(parseHash('#/nope')).toEqual({ page: 'home', sub: null })
     expect(href('jurisdictions', 'calendar')).toBe('#/jurisdictions/calendar')

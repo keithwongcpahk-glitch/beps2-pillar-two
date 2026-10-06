@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 /** Tiny hash router (no dependency): #/updates, #/jurisdictions/jp, ... */
 export type Route = { page: string; sub: string | null }
 
-export const PAGES = ['home', 'results', 'group', 'scenarios', 'overview', 'inputs', 'updates', 'jurisdictions', 'changes', 'about'] as const
+export const PAGES = ['home', 'dashboard', 'results', 'group', 'scenarios', 'overview', 'inputs', 'updates', 'jurisdictions', 'changes', 'about'] as const
 export type Page = (typeof PAGES)[number]
 
 export function parseHash(hash: string): Route {

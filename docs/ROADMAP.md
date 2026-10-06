@@ -59,4 +59,6 @@ Ground rules for every phase:
 | 4.4 | **Polish.** Print-friendly report view, accessibility pass (keyboard nav, contrast), mobile QA at 375px, empty/error states, a performance budget (<300 kB gzip JS). | Lighthouse accessibility ≥ 95 on Overview, Updates and Jurisdictions. No horizontal overflow at 375px except inside table wrappers. |
 | 4.5 | **Change log.** A "What changed" panel listing pack and ruleset version history, with links to the intel items that triggered each change. | Every pack version bump has a changelog entry referencing at least one source. |
 
+**4.6 Executive dashboard (shipped 6 Oct 2026):** `#/dashboard`, a one-page A4-landscape board view built only from engine output (`src/calc/dashboard.ts`, 20 tests). See `docs/DASHBOARD.md` for the RAG rule and the vendor research.
+
 **Phase 4 exit:** exports verified by tests, scenario A/B usable on mobile, and a production deploy READY on Vercel.

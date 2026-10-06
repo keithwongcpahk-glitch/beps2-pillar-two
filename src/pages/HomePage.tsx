@@ -14,6 +14,7 @@ const EXT: Record<string, { text: string; tone: 'ok' | 'info' | 'warn' }> = {
 }
 
 const PAGES: { page: Page; title: string; what: string }[] = [
+  { page: 'dashboard', title: 'Executive dashboard', what: 'One-page board view: headline KPIs, jurisdiction RAG status, ETR vs 15%, who collects, next deadlines, regulatory updates, key risks. Prints on one A4 landscape page.' },
   { page: 'group', title: 'Group & entities', what: 'Enter entities, ownership, GloBE income, taxes, payroll, tangible assets and CbCR data. A sample group is preloaded.' },
   { page: 'results', title: 'GloBE results', what: 'Jurisdiction-by-jurisdiction waterfall, safe harbour tests, who collects, and an explanation trail with rule links. Export to CSV or print to PDF.' },
   { page: 'scenarios', title: 'Scenarios', what: 'Save, rename, duplicate and delete named scenarios, then compare any two side by side.' },
@@ -31,7 +32,7 @@ export function HomePage({ result }: { result: ProjectionV3 }) {
         eyebrow="Start"
         title="Pillar Two Asia"
         subtitle="Estimate the 15% global minimum tax (OECD Pillar Two) for a multinational group with entities in Hong Kong, Singapore and Japan: how much top-up tax arises, who collects it, when filings are due, and the rule source behind every number."
-        actions={<><a className="btn" href={href('group')}>Enter your group</a><a className="btn ghost" href={href('results')}>See sample results</a></>}
+        actions={<><a className="btn" href={href('dashboard')}>Executive dashboard</a><a className="btn ghost" href={href('group')}>Enter your group</a><a className="btn ghost" href={href('results')}>See sample results</a></>}
       />
 
       <ol className="steps" aria-label="How it works">

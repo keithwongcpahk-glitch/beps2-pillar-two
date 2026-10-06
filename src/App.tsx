@@ -7,6 +7,7 @@ import { addScenario, migrateLegacyScenarioA, parseScenarios, SCENARIOS_KEY, uni
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { ChangesPage } from './pages/ChangesPage'
 import { HomePage } from './pages/HomePage'
+import { DashboardPage } from './pages/DashboardPage'
 import { ScenariosPage } from './pages/ScenariosPage'
 import { DEFAULT_FY_START, DEFAULT_GROUP_REVENUE, DEFAULT_JURISDICTIONS, DISCLAIMER, type EditableJurisdiction } from './defaults'
 import { INTEL_ITEMS, INTEL_META } from './intel/types'
@@ -22,6 +23,7 @@ import { href, useHashRoute, type Page } from './router'
 
 const NAV: { page: Page; label: string; group: string }[] = [
   { page: 'home', label: 'Overview', group: 'Start' },
+  { page: 'dashboard', label: 'Executive dashboard', group: 'Start' },
   { page: 'group', label: 'Group & entities', group: 'Calculator' },
   { page: 'results', label: 'GloBE results', group: 'Calculator' },
   { page: 'scenarios', label: 'Scenarios', group: 'Calculator' },
@@ -162,6 +164,7 @@ export default function App() {
       <main className="main" id="main" tabIndex={-1}>
         <ErrorBoundary resetKey={route.page} onReset={() => setGroupState(SAMPLE_GROUP)}>
         {route.page === 'home' && <HomePage result={globeResult} />}
+        {route.page === 'dashboard' && <DashboardPage current={group} scenarios={scenarios} />}
         {route.page === 'results' && <ResultsPage result={globeResult} input={group} saveScenario={() => saveCurrentScenario(`${group.groupName} · FY ${group.fiscalYearStart}`)} />}
         {route.page === 'group' && <GroupPage group={group} setGroup={setGroup} resetSample={() => setGroupState(SAMPLE_GROUP)} savedLocally={savedLocally} />}
         {route.page === 'scenarios' && (
