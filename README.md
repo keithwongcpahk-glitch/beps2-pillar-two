@@ -10,12 +10,15 @@ Live: https://beps2-pillar-two.vercel.app
 
 | Page | Route | What it does |
 |---|---|---|
-| **GloBE results** (default) | `#/results` | Entity-level engine `oecd-asia-v0.3`: jurisdictional waterfall (GloBE income → SBIE → excess profit → ETR → top-up % → top-up), transitional CbCR safe harbour pass/fail, who collects (HKMTT / DTT / JP QDMTT / IIR / UTPR residual), and an explanation trail linking every step to its OECD rule |
+| **Overview** (default) | `#/` | 30-second explainer: what the tool does, HK/SG/JP scope, what is and is not modelled, current totals, links to every page |
+| **GloBE results** | `#/results` | Entity-level engine `oecd-asia-v0.4`: jurisdictional waterfall (GloBE income → SBIE → excess profit → ETR → top-up % → top-up), transitional CbCR safe harbour pass/fail, who collects (HKMTT / DTT / JP QDMTT / IIR / UTPR residual), and an explanation trail linking every step to its OECD rule |
 | **Group & entities** | `#/group` | Constituent entities (jurisdiction, role UPE/IPE/CE, ownership %, GloBE income, covered taxes, deferred tax and booked rate, eligible payroll and tangible assets, minority-owned / investment-entity flags) plus CbCR data. Saved in localStorage; the sample group (HK UPE with SG and JP subsidiaries) is preloaded |
-| Overview | `#/overview` | KPIs, ETR chart, top-up breakdown, HK/SG/JP rule routing for the selected FY, latest-updates teaser |
+| **Scenarios** | `#/scenarios` | Named scenarios in localStorage: save, rename, duplicate, delete, load, compare any two (delta by jurisdiction and collector), comparison CSV, JSON export/import |
+| Quick estimate summary | `#/overview` | KPIs, ETR chart, top-up breakdown, HK/SG/JP rule routing for the selected FY, latest-updates teaser |
 | Inputs | `#/inputs` | Group revenue, **fiscal-year start**, per-jurisdiction GloBE income / covered taxes / carve-out / safe-harbour flag (HK, SG, JP, Other (non-QDMTT)) |
 | Latest updates | `#/updates` | Curated 30-day feed of OECD / HK / SG / JP Pillar Two developments, each with a source link. Filters by jurisdiction, topic and calc impact, plus a separate "Earlier key milestones" list and a browser-local review status (new / reviewed / needs rule change) |
-| Jurisdictions | `#/jurisdictions/{compare,hk,sg,jp,calendar}` | Sourced rule packs: rules in force, effective dates, OECD Central Record status, filing obligations, registration, local features, sources. Also a comparison table and an **indicative filing calendar** driven by fiscal year end |
+| Jurisdictions | `#/jurisdictions/{compare,hk,sg,jp,calendar}` | Sourced rule packs: rules in force, effective dates, OECD Central Record status, filing obligations, registration, local features, sources. Also a comparison table and an **indicative filing calendar** driven by fiscal year end, with sourced weekend/public-holiday roll-forward (2026–2027 official holiday lists), CSV and `.ics` export |
+| Ruleset & changes | `#/changes` | Rule versions in this build (engine, packs, holidays) and the change log with sources, from `src/rules/changelog.v1.json` |
 | About | `#/about` | Scope, method, limitations, active versions |
 
 ## Scope (Asia)
@@ -54,13 +57,17 @@ npm run build   # tsc -b && vite build
 
 ## Tests
 
-91 Vitest tests:
+121 Vitest tests:
 - Entity-level GloBE engine goldens (27; hand-worked in CALC_ASSUMPTIONS.md)
-- CSV export / scenario comparison / round-trip / inputs JSON (9)
+- v0.4 local TCSH adoption goldens (11; worked examples 7–9)
+- CSV / ICS export, scenario comparison, round-trip, inputs JSON (10)
+- Named scenario store (5)
+- Filing-calendar roll-forward and holiday data (10)
+- Pack loader / validation / filing-calendar goldens (19)
 - Legacy v0.1 engine path (13)
 - v0.2 Asia routing golden tests (10)
-- Pack loader / validation / filing-calendar goldens (19)
 - Intel window / dataset integrity / review helpers (12)
+- Change log data (3)
 - Router (1)
 
 ## Changing rules

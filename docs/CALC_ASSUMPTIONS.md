@@ -59,7 +59,7 @@ This is a simplified projection engine. **It is not tax advice, not a GIR, and n
 - Floors (JP: no deadline before 30 Jun 2026) are applied and flagged.
 - Payments are computed relative to the related return (HK payment is marked "earliest", because it also depends on the notice of assessment).
 - Obligations whose rule had not started for that FY are listed as not applicable.
-- Weekend / public-holiday roll-forward is **not** applied. All dates are indicative.
+- Weekend / public-holiday roll-forward is applied from `holidays.v1` (see "Filing calendar roll-forward" in the v0.4 section). The statutory date is kept alongside the adjusted date. All dates are indicative.
 
 ## How rules change
 
@@ -178,4 +178,88 @@ HK UPE (100m income, 20m tax) owns two OTHER CEs: A (3m income, 100%) and B (1m,
 - **Deferred tax:** a single amount per entity, recast with min(1, 15% ÷ rate). Art. 4.4.2–4.4.7 (exclusions, recapture, DTA elections) and the GloBE Loss Election are not modelled.
 - **Not modelled:** Additional Current Top-up Tax, Art. 5.6 minority-owned blending (flag only), IIR offset (Art. 2.3), POPE / split ownership, UTPR allocation (Art. 2.6), Art. 9.3 initial-phase exclusion, Side-by-Side / UPE / Simplified ETR safe harbours, JP tax-credit special measure, the national/local split of JP QDMTT.
 - **Assumptions:** a 12-month FY is assumed. The inclusion ratio is taken as the UPE ownership % of each entity.
-- **Local adoption:** the TCSH is applied with OECD terms to every jurisdiction. Japan's FY2026 reform adopts the 2027 extension. HK and SG adoption of the 2027 extension is not verified.
+- **Local adoption:** superseded in v0.4. The TCSH period now follows the collecting jurisdiction's law (see below).
+
+
+# v0.4: local adoption of the transitional CbCR safe harbour (Phase 4)
+
+Parameters: `src/rules/globe-params.v0.4.json` (OECD values unchanged from v0.3) and the `transitionalCbcrSafeHarbour` block in each pack (`hk/sg/jp.v1.json`, packVersion 1.1.0). Tests: `src/calc/tcshLocal.test.ts`.
+
+## Whose transition period applies
+
+The OECD tests (de minimis, simplified ETR at the 15/16/17/17/17% transition rates, routine profits) are unchanged. What changes is the **transition period**, which now comes from the law of the jurisdiction that would collect the top-up:
+
+1. If a domestic top-up tax (HKMTT / DTT / JP QDMTT) is in force for that FY, that jurisdiction's law applies.
+2. Otherwise, the law of the IIR parent's jurisdiction (HK, SG or JP) applies.
+3. Otherwise, OECD terms apply (FYs beginning on or before 31 Dec 2027 and ending on or before 30 Jun 2029, per the Jan 2026 Side-by-Side Package).
+
+The `tcshBasis` group input decides which local periods count:
+
+| Basis | Counts | HK | SG | JP |
+|---|---|---|---|---|
+| `enacted` (default) | Enacted law only | FY begins ≤ 31 Dec 2026, ends ≤ 30 Jun 2028 (Ord. 21/2025 Sch. 61 Pt 3 Div. 2 s.2) | FY begins ≤ 31 Dec 2026, ends ≤ 30 Jun 2028 (MMT Regulations reg. 70, IRAS Module 6) | FY begins ≤ 31 Dec 2027 (Act No. 12 of 2026, extension enacted) |
+| `announced` | Enacted law plus officially announced extensions | as enacted (no extension announced) | FY begins ≤ 31 Dec 2027, ends ≤ 30 Jun 2029 (IRAS: amendments by end-2026, subject to Parliament) | as enacted |
+| `oecd` | OECD terms everywhere | OECD | OECD | OECD |
+
+- **HKMTT assumption (unverified):** HK law expressly provides the TCSH for the GloBE rules (IIR). Sch. 62 (HKMTT) applies "the GloBE rules (Chapter 2 excepted)" but does not expressly mention the TCSH. The engine assumes it also applies to the HKMTT and adds an "Assumed" note to the trail.
+- **JP end limb:** the MOF explanation of the 2026 reform does not quote the "ending on or before 30 Jun 2029" limb. The value is taken from the OECD and noted as such.
+
+## Worked example 7: SG DTT, FY beginning 1 Jan 2027
+
+HK UPE (10,000,000 income, 2,000,000 tax, 20% ETR, so no HK top-up) holds 100% of an SG CE.
+
+| Step | Value |
+|---|---|
+| SG GloBE income / covered taxes | 10,000,000 / 1,000,000 → ETR 10% |
+| SBIE | 0 (no payroll or tangible assets) |
+| Top-up before safe harbour | (15% − 10%) × 10,000,000 = **500,000** |
+| CbCR simplified ETR | 1,800,000 / 10,000,000 = 18% ≥ 17% (2027 rate) |
+| `enacted`: SG period ends with FYs beginning 2026 | TCSH unavailable ("announced, but not yet enacted") → DTT **500,000** |
+| `announced` / `oecd` | TCSH passes → top-up **0** |
+| FY beginning 1 Jan 2026 | passes under every basis → **0** |
+
+## Worked example 8: JP QDMTT, FY beginning 1 Apr 2027
+
+Same structure with a JP CE (10,000,000 income, 1,000,000 tax; CbCR 18%).
+
+| Case | Result |
+|---|---|
+| FY 1 Apr 2027 – 31 Mar 2028, `enacted` | JP QDMTT in force. Japan law: begins ≤ 31 Dec 2027 and ends ≤ 30 Jun 2029 → TCSH passes → **0** |
+| FY beginning 1 Jan 2028 | outside every transition period → JP QDMTT **500,000** |
+
+## Worked example 9: non-pack jurisdiction under the HK IIR, FY beginning 1 Jan 2027
+
+OTHER CE: 500,000 income, 25,000 tax (5%), SBIE 0 → top-up (15% − 5%) × 500,000 = **50,000**. CbCR revenue 6,000,000 < 10m and profit 500,000 < 1m, so the de minimis test passes.
+
+| Basis | Result |
+|---|---|
+| `enacted` | No QDMTT, so the IIR parent's (HK) law applies. HK has not adopted the extension → no TCSH → IIR **50,000** |
+| `oecd` | de minimis passes → **0** |
+
+## Filing calendar roll-forward (`businessDays.ts`, `holidays.v1.json`)
+
+Each deadline is first computed as the statutory date (unchanged from v0.2), then rolled forward under the jurisdiction's general computation-of-time rule:
+
+| Jurisdiction | Rule | Non-working days | Source |
+|---|---|---|---|
+| HK | Interpretation and General Clauses Ordinance (Cap. 1) s.71(1)(b)/(c) | General holidays under Cap. 149, which include every Sunday. Saturdays are **not** excluded unless they are a general holiday. | [Cap. 1 s.71](https://www.elegislation.gov.hk/hk/cap1!en?xpid=ID_1438402527839_002) |
+| SG | Interpretation Act 1965 s.50 | Sundays and public holidays. Saturday is not excluded. Holidays Act s.4(2): a holiday falling on a Sunday makes the next day a public holiday. | Interpretation Act s.50, Holidays Act s.4(2) |
+| JP | National Tax General Act (国税通則法) Art. 10(2) + Order Art. 2(2) | Saturdays, Sundays, national holidays, 1–3 Jan (general holidays, NTA circular 10-4) and 29–31 Dec | 国税通則法 Art. 10 |
+
+Holiday lists for 2026–2027 come only from official sources: GovHK general holidays 2026 / 2027 and the 1823 data set (HK, 34 dates); Ministry of Manpower public holidays, updated 19 Jun 2026 (SG, 26 dates, including the s.4(2) Mondays); Cabinet Office national holidays CSV (JP, 35 dates). Dates outside 2026–2027 get the weekly-rest-day and fixed-date rules only and are flagged "holidays not checked". Most FY2026 deadlines fall in 2028, so they carry that flag.
+
+Golden cases (`calendarRoll.test.ts`):
+
+| Statutory | Adjusted | Why |
+|---|---|---|
+| HK Sun 28 Jun 2026 | Mon 29 Jun 2026 | Sunday |
+| HK Fri 26 Mar 2027 | Tue 30 Mar 2027 | Good Friday, the day after Good Friday, Sunday, Easter Monday |
+| HK Sat 26 Dec 2026 | Mon 28 Dec 2026 | first weekday after Christmas is a general holiday, then Sunday |
+| SG Sat 1 May 2027 | Mon 3 May 2027 | Labour Day on Saturday, then Sunday (Saturday itself is not excluded) |
+| SG Sun 9 Aug 2026 | Tue 11 Aug 2026 | National Day on Sunday, then the s.4(2) Monday holiday |
+| JP Thu 31 Dec 2026 | Mon 4 Jan 2027 | 31 Dec, 1–3 Jan, then the weekend |
+| JP GIR, FYE 30 Sep 2025 | 31 Dec 2026 → 4 Jan 2027 | calendar integration |
+
+Not modelled: HK gale-warning and black-rainstorm extensions (s.71(1)(c)), which cannot be known in advance; group-specific exemptions. Payment deadlines are computed from the **statutory** filing date and then rolled forward themselves.
+
+The `.ics` export (`src/export/ics.ts`) writes one all-day event per applicable obligation on the adjusted date. Each event has a stable UID, a 14-day reminder, and the basis, source URL, statutory date and disclaimer in its description. Lines are folded at 75 octets (RFC 5545).

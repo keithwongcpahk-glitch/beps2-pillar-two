@@ -43,7 +43,13 @@ Ground rules for every phase:
 
 ## Phase 4: Scenarios, exports, polish
 
-**Status (6 Oct 2026): partly shipped.** 4.1 shipped as one saved scenario A compared with the current inputs, with a delta table by jurisdiction and by collector (domestic / IIR / UTPR residual), CSV export, and JSON export/import of inputs. Multiple named scenarios are not done yet. 4.2 shipped as CSV only: results with the ruleset version, FY, disclaimer and explanation trail; a round-trip test is included. XLSX is deliberately not added, because no small dependency could be justified and Excel opens the UTF-8 BOM CSV directly. The CSV half of 4.3 shipped; ICS is still open. 4.4 and 4.5 are still open. Tests: `src/export/export.test.ts`.
+**Status (6 Oct 2026): shipped.**
+- **4.1:** multiple named scenarios in localStorage (`p2-scenarios-v1`): save, rename, duplicate, delete, load into the editor, compare any two (or one against the current inputs), comparison CSV, JSON export/import. The legacy single "scenario A" is migrated automatically. Tests: `scenarioStore.test.ts`, `export.test.ts`.
+- **4.2:** CSV results export with versions, FY, disclaimer and trail; round-trip tested. XLSX is deliberately not added: no small dependency could be justified, and Excel opens the UTF-8 BOM CSV directly.
+- **4.3:** calendar CSV and `.ics` export. Deadlines roll forward under each jurisdiction's sourced computation-of-time rule, with official 2026–2027 holiday lists (`holidays.v1.json`). Tests: `calendarRoll.test.ts`, `export.test.ts`.
+- **4.4:** landing/overview page, consistent page headers (eyebrow = navigation group), empty states, a page-level error boundary, a print stylesheet (results → Save as PDF), a skip link, focus outlines, focus moved to the page on navigation, labelled controls, and contrast checked. At 375px there is no horizontal overflow outside table wrappers on any page.
+- **4.5:** "Ruleset & changes" page built from `src/rules/changelog.v1.json`. Every pack and ruleset version has an entry with at least one source (tested).
+- Also shipped: engine `oecd-asia-v0.4`, in which the TCSH transition period follows local law (see CALC_ASSUMPTIONS).
 
 | # | Work item | Acceptance criteria |
 |---|---|---|
