@@ -1,9 +1,14 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { GLOBE_VERSION, projectGlobe } from './calc/globe'
+import type { GroupInputV3 } from './calc/globe'
 import { buildAsiaRuleset, RULESET_VERSION, projectPillarTwo } from './calc/pillarTwo'
+import { GROUP_STORAGE_KEY, parseStoredGroup, SAMPLE_GROUP } from './calc/sampleGroup'
 import { DEFAULT_FY_START, DEFAULT_GROUP_REVENUE, DEFAULT_JURISDICTIONS, DISCLAIMER, type EditableJurisdiction } from './defaults'
 import { INTEL_ITEMS, INTEL_META } from './intel/types'
 import { calendarDateAt, filterByWindow, windowFor } from './intel/window'
 import { AboutPage } from './pages/AboutPage'
+import { GroupPage } from './pages/GroupPage'
+import { ResultsPage } from './pages/ResultsPage'
 import { InputsPage } from './pages/InputsPage'
 import { JurisdictionsPage } from './pages/JurisdictionsPage'
 import { OverviewPage } from './pages/OverviewPage'
@@ -11,8 +16,10 @@ import { UpdatesPage } from './pages/UpdatesPage'
 import { href, useHashRoute, type Page } from './router'
 
 const NAV: { page: Page; label: string; group: string }[] = [
-  { page: 'overview', label: 'Overview', group: 'Projection' },
-  { page: 'inputs', label: 'Inputs', group: 'Projection' },
+  { page: 'results', label: 'GloBE results', group: 'Calculator' },
+  { page: 'group', label: 'Group & entities', group: 'Calculator' },
+  { page: 'overview', label: 'Overview', group: 'Quick estimate' },
+  { page: 'inputs', label: 'Inputs', group: 'Quick estimate' },
   { page: 'updates', label: 'Latest updates', group: 'Intelligence' },
   { page: 'jurisdictions', label: 'Jurisdictions', group: 'Intelligence' },
   { page: 'about', label: 'About', group: 'Product' },
@@ -20,8 +27,34 @@ const NAV: { page: Page; label: string; group: string }[] = [
 
 const IN_WINDOW_COUNT = filterByWindow(INTEL_ITEMS, windowFor(calendarDateAt(INTEL_META.lastRefreshed), INTEL_META.windowDays)).length
 
+function loadGroup(): { group: GroupInputV3; ok: boolean } {
+  try {
+    return { group: parseStoredGroup(window.localStorage.getItem(GROUP_STORAGE_KEY)) ?? SAMPLE_GROUP, ok: true }
+  } catch {
+    return { group: SAMPLE_GROUP, ok: false }
+  }
+}
+
 export default function App() {
   const route = useHashRoute()
+  const [group, setGroupState] = useState<GroupInputV3>(() => loadGroup().group)
+  const [savedLocally, setSavedLocally] = useState(true)
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(GROUP_STORAGE_KEY, JSON.stringify(group))
+      setSavedLocally(true)
+    } catch {
+      setSavedLocally(false)
+    }
+  }, [group])
+  const globeResult = useMemo(() => {
+    try {
+      return projectGlobe(group)
+    } catch {
+      return projectGlobe({ ...group, fiscalYearStart: SAMPLE_GROUP.fiscalYearStart })
+    }
+  }, [group])
+  const setGroup = (updater: (g: GroupInputV3) => GroupInputV3) => setGroupState((g) => updater(g))
   const [revenue, setRevenue] = useState(DEFAULT_GROUP_REVENUE)
   const [fiscalYearStart, setFiscalYearStart] = useState(DEFAULT_FY_START)
   const [rows, setRows] = useState<EditableJurisdiction[]>(DEFAULT_JURISDICTIONS)
@@ -73,11 +106,14 @@ export default function App() {
           })}
         </nav>
         <div className="sidebar-meta">
-          <span className="chip" title="Engine ruleset version">{RULESET_VERSION}</span>
+          <span className="chip" title="Entity-level GloBE engine parameters">{GLOBE_VERSION}</span>
+          <span className="fine">Quick estimate: {RULESET_VERSION}</span>
           <p className="fine">{DISCLAIMER}</p>
         </div>
       </aside>
       <main className="main">
+        {route.page === 'results' && <ResultsPage result={globeResult} />}
+        {route.page === 'group' && <GroupPage group={group} setGroup={setGroup} resetSample={() => setGroupState(SAMPLE_GROUP)} savedLocally={savedLocally} />}
         {route.page === 'overview' && <OverviewPage result={result} ruleset={ruleset} fiscalYearStart={fiscalYearStart} />}
         {route.page === 'inputs' && (
           <InputsPage
@@ -96,7 +132,7 @@ export default function App() {
         {route.page === 'updates' && <UpdatesPage />}
         {route.page === 'jurisdictions' && <JurisdictionsPage sub={route.sub} />}
         {route.page === 'about' && <AboutPage />}
-        <footer className="footer fine">{DISCLAIMER} Ruleset {RULESET_VERSION}.</footer>
+        <footer className="footer fine">{DISCLAIMER} Engine {GLOBE_VERSION} · quick estimate {RULESET_VERSION}.</footer>
       </main>
     </div>
   )

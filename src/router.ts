@@ -3,12 +3,12 @@ import { useEffect, useState } from 'react'
 /** Tiny hash router (no dependency): #/updates, #/jurisdictions/jp, ... */
 export type Route = { page: string; sub: string | null }
 
-export const PAGES = ['overview', 'inputs', 'updates', 'jurisdictions', 'about'] as const
+export const PAGES = ['results', 'group', 'overview', 'inputs', 'updates', 'jurisdictions', 'about'] as const
 export type Page = (typeof PAGES)[number]
 
 export function parseHash(hash: string): Route {
   const parts = hash.replace(/^#\/?/, '').split('/').filter(Boolean)
-  const page = (PAGES as readonly string[]).includes(parts[0] ?? '') ? parts[0] : 'overview'
+  const page = (PAGES as readonly string[]).includes(parts[0] ?? '') ? parts[0] : 'results'
   return { page, sub: parts[1] ?? null }
 }
 

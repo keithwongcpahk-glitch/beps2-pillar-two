@@ -1,3 +1,4 @@
+import { GLOBE_VERSION } from '../calc/globe'
 import { RULESET_VERSION } from '../calc/pillarTwo'
 import { PageHeader, SourceLink } from '../components/ui'
 import { DISCLAIMER } from '../defaults'
@@ -11,7 +12,8 @@ export function AboutPage() {
         <p className="disclaimer-box">{DISCLAIMER}</p>
         <h3>Scope: Asia (Hong Kong, Singapore, Japan)</h3>
         <ul>
-          <li>Projection: ETR, top-up rate, excess profit, and whether the top-up is collected via the domestic top-up tax (HKMTT / DTT / JP QDMTT) or the IIR</li>
+          <li>GloBE calculator (engine <code>{GLOBE_VERSION}</code>): entity-level inputs blended by jurisdiction, SBIE with OECD Art. 9.2 transition rates, transitional CbCR safe harbour tests (incl. the 2027 extension), deferred tax recast at 15%, then domestic top-up tax → IIR (× ownership %) → flagged UTPR residual, with an explanation trail</li>
+          <li>Quick estimate: jurisdiction-level ETR, top-up rate, excess profit, and whether the top-up is collected via the domestic top-up tax (HKMTT / DTT / JP QDMTT) or the IIR</li>
           <li>HK, SG and JP routing and labels come from versioned, sourced rule packs and depend on the fiscal-year start (e.g. Japan's QDMTT applies to FYs beginning on or after 1 Apr 2026)</li>
           <li>Other jurisdictions are grouped as “Other (non-QDMTT)”</li>
           <li>Latest updates: a curated 30-day feed of OECD / HK / SG / JP developments, each with its source, plus a local review workflow</li>
@@ -19,8 +21,8 @@ export function AboutPage() {
         </ul>
         <h3>Not modelled (yet)</h3>
         <ul>
-          <li>Entity-level inputs, SBIE computation (carve-out is a direct input), ownership % for the IIR, QDMTT → IIR → UTPR ordering, UTPR allocation</li>
-          <li>Transitional CbCR safe harbour numeric tests (the safe harbour is a manual flag), deferred tax detail, special entities, Side-by-Side / UPE safe harbour, Pillar One</li>
+          <li>Chapter 3 / 4 adjustments (GloBE income and covered taxes are direct inputs), Additional Current Top-up Tax, Art. 5.6 minority-owned blending, IIR offset, POPE / split ownership, UTPR allocation</li>
+          <li>Detailed deferred tax rules (recapture, exclusions, elections), special entities (Art. 7.4), Side-by-Side / UPE / Simplified ETR safe harbours, Pillar One</li>
           <li>Weekend and public-holiday adjustments in the filing calendar</li>
         </ul>
         <h3>Method</h3>
@@ -31,7 +33,7 @@ export function AboutPage() {
           <li>The rules are not rewritten automatically from OECD / IRD / IRAS / NTA documents. Changes go through a pack version bump and golden tests.</li>
         </ul>
         <h3>Active versions</h3>
-        <p>Engine ruleset <code>{RULESET_VERSION}</code> · packs {PACK_CODES.map((c) => <code key={c}>{JURISDICTION_PACKS[c].packId}</code>)}</p>
+        <p>GloBE engine <code>{GLOBE_VERSION}</code> · quick estimate <code>{RULESET_VERSION}</code> · packs {PACK_CODES.map((c) => <code key={c}>{JURISDICTION_PACKS[c].packId}</code>)}</p>
         <p className="fine">Legacy ruleset <code>oecd-hk-simplified-v0.1</code> is kept in the repo and covered by tests.</p>
         <h3>Primary references</h3>
         <ul>
