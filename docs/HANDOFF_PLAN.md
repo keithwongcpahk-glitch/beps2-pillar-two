@@ -1,5 +1,8 @@
 # BEPS 2.0 — Handoff Plan for Parallel Work (Grok)
 
+> **Update 2026-10-06:** Phases 1–2 of the Asia (HK / SG / JP) expansion have shipped: Latest updates page, jurisdiction rule packs, Jurisdictions page and engine `oecd-asia-v0.2`. The jurisdiction presets listed below (CN/GB/IE/US) belong to the legacy v0.1 ruleset only. See `docs/ROADMAP.md` for Phase 3–4 and `README.md` for the current layout.
+
+
 Self-contained plan. Grok does **not** need access to the author’s desktop — paste this file (or the whole repo) into the other bot’s context.
 
 ---
