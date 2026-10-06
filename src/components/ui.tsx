@@ -53,7 +53,7 @@ export function SourceLink(props: { url: string; label?: string }) {
   }
   return (
     <a className="source-link" href={props.url} target="_blank" rel="noopener noreferrer" title={props.url}>
-      {props.label ?? host} <span aria-hidden="true">↗</span>
+      {props.label ?? host} <span aria-hidden="true">↗</span><span className="sr-only"> (opens in a new tab)</span>
     </a>
   )
 }

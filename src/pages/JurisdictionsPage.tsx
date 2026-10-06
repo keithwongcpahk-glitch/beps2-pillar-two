@@ -6,6 +6,8 @@ import { computeFilingCalendar } from '../rules/jurisdictions/calendar'
 import { Callout, EmptyState, formatDate, JurBadge, PageHeader, SourceLink, SourceTypeTag, Tag, VerifiedTag } from '../components/ui'
 import { href } from '../router'
 import { calendarCsvRows, toCsv, withBom } from '../export/csv'
+import { calendarToIcs } from '../export/ics'
+import { HOLIDAYS } from '../rules/jurisdictions/businessDays'
 import { downloadText } from '../export/download'
 
 const STATUS_TEXT: Record<RuleStatus, string> = { 'in-force': 'In force', deferred: 'Deferred', 'not-implemented': 'Not implemented' }
@@ -151,6 +153,17 @@ function PackView(props: { pack: JurisdictionPack }) {
       </div>
 
       <section className="panel">
+        <h3>Transitional CbCR safe harbour: local adoption</h3>
+        <p className="fine">Used by the GloBE engine (v0.4+) to decide whether the safe harbour is available for a fiscal year when this jurisdiction collects the top-up.</p>
+        <dl className="facts">
+          <Fact label="Applies to the IIR" fact={p.transitionalCbcrSafeHarbour.appliesToIir} />
+          <Fact label={`Applies to ${p.domesticTopUpTax.shortName}`} fact={p.transitionalCbcrSafeHarbour.appliesToDomestic} />
+          <Fact label="Enacted transition period" fact={p.transitionalCbcrSafeHarbour.enactedPeriod} />
+          <Fact label={`2027 extension (${TCSH_EXT[p.transitionalCbcrSafeHarbour.extension.status]})`} fact={p.transitionalCbcrSafeHarbour.extension} />
+        </dl>
+      </section>
+
+      <section className="panel">
         <h3>Sources</h3>
         <ul className="sources">
           {p.sources.map((s) => (
@@ -169,6 +182,8 @@ function PackView(props: { pack: JurisdictionPack }) {
     </div>
   )
 }
+
+const TCSH_EXT: Record<string, string> = { enacted: 'enacted', announced: 'announced, not yet enacted', 'not-announced': 'not adopted' }
 
 function fy(p: JurisdictionPack, k: RuleKind) {
   const r = p.rules[k]
@@ -190,6 +205,20 @@ function CompareView() {
     { label: 'UTPR', cell: (p) => fy(p, 'UTPR') },
     { label: 'Central Record (QDMTT SH)', cell: (p) => p.qualifiedStatus.QDMTTSafeHarbour.value },
     { label: 'Headline CIT rate', cell: (p) => p.headlineCitRate.value },
+    {
+      label: 'Transitional CbCR safe harbour',
+      cell: (p) => {
+        const t = p.transitionalCbcrSafeHarbour
+        const tone = t.extension.status === 'enacted' ? 'ok' : t.extension.status === 'announced' ? 'info' : 'warn'
+        return (
+          <>
+            FYs beginning ≤ {formatDate(t.enactedPeriod.fyBeginsOnOrBefore)}
+            <div><Tag tone={tone}>2027 extension: {TCSH_EXT[t.extension.status]}</Tag></div>
+            <div className="fine">Domestic tax: {t.appliesToDomestic.applies === null ? 'not expressly stated' : t.appliesToDomestic.applies ? 'yes' : 'no'}</div>
+          </>
+        )
+      },
+    },
     { label: 'Notification / registration', cell: (p) => filingSummary(p, ['notification', 'registration']) },
     { label: 'GIR / information returns', cell: (p) => filingSummary(p, ['gir', 'qdmtt-info']) },
     { label: 'Top-up tax return(s)', cell: (p) => filingSummary(p, ['return'], ['gir']) },
@@ -241,9 +270,9 @@ function CalendarView() {
   return (
     <div className="stack">
       <Callout tone="warn">
-        <strong>Indicative only.</strong> Dates come from the deadline rules in each pack and assume a 12-month fiscal year. Weekend and public-holiday roll-forward is not
-        applied (Japan rolls deadlines to the next business day), and group-specific exemptions (e.g. GIR filed via the UPE jurisdiction) are not modelled. Check every date
-        against the linked source.
+        <strong>Indicative only.</strong> Statutory dates come from the deadline rules in each pack and assume a 12-month fiscal year. The adjusted date rolls a deadline that falls on a
+        weekend or public holiday forward, but only where that jurisdiction's computation-of-time rule says so (see below). Official holiday lists cover 2026–2027 only. HK gale and
+        black rainstorm days, and group-specific exemptions (e.g. GIR filed via the UPE jurisdiction), are not modelled. Check every date against the linked source.
       </Callout>
       <div className="panel filters">
         <label>
@@ -265,6 +294,7 @@ function CalendarView() {
           <div className="filter-summary fine">
             <span>FY {formatDate(cal.fiscalYearStart)} – {formatDate(cal.fiscalYearEnd)}</span>
             <button type="button" className="secondary" onClick={() => downloadText(`pillar-two-filing-calendar-FYE-${cal.fiscalYearEnd}.csv`, withBom(toCsv(calendarCsvRows(cal))))}>Export CSV</button>
+            <button type="button" className="secondary" disabled={due.length === 0} onClick={() => downloadText(`pillar-two-filing-calendar-FYE-${cal.fiscalYearEnd}.ics`, calendarToIcs(cal, new Date()), 'text/calendar;charset=utf-8')}>Add to calendar (.ics)</button>
           </div>
         )}
       </div>
@@ -279,11 +309,16 @@ function CalendarView() {
             ) : (
               <div className="table-wrap tall">
                 <table className="table sticky">
-                  <thead><tr><th>Due (indicative)</th><th>Jurisdiction</th><th>Obligation</th><th>Basis</th><th>Source</th></tr></thead>
+                  <thead><tr><th scope="col">Adjusted due date</th><th scope="col">Statutory date</th><th scope="col">Jurisdiction</th><th scope="col">Obligation</th><th scope="col">Basis</th><th scope="col">Source</th></tr></thead>
                   <tbody>
                     {due.map((r) => (
                       <tr key={r.obligationId}>
-                        <td className="nowrap"><strong>{formatDate(r.dueDate as string)}</strong>
+                        <td className="nowrap"><strong>{formatDate(r.adjustedDate as string)}</strong>
+                          {r.rolled && <div><Tag tone="info" title={r.rollReasons.join('; ')}>Rolled forward</Tag></div>}
+                          {r.rolled && <div className="fine">{r.rollReasons.map((x) => x.split(': ')[1]).join(' → ')}</div>}
+                          {!r.holidaysChecked && <div><Tag tone="warn" title="No official holiday list for this year yet: only the weekend / fixed-date rule was applied">Holidays not checked</Tag></div>}
+                        </td>
+                        <td className="nowrap">{formatDate(r.dueDate as string)}
                           {r.earliestOnly && <div><Tag tone="info" title="Actual date is the later of this and a date tied to the assessment notice">Earliest</Tag></div>}
                           {r.floorApplied && <div><Tag tone="info">Floor date applied</Tag></div>}
                         </td>
@@ -297,6 +332,27 @@ function CalendarView() {
                 </table>
               </div>
             )}
+          </section>
+          <section className="panel">
+            <h3>Roll-forward rules and holiday sources</h3>
+            <ul className="features">
+              {PACK_CODES.map((c) => {
+                const h = HOLIDAYS.jurisdictions[c]
+                return (
+                  <li key={c}>
+                    <div className="feature-head"><strong><JurBadge code={c} /> {JURISDICTION_PACKS[c].name}</strong><VerifiedTag verified={h.rule.verified} note={h.rule.note} /></div>
+                    <p>{h.rule.value}</p>
+                    {h.rule.note && <p className="fine">{h.rule.note}</p>}
+                    <SourceLink url={h.rule.sourceUrl} label="Computation-of-time rule" />
+                    <p className="fine">
+                      {h.holidays.length} public holidays in 2026–2027 from:{' '}
+                      {h.holidaySources.map((s, i) => <span key={s.url}>{i > 0 && ' · '}<SourceLink url={s.url} label={s.name} /></span>)}
+                    </p>
+                  </li>
+                )
+              })}
+            </ul>
+            <p className="fine">{HOLIDAYS.note}</p>
           </section>
           {na.length > 0 && (
             <section className="panel">
@@ -327,7 +383,7 @@ export function JurisdictionsPage(props: { sub: string | null }) {
   return (
     <>
       <PageHeader
-        eyebrow="Rule packs"
+        eyebrow="Intelligence"
         title="Jurisdictions"
         subtitle="Pillar Two implementation in Hong Kong, Singapore and Japan. Every field links to the source it came from and carries a verified flag."
       />

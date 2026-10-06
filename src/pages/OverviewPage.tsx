@@ -13,8 +13,8 @@ export function OverviewPage(props: { result: ProjectionResult; ruleset: Ruleset
   return (
     <>
       <PageHeader
-        eyebrow="Projection"
-        title="Group overview"
+        eyebrow="Quick estimate"
+        title="Quick estimate summary"
         subtitle={`Simplified GloBE top-up projection for the fiscal year beginning ${formatDate(fiscalYearStart)}. HK, SG and JP routing comes from the jurisdiction rule packs.`}
         actions={<a className="btn" href={href('inputs')}>Edit inputs</a>}
       />

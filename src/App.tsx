@@ -1,8 +1,13 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { GLOBE_VERSION, projectGlobe } from './calc/globe'
 import type { GroupInputV3 } from './calc/globe'
 import { buildAsiaRuleset, RULESET_VERSION, projectPillarTwo } from './calc/pillarTwo'
 import { GROUP_STORAGE_KEY, parseStoredGroup, SAMPLE_GROUP, SCENARIO_A_KEY } from './calc/sampleGroup'
+import { addScenario, migrateLegacyScenarioA, parseScenarios, SCENARIOS_KEY, uniqueName, type SavedScenario } from './calc/scenarioStore'
+import { ErrorBoundary } from './components/ErrorBoundary'
+import { ChangesPage } from './pages/ChangesPage'
+import { HomePage } from './pages/HomePage'
+import { ScenariosPage } from './pages/ScenariosPage'
 import { DEFAULT_FY_START, DEFAULT_GROUP_REVENUE, DEFAULT_JURISDICTIONS, DISCLAIMER, type EditableJurisdiction } from './defaults'
 import { INTEL_ITEMS, INTEL_META } from './intel/types'
 import { calendarDateAt, filterByWindow, windowFor } from './intel/window'
@@ -16,14 +21,27 @@ import { UpdatesPage } from './pages/UpdatesPage'
 import { href, useHashRoute, type Page } from './router'
 
 const NAV: { page: Page; label: string; group: string }[] = [
-  { page: 'results', label: 'GloBE results', group: 'Calculator' },
+  { page: 'home', label: 'Overview', group: 'Start' },
   { page: 'group', label: 'Group & entities', group: 'Calculator' },
-  { page: 'overview', label: 'Overview', group: 'Quick estimate' },
+  { page: 'results', label: 'GloBE results', group: 'Calculator' },
+  { page: 'scenarios', label: 'Scenarios', group: 'Calculator' },
+  { page: 'overview', label: 'Summary', group: 'Quick estimate' },
   { page: 'inputs', label: 'Inputs', group: 'Quick estimate' },
   { page: 'updates', label: 'Latest updates', group: 'Intelligence' },
   { page: 'jurisdictions', label: 'Jurisdictions', group: 'Intelligence' },
+  { page: 'changes', label: 'Ruleset & changes', group: 'Product' },
   { page: 'about', label: 'About', group: 'Product' },
 ]
+
+function loadScenarios(): SavedScenario[] {
+  try {
+    const raw = window.localStorage.getItem(SCENARIOS_KEY)
+    if (raw !== null) return parseScenarios(raw)
+    return migrateLegacyScenarioA(window.localStorage.getItem(SCENARIO_A_KEY), new Date().toISOString())
+  } catch {
+    return []
+  }
+}
 
 const IN_WINDOW_COUNT = filterByWindow(INTEL_ITEMS, windowFor(calendarDateAt(INTEL_META.lastRefreshed), INTEL_META.windowDays)).length
 
@@ -37,6 +55,18 @@ function loadGroup(): { group: GroupInputV3; ok: boolean } {
 
 export default function App() {
   const route = useHashRoute()
+  const firstRender = useRef(true)
+  useEffect(() => {
+    const label = NAV.find((n) => n.page === route.page)?.label ?? 'Overview'
+    document.title = `${route.page === 'home' ? 'Overview' : label} · Pillar Two Asia (HK / SG / JP)`
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
+    // Move focus to the new page for keyboard and screen-reader users.
+    window.scrollTo(0, 0)
+    document.getElementById('main')?.focus({ preventScroll: true })
+  }, [route.page])
   const [group, setGroupState] = useState<GroupInputV3>(() => loadGroup().group)
   const [savedLocally, setSavedLocally] = useState(true)
   useEffect(() => {
@@ -54,29 +84,23 @@ export default function App() {
       return projectGlobe({ ...group, fiscalYearStart: SAMPLE_GROUP.fiscalYearStart })
     }
   }, [group])
-  const [scenarioAGroup, setScenarioAGroup] = useState<GroupInputV3 | null>(() => {
-    try {
-      return parseStoredGroup(window.localStorage.getItem(SCENARIO_A_KEY))
-    } catch {
-      return null
-    }
-  })
+  const [scenarios, setScenariosState] = useState<SavedScenario[]>(loadScenarios)
+  const [scenarioStorageOk, setScenarioStorageOk] = useState(true)
   useEffect(() => {
     try {
-      if (scenarioAGroup) window.localStorage.setItem(SCENARIO_A_KEY, JSON.stringify(scenarioAGroup))
-      else window.localStorage.removeItem(SCENARIO_A_KEY)
+      window.localStorage.setItem(SCENARIOS_KEY, JSON.stringify(scenarios))
+      window.localStorage.removeItem(SCENARIO_A_KEY)
+      setScenarioStorageOk(true)
     } catch {
-      /* storage unavailable */
+      setScenarioStorageOk(false)
     }
-  }, [scenarioAGroup])
-  const scenarioAResult = useMemo(() => {
-    if (!scenarioAGroup) return null
-    try {
-      return projectGlobe(scenarioAGroup)
-    } catch {
-      return null
-    }
-  }, [scenarioAGroup])
+  }, [scenarios])
+  const setScenarios = (updater: (l: SavedScenario[]) => SavedScenario[]) => setScenariosState((l) => updater(l))
+  const saveCurrentScenario = (name: string): string => {
+    const finalName = uniqueName(scenarios, name)
+    setScenariosState((l) => addScenario(l, finalName, group, new Date().toISOString(), `s${Date.now().toString(36)}`))
+    return finalName
+  }
   const setGroup = (updater: (g: GroupInputV3) => GroupInputV3) => setGroupState((g) => updater(g))
   const [revenue, setRevenue] = useState(DEFAULT_GROUP_REVENUE)
   const [fiscalYearStart, setFiscalYearStart] = useState(DEFAULT_FY_START)
@@ -107,6 +131,7 @@ export default function App() {
   let lastGroup = ''
   return (
     <div className="app">
+      <a className="skip-link" href="#main" onClick={(e) => { e.preventDefault(); document.getElementById('main')?.focus() }}>Skip to content</a>
       <aside className="sidebar">
         <div className="brand">
           <span className="logo" aria-hidden="true">P2</span>
@@ -134,9 +159,14 @@ export default function App() {
           <p className="fine">{DISCLAIMER}</p>
         </div>
       </aside>
-      <main className="main">
-        {route.page === 'results' && <ResultsPage result={globeResult} input={group} importA={setScenarioAGroup} scenarioA={scenarioAResult} saveA={() => setScenarioAGroup(group)} clearA={() => setScenarioAGroup(null)} />}
+      <main className="main" id="main" tabIndex={-1}>
+        <ErrorBoundary resetKey={route.page} onReset={() => setGroupState(SAMPLE_GROUP)}>
+        {route.page === 'home' && <HomePage result={globeResult} />}
+        {route.page === 'results' && <ResultsPage result={globeResult} input={group} saveScenario={() => saveCurrentScenario(`${group.groupName} · FY ${group.fiscalYearStart}`)} />}
         {route.page === 'group' && <GroupPage group={group} setGroup={setGroup} resetSample={() => setGroupState(SAMPLE_GROUP)} savedLocally={savedLocally} />}
+        {route.page === 'scenarios' && (
+          <ScenariosPage scenarios={scenarios} setScenarios={setScenarios} current={group} saveCurrent={saveCurrentScenario} loadIntoEditor={(g) => setGroupState(g)} storageOk={scenarioStorageOk} />
+        )}
         {route.page === 'overview' && <OverviewPage result={result} ruleset={ruleset} fiscalYearStart={fiscalYearStart} />}
         {route.page === 'inputs' && (
           <InputsPage
@@ -154,7 +184,9 @@ export default function App() {
         )}
         {route.page === 'updates' && <UpdatesPage />}
         {route.page === 'jurisdictions' && <JurisdictionsPage sub={route.sub} />}
+        {route.page === 'changes' && <ChangesPage />}
         {route.page === 'about' && <AboutPage />}
+        </ErrorBoundary>
         <footer className="footer fine">{DISCLAIMER} Engine {GLOBE_VERSION} · quick estimate {RULESET_VERSION}.</footer>
       </main>
     </div>

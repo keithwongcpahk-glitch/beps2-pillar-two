@@ -95,7 +95,7 @@ export function UpdatesPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Regulatory intel"
+        eyebrow="Intelligence"
         title="Latest updates"
         subtitle={`BEPS 2.0 / Pillar Two developments for the OECD, Hong Kong, Singapore and Japan over the last ${INTEL_META.windowDays} days, each linked to its source.`}
         actions={

@@ -1,0 +1,256 @@
+{
+ "version": "changelog.v1",
+ "note": "Version history of the calculation rulesets, jurisdiction rule packs and calendar data. Each entry lists what changed and the sources behind it. Commit hashes refer to the GitHub repository.",
+ "entries": [
+  {
+   "id": "oecd-asia-v0.4",
+   "kind": "engine",
+   "version": "oecd-asia-v0.4",
+   "date": "2026-10-06",
+   "title": "Local adoption of the Transitional CbCR Safe Harbour",
+   "changes": [
+    "The TCSH transition period now follows the collecting jurisdiction's law, read from its rule pack: the domestic top-up tax law first, then the IIR parent's law, otherwise OECD terms.",
+    "New input 'TCSH basis': enacted law (default), enacted plus officially announced, or OECD terms everywhere.",
+    "Assumptions are flagged where local law is silent (HKMTT).",
+    "OECD parameters unchanged from v0.3 (globe-params.v0.4.json)."
+   ],
+   "sources": [
+    {
+     "label": "OECD Safe Harbours and Penalty Relief (Dec 2022)",
+     "url": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/safe-harbours-and-penalty-relief-global-anti-base-erosion-rules-pillar-two.pdf"
+    },
+    {
+     "label": "OECD Side-by-Side Package (Jan 2026), ch. 3",
+     "url": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/side-by-side-package.pdf"
+    }
+   ],
+   "intel": [
+    "oecd-2026-01-05-side-by-side-package",
+    "sg-2026-09-08-finance-income-taxes-bill",
+    "jp-2026-01-23-fy2026-reform-outline"
+   ]
+  },
+  {
+   "id": "hk.v1@1.1.0",
+   "kind": "pack",
+   "version": "hk.v1 1.1.0",
+   "date": "2026-10-06",
+   "title": "Hong Kong: TCSH adoption block",
+   "changes": [
+    "The TCSH applies to the IIR under Sch. 61 Pt 3 Div. 2 IRO, for FYs beginning on or before 31 Dec 2026 and ending on or before 30 Jun 2028 (verified).",
+    "Whether the TCSH also zeroes HKMTT is not expressly stated (unverified; the engine assumes yes and flags it).",
+    "The OECD 2027 extension is not adopted: no s.26AG notice or IRD announcement found (unverified absence)."
+   ],
+   "sources": [
+    {
+     "label": "Inland Revenue (Amendment) (Minimum Tax for MNE Groups) Ordinance 2025",
+     "url": "https://www.ird.gov.hk/eng/pdf/iro/gazette/ord_112_21_2025.pdf"
+    },
+    {
+     "label": "IRD: Global minimum tax and HKMTT",
+     "url": "https://www.ird.gov.hk/eng/tax/bus_beps.htm"
+    }
+   ],
+   "intel": [
+    "hk-2025-06-06-ordinance"
+   ]
+  },
+  {
+   "id": "sg.v1@1.1.0",
+   "kind": "pack",
+   "version": "sg.v1 1.1.0",
+   "date": "2026-10-06",
+   "title": "Singapore: TCSH adoption block",
+   "changes": [
+    "The TCSH applies to both MTT (IIR) and DTT for FYs beginning on or before 31 Dec 2026 and ending on or before 30 Jun 2028 (IRAS Module 6, June 2026; verified).",
+    "Extension to FYs beginning on or before 31 Dec 2027 announced by IRAS (amendments by end-2026, subject to Parliament); not yet enacted."
+   ],
+   "sources": [
+    {
+     "label": "IRAS e-learning Module 6: Safe Harbours (June 2026)",
+     "url": "https://www.iras.gov.sg/docs/default-source/uploadedfiles/pdf/module-6-safe-harbours.pdf?sfvrsn=be5da8ef_4"
+    },
+    {
+     "label": "IRAS: GloBE rules and DTT (Side-by-Side implementation)",
+     "url": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/global-anti-base-erosion-(globe)-rules-and-domestic-top-up-tax-(dtt)"
+    }
+   ],
+   "intel": [
+    "sg-2026-09-08-finance-income-taxes-bill",
+    "sg-2026-09-02-mof-consultation-responses"
+   ]
+  },
+  {
+   "id": "jp.v1@1.1.0",
+   "kind": "pack",
+   "version": "jp.v1 1.1.0",
+   "date": "2026-10-06",
+   "title": "Japan: TCSH adoption block",
+   "changes": [
+    "TCSH for the IIR and the QDMTT; the one-year extension (FYs beginning by end-2027) was enacted by Act No. 12 of 31 Mar 2026, in force 1 Apr 2026 (verified).",
+    "The end limb (30 Jun 2029) follows the OECD SbS Package and is not quoted from Japanese law."
+   ],
+   "sources": [
+    {
+     "label": "MOF: FY2026 international tax amendments explained",
+     "url": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2026/explanation/PDF/p0739-0799.pdf"
+    },
+    {
+     "label": "MOF: FY2026 tax reform outline (international)",
+     "url": "https://www.mof.go.jp/tax_policy/tax_reform/outline/fy2026/20260123kokusai.htm"
+    }
+   ],
+   "intel": [
+    "jp-2026-01-23-fy2026-reform-outline",
+    "jp-2026-08-07-nta-guidance-qa"
+   ]
+  },
+  {
+   "id": "holidays.v1",
+   "kind": "calendar",
+   "version": "holidays.v1",
+   "date": "2026-10-06",
+   "title": "Deadline roll-forward and 2026–2027 public holidays",
+   "changes": [
+    "Filing calendar shows the statutory and the adjusted due date.",
+    "HK (Cap. 1 s.71: general holidays incl. Sundays), SG (Interpretation Act s.50: Sundays and public holidays), JP (National Tax General Act Art. 10(2): Sat/Sun, holidays, 29 Dec–3 Jan).",
+    "Holiday lists for 2026–2027 only, from GovHK / 1823, MOM and the Cabinet Office. Other years use the weekend rule only and are flagged.",
+    "ICS (calendar) export added."
+   ],
+   "sources": [
+    {
+     "label": "HK Cap. 1 s.71",
+     "url": "https://www.elegislation.gov.hk/hk/cap1!en?xpid=ID_1438402527839_002"
+    },
+    {
+     "label": "SG Interpretation Act 1965 s.50",
+     "url": "https://sso.agc.gov.sg/Act/IA1965?ProvIds=pr50-"
+    },
+    {
+     "label": "JP 国税通則法 Art. 10",
+     "url": "https://laws.e-gov.go.jp/law/337AC0000000066"
+    },
+    {
+     "label": "GovHK general holidays 2027",
+     "url": "https://www.gov.hk/en/about/abouthk/holiday/2027.htm"
+    },
+    {
+     "label": "MOM public holidays",
+     "url": "https://www.mom.gov.sg/employment-practices/public-holidays"
+    },
+    {
+     "label": "Cabinet Office national holidays",
+     "url": "https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv"
+    }
+   ],
+   "intel": []
+  },
+  {
+   "id": "oecd-asia-v0.3",
+   "kind": "engine",
+   "version": "oecd-asia-v0.3",
+   "date": "2026-10-06",
+   "commit": "1b78205",
+   "title": "Entity-level GloBE engine",
+   "changes": [
+    "Entities blended by jurisdiction, with SBIE on payroll and tangible assets at the Art. 9.2 transition rates.",
+    "TCSH tests (de minimis, simplified ETR 15/15/16/17/17%, routine profits) on CbCR inputs, over the OECD transition period as extended by the SbS Package.",
+    "Ordering: QDMTT (with QDMTT Safe Harbour status), then the IIR at the parent × ownership %, then a flagged UTPR residual.",
+    "Simplified Art. 4.4.1 deferred tax recast at 15%."
+   ],
+   "sources": [
+    {
+     "label": "OECD GloBE Model Rules (Dec 2021)",
+     "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2021/12/tax-challenges-arising-from-digitalisation-of-the-economy-global-anti-base-erosion-model-rules-pillar-two_eed81a23/782bac33-en.pdf"
+    },
+    {
+     "label": "OECD Safe Harbours and Penalty Relief (Dec 2022)",
+     "url": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/safe-harbours-and-penalty-relief-global-anti-base-erosion-rules-pillar-two.pdf"
+    },
+    {
+     "label": "OECD Side-by-Side Package (Jan 2026)",
+     "url": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/side-by-side-package.pdf"
+    }
+   ],
+   "intel": [
+    "oecd-2026-01-05-side-by-side-package",
+    "oecd-2026-05-central-record"
+   ]
+  },
+  {
+   "id": "pack-v1-initial",
+   "kind": "pack",
+   "version": "hk.v1 / sg.v1 / jp.v1 1.0.0",
+   "date": "2026-10-06",
+   "commit": "ed684a2",
+   "title": "HK / SG / JP rule packs",
+   "changes": [
+    "Sourced facts per jurisdiction: legislation, QDMTT / IIR / UTPR status and effective dates, qualified status (Central Record), filing obligations, registration, safe harbours, portals.",
+    "Each fact carries value + sourceUrl + verified."
+   ],
+   "sources": [
+    {
+     "label": "HK Ordinance No. 21 of 2025",
+     "url": "https://www.ird.gov.hk/eng/pdf/iro/gazette/ord_112_21_2025.pdf"
+    },
+    {
+     "label": "IRAS: GloBE rules and DTT",
+     "url": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/global-anti-base-erosion-(globe)-rules-and-domestic-top-up-tax-(dtt)"
+    },
+    {
+     "label": "NTA: global minimum tax guidance",
+     "url": "https://www.nta.go.jp/taxes/shiraberu/kokusai/global-minimum/pdf/01.pdf"
+    },
+    {
+     "label": "OECD Central Record",
+     "url": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/updated-central-record-for-purposes-of-the-global-minimum-tax.pdf"
+    }
+   ],
+   "intel": [
+    "hk-2025-06-06-ordinance",
+    "oecd-2026-05-central-record",
+    "jp-2026-01-23-fy2026-reform-outline"
+   ]
+  },
+  {
+   "id": "oecd-asia-v0.2",
+   "kind": "engine",
+   "version": "oecd-asia-v0.2",
+   "date": "2026-10-06",
+   "commit": "ed684a2",
+   "title": "Asia quick estimate with pack-driven presets",
+   "changes": [
+    "Jurisdiction presets (domestic top-up tax in force, labels, effective dates) derived from the HK/SG/JP packs for the selected fiscal-year start.",
+    "Quick-estimate inputs at jurisdiction level; SBIE remained a direct input."
+   ],
+   "sources": [
+    {
+     "label": "OECD GloBE Model Rules (Dec 2021)",
+     "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2021/12/tax-challenges-arising-from-digitalisation-of-the-economy-global-anti-base-erosion-model-rules-pillar-two_eed81a23/782bac33-en.pdf"
+    }
+   ],
+   "intel": [
+    "oecd-2026-05-central-record"
+   ]
+  },
+  {
+   "id": "oecd-hk-simplified-v0.1",
+   "kind": "engine",
+   "version": "oecd-hk-simplified-v0.1",
+   "date": "2026-09-05",
+   "commit": "dacc7d0",
+   "title": "Initial simplified MVP",
+   "changes": [
+    "Jurisdictional ETR vs 15% with a manual carve-out input and a transitional safe harbour flag.",
+    "HK-focused presets; not modelled: deferred tax detail, ownership chains, UTPR allocation, CbCR safe harbour numeric tests."
+   ],
+   "sources": [
+    {
+     "label": "OECD GloBE Model Rules (Dec 2021)",
+     "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2021/12/tax-challenges-arising-from-digitalisation-of-the-economy-global-anti-base-erosion-model-rules-pillar-two_eed81a23/782bac33-en.pdf"
+    }
+   ],
+   "intel": []
+  }
+ ]
+}

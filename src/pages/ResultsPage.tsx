@@ -1,9 +1,8 @@
-import type { ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { GLOBE_PARAMS, SOURCE_URLS } from '../calc/globe'
 import type { GroupInputV3, JurisdictionResultV3, ProjectionV3, TestOutcome } from '../calc/globe'
-import { Callout, formatDate, JurBadge, PageHeader, SourceLink, Tag } from '../components/ui'
+import { Callout, EmptyState, formatDate, JurBadge, PageHeader, SourceLink, Tag } from '../components/ui'
 import { href } from '../router'
-import { ScenarioPanel } from '../components/ScenarioPanel'
 import { resultsCsvRows, toCsv, withBom } from '../export/csv'
 import { downloadText, safeFilePart } from '../export/download'
 
@@ -49,13 +48,27 @@ function Waterfall({ j }: { j: JurisdictionResultV3 }) {
 export interface ResultsPageProps {
   result: ProjectionV3
   input: GroupInputV3
-  importA: (g: GroupInputV3) => void
-  scenarioA: ProjectionV3 | null
-  saveA: () => void
-  clearA: () => void
+  /** Saves the current inputs as a named scenario; returns the name used. */
+  saveScenario: () => string
 }
 
-export function ResultsPage({ result, input, importA, scenarioA, saveA, clearA }: ResultsPageProps) {
+const BASIS_LABEL: Record<string, string> = { enacted: 'enacted local law', announced: 'enacted + announced extensions', oecd: 'OECD terms for all' }
+
+/** Opens every explanation-trail section so the browser's print / "Save as PDF" includes all steps. */
+function openAllTrails() {
+  document.querySelectorAll<HTMLDetailsElement>('details.trail').forEach((d) => (d.open = true))
+}
+
+export function ResultsPage({ result, input, saveScenario }: ResultsPageProps) {
+  const [saved, setSaved] = useState<string | null>(null)
+  useEffect(() => {
+    window.addEventListener('beforeprint', openAllTrails)
+    return () => window.removeEventListener('beforeprint', openAllTrails)
+  }, [])
+  const printResults = () => {
+    openAllTrails()
+    window.print()
+  }
   const exportCsv = () => downloadText(`pillar-two-results-${safeFilePart(result.groupName)}-${result.fiscalYearStart}.csv`, withBom(toCsv(resultsCsvRows(result))))
   const rows: { label: string; cell: (j: JurisdictionResultV3) => ReactNode; strong?: boolean }[] = [
     { label: 'Entities (excluded)', cell: (j) => `${j.entityCount}${j.excludedEntities.length ? ` (${j.excludedEntities.length} inv. entity)` : ''}` },
@@ -74,6 +87,7 @@ export function ResultsPage({ result, input, importA, scenarioA, saveA, clearA }
             <Outcome o={j.safeHarbour.tests.deMinimis} label="De minimis" />
             <Outcome o={j.safeHarbour.tests.simplifiedEtr} label={`ETR ${pct(j.safeHarbour.simplifiedEtr, 1)} vs ${pct(j.safeHarbour.transitionRate, 0)}`} />
             <Outcome o={j.safeHarbour.tests.routineProfits} label="Routine profits" />
+            <span className="fine">Basis: {j.safeHarbour.basisLabel}{j.safeHarbour.assumption ? ' (assumed)' : ''}</span>
           </span>
         ) : (
           <span className="fine">{j.safeHarbour.reason}</span>
@@ -96,11 +110,28 @@ export function ResultsPage({ result, input, importA, scenarioA, saveA, clearA }
         subtitle={`${result.groupName}: fiscal year ${formatDate(result.fiscalYearStart)} – ${formatDate(result.fiscalYearEnd)}. Jurisdictional blending, SBIE, transitional safe harbour, then domestic top-up tax → IIR → UTPR residual.`}
         actions={
           <>
+            <button type="button" className="secondary" onClick={() => setSaved(saveScenario())}>Save as scenario</button>
             <button type="button" className="secondary" onClick={exportCsv}>Export CSV</button>
+            <button type="button" className="secondary" onClick={printResults}>Print / save PDF</button>
             <a className="btn" href={href('group')}>Edit group</a>
           </>
         }
       />
+      <div className="print-only print-meta">
+        <strong>Pillar Two Asia: GloBE results</strong> · {result.groupName} · FY {result.fiscalYearStart} to {result.fiscalYearEnd} · engine {result.version} · TCSH basis: {BASIS_LABEL[input.tcshBasis ?? 'enacted']}
+        <br />
+        {GLOBE_PARAMS.disclaimer}
+      </div>
+      {saved && (
+        <p className="fine save-status" role="status">
+          Saved as "{saved}". <a href={href('scenarios')}>Open Scenarios</a> to rename it or compare it with another scenario.
+        </p>
+      )}
+      {input.entities.length === 0 && (
+        <EmptyState title="No entities to calculate">
+          Add entities on the <a href={href('group')}>Group & entities</a> page, or reset to the sample group there.
+        </EmptyState>
+      )}
       <div className="kpi-grid five">
         <div className="kpi accent"><span className="kpi-label">Total top-up</span><strong>{eur(t.topUp)}</strong></div>
         <div className="kpi"><span className="kpi-label">Domestic (HKMTT / DTT / JP QDMTT)</span><strong>{eur(t.domestic)}</strong></div>
@@ -124,7 +155,7 @@ export function ResultsPage({ result, input, importA, scenarioA, saveA, clearA }
           <span className="fine">Ruleset {result.version} · SBIE rates {pct(result.jurisdictions[0]?.payrollRate ?? null, 1)} payroll / {pct(result.jurisdictions[0]?.tangibleRate ?? null, 1)} tangible</span>
         </div>
         {result.jurisdictions.length === 0 ? (
-          <p className="fine">Add entities on the Group & entities page.</p>
+          <EmptyState title="No jurisdictions yet">Add entities on the <a href={href('group')}>Group & entities</a> page.</EmptyState>
         ) : (
           <div className="table-wrap tall">
             <table className="table sticky compare results">
@@ -155,8 +186,6 @@ export function ResultsPage({ result, input, importA, scenarioA, saveA, clearA }
           </section>
         ))}
       </div>
-
-      <ScenarioPanel current={result} currentInput={input} importA={importA} scenarioA={scenarioA} saveA={saveA} clearA={clearA} />
 
       <section className="panel">
         <h3>Explanation trail</h3>
@@ -198,7 +227,7 @@ export function ResultsPage({ result, input, importA, scenarioA, saveA, clearA }
           <li><SourceLink url={SOURCE_URLS.tcshExtension} label="Extension to FYs beginning by 31 Dec 2027: Side-by-Side Package (Jan 2026), ch. 3" /></li>
           <li><SourceLink url={SOURCE_URLS.deferredTax} label="Deferred tax recast: Model Rules Art. 4.4.1" /></li>
         </ul>
-        <p className="fine">{sb.localAdoptionNote}</p>
+        <p className="fine">{sb.localAdoptionNote} Current basis: <strong>{BASIS_LABEL[input.tcshBasis ?? 'enacted']}</strong> (change it on the Group & entities page).</p>
         <p className="fine">{GLOBE_PARAMS.deferredTax.simplification} {GLOBE_PARAMS.investmentEntities.simplification}</p>
         <p className="fine">Not modelled: Additional Current Top-up Tax, Art. 5.6 minority-owned blending, POPE / split ownership, IIR offset (Art. 2.3), UTPR allocation (Art. 2.6), Side-by-Side / UPE safe harbours, the Simplified ETR Safe Harbour, and local deviations in HK / SG / JP law.</p>
       </section>

@@ -6,6 +6,7 @@ export const SAMPLE_GROUP: GroupInputV3 = {
   consolidatedRevenueEur: 1_200_000_000,
   fiscalYearStart: '2026-01-01',
   applyTransitionalSafeHarbour: true,
+  tcshBasis: 'enacted',
   entities: [
     { id: 'hk-upe', name: 'Harbour Holdings Ltd', jurisdiction: 'HK', role: 'UPE', ownershipPct: 100, globeIncome: 50_000_000, coveredTaxes: 4_000_000, deferredTaxExpense: 0, deferredTaxRate: 0.165, eligiblePayroll: 10_000_000, eligibleTangibleAssets: 20_000_000 },
     { id: 'hk-opco', name: 'Harbour Trading (HK) Ltd', jurisdiction: 'HK', role: 'CE', ownershipPct: 100, globeIncome: 30_000_000, coveredTaxes: 1_500_000, deferredTaxExpense: 0, deferredTaxRate: 0.165, eligiblePayroll: 5_000_000, eligibleTangibleAssets: 5_000_000 },
@@ -41,7 +42,8 @@ export function parseStoredGroup(raw: string | null | undefined): GroupInputV3 |
         [e.ownershipPct, e.globeIncome, e.coveredTaxes, e.deferredTaxExpense, e.deferredTaxRate, e.eligiblePayroll, e.eligibleTangibleAssets].every(isNum),
     )
     const cbcr = g.cbcr.filter((c): c is CbcrInput => !!c && typeof c.jurisdiction === 'string' && [c.revenue, c.profitBeforeTax, c.simplifiedCoveredTaxes].every(isNum))
-    return { groupName: g.groupName, consolidatedRevenueEur: g.consolidatedRevenueEur, fiscalYearStart: g.fiscalYearStart, applyTransitionalSafeHarbour: g.applyTransitionalSafeHarbour !== false, entities, cbcr }
+    const tcshBasis = g.tcshBasis === 'announced' || g.tcshBasis === 'oecd' ? g.tcshBasis : 'enacted'
+    return { groupName: g.groupName, consolidatedRevenueEur: g.consolidatedRevenueEur, fiscalYearStart: g.fiscalYearStart, applyTransitionalSafeHarbour: g.applyTransitionalSafeHarbour !== false, tcshBasis, entities, cbcr }
   } catch {
     return null
   }

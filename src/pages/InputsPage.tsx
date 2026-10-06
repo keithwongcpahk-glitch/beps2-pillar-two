@@ -22,7 +22,7 @@ export interface InputsProps {
 export function InputsPage(p: InputsProps) {
   return (
     <>
-      <PageHeader eyebrow="Projection" title="Group inputs" subtitle="Amounts in EUR. The projection updates as you type. The fiscal-year start sets which HK / SG / JP rules apply." />
+      <PageHeader eyebrow="Quick estimate" title="Quick estimate inputs" subtitle="Jurisdiction-level inputs for when entity data is not yet available. Amounts in EUR. The projection updates as you type. The fiscal-year start sets which HK / SG / JP rules apply." />
       <div className="panel input-grid">
         <label className="field">
           Consolidated revenue (EUR)
