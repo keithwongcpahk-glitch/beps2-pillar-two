@@ -19,7 +19,14 @@ Ground rules for every phase:
 - Jurisdictions page: one tab per country, a comparison table, and the filing calendar. Inputs are narrowed to HK / SG / JP / Other (non-QDMTT).
 - 55 tests.
 
-## Phase 3: Fuller engine (target `oecd-asia-v0.3`)
+### Phase 3: Fuller engine (`oecd-asia-v0.3`), shipped 2026-10-06
+- `src/calc/globe.ts` and `src/rules/globe-params.v0.3.json` (all parameters sourced to the OECD Model Rules, the Dec 2022 Safe Harbours document and the Jan 2026 Side-by-Side Package).
+- Entity-level inputs (3.1), SBIE with Art. 9.2 transition rates (3.2), transitional CbCR safe harbour with the 2027 extension (3.3), ownership % as the inclusion ratio (3.4), QDMTT → IIR → UTPR residual ordering with pack-driven timing (3.5), deferred tax recast basics (3.6).
+- UI: Group & entities page (persisted in localStorage, preloaded sample group) and a GloBE results page with a waterfall and an explanation trail.
+- 27 new golden tests, hand-worked in `docs/CALC_ASSUMPTIONS.md`.
+- Still open from Phase 3: **3.7** (pack hardening: holiday calendar, unverified fields) and **3.8** (intel refresh routine). The acceptance criteria below are kept for reference.
+
+## Phase 3: Fuller engine (original plan and acceptance criteria)
 
 | # | Work item | Acceptance criteria |
 |---|---|---|

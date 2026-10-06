@@ -10,6 +10,8 @@ Live: https://beps2-pillar-two.vercel.app
 
 | Page | Route | What it does |
 |---|---|---|
+| **GloBE results** (default) | `#/results` | Entity-level engine `oecd-asia-v0.3`: jurisdictional waterfall (GloBE income → SBIE → excess profit → ETR → top-up % → top-up), transitional CbCR safe harbour pass/fail, who collects (HKMTT / DTT / JP QDMTT / IIR / UTPR residual), and an explanation trail linking every step to its OECD rule |
+| **Group & entities** | `#/group` | Constituent entities (jurisdiction, role UPE/IPE/CE, ownership %, GloBE income, covered taxes, deferred tax and booked rate, eligible payroll and tangible assets, minority-owned / investment-entity flags) plus CbCR data. Saved in localStorage; the sample group (HK UPE with SG and JP subsidiaries) is preloaded |
 | Overview | `#/overview` | KPIs, ETR chart, top-up breakdown, HK/SG/JP rule routing for the selected FY, latest-updates teaser |
 | Inputs | `#/inputs` | Group revenue, **fiscal-year start**, per-jurisdiction GloBE income / covered taxes / carve-out / safe-harbour flag (HK, SG, JP, Other (non-QDMTT)) |
 | Latest updates | `#/updates` | Curated 30-day feed of OECD / HK / SG / JP Pillar Two developments, each with a source link. Filters by jurisdiction, topic and calc impact, plus a separate "Earlier key milestones" list and a browser-local review status (new / reviewed / needs rule change) |
@@ -38,7 +40,8 @@ npm run build   # tsc -b && vite build
 
 ## Layout
 
-- `src/calc/pillarTwo.ts`: pure calc engine. `buildAsiaRuleset(fyStart)` merges the HK/SG/JP pack presets into `src/rules/oecd-asia-v0.2.json`.
+- `src/calc/globe.ts`: entity-level GloBE engine (v0.3). `src/rules/globe-params.v0.3.json` holds the sourced OECD parameters (SBIE rates, TCSH, deferred tax, ordering). `src/calc/sampleGroup.ts` holds the sample group and the localStorage parser.
+- `src/calc/pillarTwo.ts`: quick-estimate engine (jurisdiction-level). `buildAsiaRuleset(fyStart)` merges the HK/SG/JP pack presets into `src/rules/oecd-asia-v0.2.json`.
 - `src/rules/oecd-asia-v0.2.json`: active engine ruleset (`oecd-asia-v0.2`)
 - `src/rules/oecd-hk-simplified-v0.1.json`: legacy ruleset (still supported via `legacyRulesetV01`)
 - `src/rules/jurisdictions/{hk,sg,jp}.v1.json`: sourced jurisdiction rule packs
@@ -51,7 +54,8 @@ npm run build   # tsc -b && vite build
 
 ## Tests
 
-55 Vitest tests:
+82 Vitest tests:
+- Entity-level GloBE engine goldens (27; hand-worked in CALC_ASSUMPTIONS.md)
 - Legacy v0.1 engine path (13)
 - v0.2 Asia routing golden tests (10)
 - Pack loader / validation / filing-calendar goldens (19)
