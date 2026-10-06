@@ -1,0 +1,11 @@
+{
+  "lastRefreshed": "2026-10-06T11:00:00+08:00",
+  "windowDays": 30,
+  "method": "Manual research run: WebSearch plus fetching the primary page for each item. Items are only included when the date and content were confirmed against a fetched source.",
+  "coverage": {
+    "OECD": "Checked: OECD Pillar Two page and September 2026 package PDFs, Central Record PDF, EY/KPMG/Grant Thornton alerts.",
+    "HK": "Checked: IRD 'What's New' (entries up to 30 Sep 2026) and the IRD global minimum tax page. No Pillar Two items dated 6 Sep–6 Oct 2026. IRD still states Phase 2 of the Pillar Two Portal (top-up tax returns) is due in Q4 2026.",
+    "SG": "Checked: IRAS Pillar 2 pages, Singapore Statutes Online (Bill No. 22/2026), Allen & Gledhill.",
+    "JP": "Checked: MOF and NTA global minimum tax pages, NTA e-Tax GIR page, KPMG Japan. No new legislation or guidance in the window; only the e-Tax GIR recording guideline update."
+  }
+}
