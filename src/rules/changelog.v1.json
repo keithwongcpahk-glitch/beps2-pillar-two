@@ -3,6 +3,70 @@
  "note": "Version history of the calculation rulesets, jurisdiction rule packs and calendar data. Each entry lists what changed and the sources behind it. Commit hashes refer to the GitHub repository.",
  "entries": [
   {
+   "id": "oecd-asia-v0.5",
+   "kind": "engine",
+   "version": "oecd-asia-v0.5",
+   "date": "2026-10-07",
+   "title": "Singapore Side-by-Side exemption for US-parented groups; legislative status basis",
+   "changes": [
+    "New group input 'Ultimate parent is a US entity (US-parented group, Side-by-Side)'. It is off by default and saved with the group and with scenarios.",
+    "When the group is US-parented and an SG parent would apply the IIR for an FY commencing on or after 1 Jan 2026, Singapore's MTT (IIR) is not charged. Trail: 'SG IIR exempt under the Side-by-Side package (passed, not yet law)', linked to the source. A non-SG intermediate parent with an IIR in force takes over if there is one; otherwise the residual top-up is shown as 'SbS exempt' and excluded from the total top-up. Singapore's DTT is unchanged.",
+    "The 'TCSH basis' setting is renamed 'legislative status basis' (the stored field is still tcshBasis). Enacted law only (default): the SG IIR is still charged, with a note that it would be exempt once enacted. Enacted + passed / announced, or OECD terms: the exemption applies.",
+    "Dashboard: amber 'Not yet law' risk line ('Relies on passed-not-yet-enacted law') whenever the exemption is relied on; RAG amber for a jurisdiction whose top-up is exempt only for this reason. Results page callout, CSV column and Jurisdictions page block added.",
+    "Not modelled: Japan's Side-by-Side IIR exemption (the JP pack sources it: FY2026 reform outline, plus the US designation reported via a secondary source) and any Hong Kong equivalent (none sourced). The UTPR side of the SbS Safe Harbour elsewhere is not modelled either.",
+    "OECD parameters unchanged (globe-params.v0.5.json)."
+   ],
+   "sources": [
+    {
+     "label": "MOF Singapore – Second Reading Speech, Finance (Income Taxes) Bill (6 Oct 2026)",
+     "url": "https://www.mof.gov.sg/news-resources/newsroom/second-reading-opening-speech-on-the-finance--income-taxes--bill---2m-jeffrey-siow/"
+    },
+    {
+     "label": "SSO – Finance (Income Taxes) Bill 2026 (Bill No. 22/2026), cl. 1(4), 38, 49(b)",
+     "url": "https://sso.agc.gov.sg/Bills-Supp/22-2026/Published/20260908?DocDate=20260908"
+    },
+    {
+     "label": "IRAS – GloBE rules and DTT (SbS Safe Harbour for FYs commencing on or after 1 Jan 2026)",
+     "url": "https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/global-anti-base-erosion-(globe)-rules-and-domestic-top-up-tax-(dtt)"
+    }
+   ],
+   "intel": [
+    "sg-2026-10-06-finance-income-taxes-bill-passed",
+    "sg-2026-09-08-finance-income-taxes-bill",
+    "oecd-2026-01-05-side-by-side-package",
+    "jp-2026-01-23-fy2026-reform-outline"
+   ]
+  },
+  {
+   "id": "sg.v1@1.2.0",
+   "kind": "pack",
+   "version": "sg.v1 1.2.0",
+   "date": "2026-10-07",
+   "title": "Singapore: Finance (Income Taxes) Bill 2026 passed; Side-by-Side Safe Harbour block",
+   "changes": [
+    "Bill No. 22/2026 recorded as passed by Parliament on 6 Oct 2026, with presidential assent and gazetting pending (MOF speech; CNA confirms passage).",
+    "New sideBySideSafeHarbour block: legal status 'passed-not-enacted', applies to the MTT (IIR) only, effective 'for financial years commencing on or after 1 January 2026' (IRAS; Bill s.1(4), cl.38(2) and new s.84(3)). Qualifying groups are set by regulations that refer to the OECD list of qualified side-by-side regimes; MOF names US MNEs. The DTT is unaffected.",
+    "Safe-harbour status text, TCSH extension note and the 'Pending amendments' feature updated; MOF and CNA added to the sources."
+   ],
+   "sources": [
+    {
+     "label": "MOF Singapore – Second Reading Speech (6 Oct 2026)",
+     "url": "https://www.mof.gov.sg/news-resources/newsroom/second-reading-opening-speech-on-the-finance--income-taxes--bill---2m-jeffrey-siow/"
+    },
+    {
+     "label": "SSO – Bill No. 22/2026",
+     "url": "https://sso.agc.gov.sg/Bills-Supp/22-2026/Published/20260908?DocDate=20260908"
+    },
+    {
+     "label": "CNA – Parliament in brief (6 Oct 2026)",
+     "url": "https://www.channelnewsasia.com/singapore/speakers-pay-parliament-in-brief-oct-6-6436476"
+    }
+   ],
+   "intel": [
+    "sg-2026-10-06-finance-income-taxes-bill-passed"
+   ]
+  },
+  {
    "id": "oecd-asia-v0.4",
    "kind": "engine",
    "version": "oecd-asia-v0.4",

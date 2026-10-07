@@ -20,9 +20,9 @@ describe('changelog data', () => {
       if (e.commit) expect(e.commit).toMatch(/^[0-9a-f]{7}$/)
     }
   })
-  it('covers every current version: engines v0.1–v0.4, each pack version, the holiday data', () => {
+  it('covers every current version: engines v0.1–v0.5, each pack version, the holiday data', () => {
     const versions = CHANGELOG.entries.map((e) => e.version)
-    for (const v of ['oecd-hk-simplified-v0.1', 'oecd-asia-v0.2', 'oecd-asia-v0.3', GLOBE_VERSION, RULESET_VERSION, HOLIDAYS.version]) expect(versions).toContain(v)
+    for (const v of ['oecd-hk-simplified-v0.1', 'oecd-asia-v0.2', 'oecd-asia-v0.3', 'oecd-asia-v0.4', GLOBE_VERSION, RULESET_VERSION, HOLIDAYS.version]) expect(versions).toContain(v)
     for (const c of PACK_CODES) {
       const p = JURISDICTION_PACKS[c]
       expect(versions.some((v) => v.includes(p.packId) && v.includes(p.packVersion))).toBe(true)

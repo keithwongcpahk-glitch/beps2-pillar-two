@@ -12,7 +12,7 @@ Live: https://beps2-pillar-two.vercel.app
 |---|---|---|
 | **Overview** (default) | `#/` | 30-second explainer: what the tool does, HK/SG/JP scope, what is and is not modelled, current totals, links to every page |
 | **Executive dashboard** | `#/dashboard` | One-page board view: KPIs (total top-up, blended ETR vs 15%, safe harbour passes, domestic / IIR / UTPR residual, change vs a comparison scenario), jurisdiction RAG table with a stated rule, ETR vs 15% chart, top-up by collecting tax, next deadlines, data readiness, material regulatory updates, key risks & assumptions. Prints on one A4 landscape page. See `docs/DASHBOARD.md` |
-| **GloBE results** | `#/results` | Entity-level engine `oecd-asia-v0.4`: jurisdictional waterfall (GloBE income → SBIE → excess profit → ETR → top-up % → top-up), transitional CbCR safe harbour pass/fail, who collects (HKMTT / DTT / JP QDMTT / IIR / UTPR residual), and an explanation trail linking every step to its OECD rule |
+| **GloBE results** | `#/results` | Entity-level engine `oecd-asia-v0.5`: jurisdictional waterfall (GloBE income → SBIE → excess profit → ETR → top-up % → top-up), transitional CbCR safe harbour pass/fail, who collects (HKMTT / DTT / JP QDMTT / IIR / UTPR residual), Singapore's Side-by-Side MTT exemption for US-parented groups (legislative status basis), and an explanation trail linking every step to its OECD rule |
 | **Group & entities** | `#/group` | Constituent entities (jurisdiction, role UPE/IPE/CE, ownership %, GloBE income, covered taxes, deferred tax and booked rate, eligible payroll and tangible assets, minority-owned / investment-entity flags) plus CbCR data. Saved in localStorage; the sample group (HK UPE with SG and JP subsidiaries) is preloaded |
 | **Scenarios** | `#/scenarios` | Named scenarios in localStorage: save, rename, duplicate, delete, load, compare any two (delta by jurisdiction and collector), comparison CSV, JSON export/import |
 | Quick estimate summary | `#/overview` | KPIs, ETR chart, top-up breakdown, HK/SG/JP rule routing for the selected FY, latest-updates teaser |
@@ -58,10 +58,11 @@ npm run build   # tsc -b && vite build
 
 ## Tests
 
-141 Vitest tests:
+153 Vitest tests:
 - Executive dashboard aggregation / RAG / deadlines / updates / readiness / risks (20)
 - Entity-level GloBE engine goldens (27; hand-worked in CALC_ASSUMPTIONS.md)
 - v0.4 local TCSH adoption goldens (11; worked examples 7–9)
+- v0.5 Singapore Side-by-Side goldens (12; worked examples 10–14, `src/calc/sbsUs.test.ts`)
 - CSV / ICS export, scenario comparison, round-trip, inputs JSON (10)
 - Named scenario store (5)
 - Filing-calendar roll-forward and holiday data (10)

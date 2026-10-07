@@ -50,6 +50,7 @@ Ground rules for every phase:
 - **4.4:** landing/overview page, consistent page headers (eyebrow = navigation group), empty states, a page-level error boundary, a print stylesheet (results → Save as PDF), a skip link, focus outlines, focus moved to the page on navigation, labelled controls, and contrast checked. At 375px there is no horizontal overflow outside table wrappers on any page.
 - **4.5:** "Ruleset & changes" page built from `src/rules/changelog.v1.json`. Every pack and ruleset version has an entry with at least one source (tested).
 - Also shipped: engine `oecd-asia-v0.4`, in which the TCSH transition period follows local law (see CALC_ASSUMPTIONS).
+- Shipped 2026-10-07: engine `oecd-asia-v0.5` and SG pack 1.2.0. Singapore's Side-by-Side MTT exemption for US-parented groups (Finance (Income Taxes) Bill 2026, passed 6 Oct 2026, not yet law), applied only on the 'enacted + passed / announced' or OECD legislative status basis. Next: move it to enacted once the Act is gazetted and the regulations are published, and consider modelling Japan's sourced SbS IIR exemption.
 
 | # | Work item | Acceptance criteria |
 |---|---|---|

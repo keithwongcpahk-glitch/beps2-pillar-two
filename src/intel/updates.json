@@ -11,11 +11,11 @@
     "sourceType": "official",
     "secondarySourceUrl": "https://www.channelnewsasia.com/singapore/speakers-pay-parliament-in-brief-oct-6-6436476",
     "secondarySourceName": "CNA, 'Parliament in brief' 6 Oct 2026 (secondary, confirms passage)",
-    "affectsCalc": "unknown",
-    "impactNote": "Rule-pack review needed: the SG pack still describes the SbS Safe Harbour and the Finance (Income Taxes) Bill as pending/announced. DTT (QDMTT) routing is unchanged. Whether to model the MTT exemption for US-parented groups from FY2026 is a reviewer decision. Do not edit rules or calc without sign-off.",
-    "status": "needs-rule-change",
+    "affectsCalc": "yes",
+    "impactNote": "Modelled in engine oecd-asia-v0.5 and SG pack 1.2.0 (7 Oct 2026). For US-parented groups the SG IIR (MTT) at an SG parent is exempt for FYs commencing on or after 1 Jan 2026. This applies only on the 'enacted + passed / announced' or OECD legislative status basis; on the enacted-only default it is still charged, with a 'would be exempt once enacted' note. DTT unchanged. See Ruleset & changes.",
+    "status": "reviewed",
     "verified": true,
-    "verificationNote": "MOF speech fetched and read (6 Oct 2026). Passage confirmed by CNA; the Parliament Hansard and the gazetted Act were not fetched. Commencement dates taken from Bill No. 22/2026 as tabled on SSO."
+    "verificationNote": "MOF speech fetched and read (6 Oct 2026). Passage confirmed by CNA; the Parliament Hansard and the gazetted Act were not fetched. Commencement dates taken from Bill No. 22/2026 as tabled on SSO. Bill text read on SSO on 7 Oct 2026: cl.38 amends s.20 so stateless entities can use the GloBE safe harbours, with effect for FYs beginning on or after 1 Jan 2026; cl.49(b) inserts s.84(3), letting safe harbour regulations refer to an OECD webpage (qualified side-by-side regimes) and apply from FYs beginning on or after 1 Jan 2026."
   },
   {
     "id": "oecd-2026-09-11-administrative-guidance",

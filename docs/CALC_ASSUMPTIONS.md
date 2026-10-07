@@ -176,7 +176,7 @@ HK UPE (100m income, 20m tax) owns two OTHER CEs: A (3m income, 100%) and B (1m,
 
 - **Inputs:** GloBE income and covered taxes are entered directly. Chapter 3 / 4 adjustments are not computed.
 - **Deferred tax:** a single amount per entity, recast with min(1, 15% ÷ rate). Art. 4.4.2–4.4.7 (exclusions, recapture, DTA elections) and the GloBE Loss Election are not modelled.
-- **Not modelled:** Additional Current Top-up Tax, Art. 5.6 minority-owned blending (flag only), IIR offset (Art. 2.3), POPE / split ownership, UTPR allocation (Art. 2.6), Art. 9.3 initial-phase exclusion, Side-by-Side / UPE / Simplified ETR safe harbours, JP tax-credit special measure, the national/local split of JP QDMTT.
+- **Not modelled:** Additional Current Top-up Tax, Art. 5.6 minority-owned blending (flag only), IIR offset (Art. 2.3), POPE / split ownership, UTPR allocation (Art. 2.6), Art. 9.3 initial-phase exclusion, UPE / Simplified ETR safe harbours, Side-by-Side safe harbours other than Singapore's MTT exemption (v0.5), JP tax-credit special measure, the national/local split of JP QDMTT.
 - **Assumptions:** a 12-month FY is assumed. The inclusion ratio is taken as the UPE ownership % of each entity.
 - **Local adoption:** superseded in v0.4. The TCSH period now follows the collecting jurisdiction's law (see below).
 
@@ -235,6 +235,73 @@ OTHER CE: 500,000 income, 25,000 tax (5%), SBIE 0 → top-up (15% − 5%) × 500
 |---|---|
 | `enacted` | No QDMTT, so the IIR parent's (HK) law applies. HK has not adopted the extension → no TCSH → IIR **50,000** |
 | `oecd` | de minimis passes → **0** |
+
+# v0.5: Singapore Side-by-Side Safe Harbour for US-parented groups
+
+Parameters: `src/rules/globe-params.v0.5.json` (OECD values unchanged from v0.4) and the new `sideBySideSafeHarbour` block in `src/rules/jurisdictions/sg.v1.json` (packVersion 1.2.0). Tests: `src/calc/sbsUs.test.ts` (12).
+
+## Sources and legal status (7 Oct 2026)
+
+| Fact | Value | Source |
+|---|---|---|
+| Bill status | Finance (Income Taxes) Bill 2026 (Bill No. 22/2026): first reading 8 Sep 2026, **passed by Parliament 6 Oct 2026**, presidential assent and gazetting pending. `legalStatus: passed-not-enacted` | [MOF second reading speech, 6 Oct 2026](https://www.mof.gov.sg/news-resources/newsroom/second-reading-opening-speech-on-the-finance--income-taxes--bill---2m-jeffrey-siow/); CNA confirms passage |
+| Effect | "US multinational enterprises will be exempted from our Multinational Enterprise Top-up Tax. The Domestic Top-up Tax will continue to apply to all multinational enterprises in Singapore, including those from the US." (MOF) | MOF speech |
+| Effective date | "with effect for financial years commencing on or after 1 January 2026" (IRAS). Bill s.1(4) deems ss.38 and 49(b) to have come into operation on 1 Jan 2026; cl.38(2) applies to each FY beginning on or after 1 Jan 2026 | [IRAS GloBE / DTT page](https://www.iras.gov.sg/taxes/pillar-2-top-up-taxes/global-anti-base-erosion-(globe)-rules-and-domestic-top-up-tax-(dtt)); [SSO Bill text](https://sso.agc.gov.sg/Bills-Supp/22-2026/Published/20260908?DocDate=20260908) |
+| Who qualifies | Cl.38 amends MMT Act s.20 (GloBE Safe Harbours) so stateless entities can also use a GloBE safe harbour. Cl.49(b) inserts s.84(3): safe harbour regulations "may do so by reference to a webpage that is accessible from a prescribed Internet website of the [OECD]", applying from FYs beginning on or after 1 Jan 2026. The Explanatory Statement says this lets the SbS Safe Harbour "refer to the prescribed Internet website of the OECD to determine whether a jurisdiction's tax regime is a qualified side-by-side regime". The Bill does not name the US; MOF does. | SSO Bill text and Explanatory Statement (read 7 Oct 2026) |
+
+**Qualifying test used by the model (proxy):** the user ticks "Ultimate parent is a US entity (US-parented group, Side-by-Side)". The SbS regulations and the OECD list of qualified side-by-side regimes have not been read, so any other conditions are not modelled.
+
+## Legislative status basis (renamed from "TCSH basis")
+
+The v0.4 `tcshBasis` input is now the general **legislative status basis**. The stored field name is unchanged, so saved groups and scenarios still load. One setting covers the TCSH transition period and the SbS exemption, which keeps the "which law counts" choice in one place.
+
+| Basis | TCSH period (v0.4) | SG SbS exemption (v0.5) |
+|---|---|---|
+| `enacted` (default) | enacted law | **not applied**: the SG IIR is still charged, with the note "would be exempt once enacted" |
+| `announced` ("enacted + passed / announced, not yet law") | plus announced extensions | **applied** |
+| `oecd` | OECD terms | **applied** (OECD SbS Safe Harbour, FYs commencing on or after 1 Jan 2026) |
+
+The default stays enacted-only because the Act has not received assent and the regulations are not yet made.
+
+## Engine rule
+
+The exemption applies when all of the following hold:
+
+- `usParented` is true;
+- the UPE is not located in HK / SG / JP (otherwise it is ignored, with a warning);
+- the parent that would apply the IIR is located in SG;
+- the FY begins on or after 2026-01-01;
+- the measure counts under the basis.
+
+Then:
+
+1. The SG parent does not charge the IIR.
+2. If a non-SG intermediate parent has an IIR in force (HK or JP), it applies the IIR instead. Japan's own SbS exemption and any HK equivalent are not modelled, so this may overstate the result, and a warning says so.
+3. Otherwise the residual top-up (after any domestic top-up tax) is recorded as `sbsExempt` (collector "SbS exempt") and excluded from the jurisdiction's `topUp` and the total top-up. It is not moved to the UTPR residual, because the OECD SbS Safe Harbour also switches off the UTPR where adopted and Singapore has no UTPR. Other jurisdictions' UTPR is not modelled.
+4. Domestic top-up taxes, including Singapore's DTT, are unchanged. The SG jurisdiction gets a "Side-by-Side: DTT unaffected" trail line.
+5. Dashboard: an amber "Not yet law" risk line (`kind: 'legislative'`, "Relies on passed-not-yet-enacted law …"). RAG is amber for a jurisdiction whose top-up is nil only because of the exemption. On the enacted basis a "would be exempt once enacted" basis line is shown instead.
+
+**JP / HK check (7 Oct 2026):**
+
+- **JP pack:** it does source a Japanese SbS equivalent. `safeHarbours` cites the MOF FY2026 reform outline (IIR top-up set to zero where the UPE jurisdiction is designated, FYs beginning on or after 1 Jan 2026). The local feature "Side-by-Side designation (US)" cites MOF Notice No. 89 of 31 Mar 2026, but via a secondary source. The pack does not record the enacting provision, and v0.5 does not model it.
+- **HK pack:** no SbS equivalent is sourced (only the TCSH, the Transitional UTPR, QDMTT and Simplified Calculations safe harbours), so nothing is modelled.
+
+## Worked examples 10–14
+
+Group: US UPE in "Other" (20,000,000 income, 4,200,000 tax, 21%, no top-up). It owns an SG intermediate parent (10,000,000 income, 1,000,000 tax, ETR 10%, SBIE 0), which holds 80% of a JP CE (20,000,000 income, 2,000,000 tax, ETR 10%, SBIE 0). FY beginning 1 Jan 2026; TCSH off. Japan's QDMTT applies only to FYs beginning on or after 1 Apr 2026, so JP top-up goes to the IIR.
+
+- SG top-up = (15% − 10%) × 10,000,000 = **500,000**, collected by SG DTT in every case.
+- JP top-up = (15% − 10%) × 20,000,000 = **1,000,000**.
+
+| # | Case | JP result | Total top-up |
+|---|---|---|---|
+| 10 | US-parented, `enacted` | IIR at the SG parent = 1,000,000 × 80% = **800,000**; minority 200,000 not collected; trail "Side-by-Side exemption (not applied) … would be exempt once enacted" | 1,500,000 |
+| 11 | US-parented, `announced` | trail "SG IIR exempt under the Side-by-Side package (passed, not yet law)"; IIR 0, UTPR residual 0, **SbS exempt 1,000,000**; RAG amber | **500,000** (SG DTT only) |
+| 12 | US-parented, `oecd` | as example 11 | 500,000 |
+| 13 | Not US-parented, any basis | unchanged from v0.4: IIR 800,000, minority 200,000; no SbS lines | 1,500,000 |
+| 14 | US-parented, `announced`, plus an HK intermediate parent (no income) | IIR passes to the HK parent: **800,000** at HK Holdings Ltd, with a warning that no HK SbS equivalent is sourced | 1,500,000 |
+
+An FY beginning 1 Jan 2025 is not covered, so the SG IIR applies. A group flagged US-parented whose UPE is in SG is ignored, with a warning.
 
 ## Filing calendar roll-forward (`businessDays.ts`, `holidays.v1.json`)
 

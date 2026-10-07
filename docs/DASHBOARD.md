@@ -13,14 +13,14 @@ A one-page board view. It reads only the existing engine output (`projectGlobe`)
 | Next filing deadlines | `computeFilingCalendar()` + `nextDeadlines()` | Next five applicable deadlines on or after today, by **adjusted** date (weekend/holiday roll-forward). |
 | Data readiness | `dataReadiness()` | Input completeness only: CbCR rows per jurisdiction, payroll/tangible assets per entity, booked rate where deferred tax is entered. |
 | Regulatory updates | `materialUpdates()` | Three items: material first (affects calc = yes, or locally flagged "needs rule change"), then newest. |
-| Key risks & assumptions | `keyRisks()` | Assumptions that change a result (e.g. the HKMTT safe harbour), a non-enacted safe harbour basis, unverified pack facts that matter (descriptive ones are only counted), engine warnings, the main simplifications. |
+| Key risks & assumptions | `keyRisks()` | Assumptions that change a result (e.g. the HKMTT safe harbour), a non-enacted legislative status basis, an amber 'Not yet law' line when Singapore's Side-by-Side exemption (passed, not yet law) is relied on (v0.5), unverified pack facts that matter (descriptive ones are only counted), engine warnings, the main simplifications. |
 
 ## RAG rule
 
 Thresholds are presentation settings (`ETR_BUFFER` = 1pp), not tax parameters. The UI legend reads from `RAG_RULES`.
 
 - **Red:** top-up tax due (any collector).
-- **Amber:** no top-up, but only via (a) a safe harbour that relies on an assumption (local law silent), (b) an announced-but-not-enacted extension (detected by re-running the engine on the enacted basis), or (c) OECD terms where local adoption is not modelled; or the GloBE ETR is below 16% (within 1pp of 15%, or below 15% with the excess absorbed by the substance carve-out).
+- **Amber:** no top-up, but only via (a) a safe harbour that relies on an assumption (local law silent), (b) an announced-but-not-enacted extension (detected by re-running the engine on the enacted basis), or (c) OECD terms where local adoption is not modelled, or (d) Singapore's Side-by-Side exemption for a US-parented group (passed, not yet law); or the GloBE ETR is below 16% (within 1pp of 15%, or below 15% with the excess absorbed by the substance carve-out).
 - **Green:** no top-up, and either the safe harbour passes under enacted local law with no assumption, or the GloBE ETR is 16% or more.
 - **Grey (n/a):** no net GloBE income, or the group is out of scope.
 
