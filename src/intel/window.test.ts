@@ -45,8 +45,11 @@ describe('intel window helpers', () => {
 describe('intel dataset integrity', () => {
   const w = windowFor(calendarDateAt(INTEL_META.lastRefreshed), INTEL_META.windowDays)
 
-  it('meta window is the 30 days to 2026-10-06', () => {
-    expect(w).toEqual({ start: '2026-09-06', end: '2026-10-06' })
+  it('meta window is the 30 days ending on the lastRefreshed (HK) date', () => {
+    // Refresh-agnostic so routine news refreshes don't need a test edit.
+    expect(INTEL_META.windowDays).toBe(30)
+    expect(w.end).toBe(calendarDateAt(INTEL_META.lastRefreshed))
+    expect(windowFor(w.end, 30)).toEqual(w)
   })
 
   it('every item has an https source, valid enums and a unique id', () => {

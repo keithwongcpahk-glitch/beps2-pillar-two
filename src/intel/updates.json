@@ -1,5 +1,23 @@
 [
   {
+    "id": "sg-2026-10-06-finance-income-taxes-bill-passed",
+    "date": "2026-10-06",
+    "jurisdiction": "SG",
+    "title": "Parliament passes the Finance (Income Taxes) Bill 2026: US-parented groups exempted from Singapore's MTT, DTT unchanged",
+    "summary": "Second Minister for Finance Jeffrey Siow moved the second reading of Bill No. 22/2026 on 6 October 2026 and Parliament passed it the same day. Clauses 38 and 49(b) give effect to the Side-by-Side package: US multinational enterprises are exempted from Singapore's Multinational Enterprise Top-up Tax (IIR), while the Domestic Top-up Tax continues to apply to all MNEs in Singapore, including US groups. Under the Bill as tabled, those clauses are deemed to operate from 1 January 2026. Other clauses (36, 37, 39 to 50) align the MMT Act with further international updates, including exchange of GloBE Information Returns so groups only need to file the GIR in one jurisdiction. The Act still needs presidential assent and gazetting, and the detailed safe harbour rules are to follow in regulations.",
+    "topic": "Side-by-side",
+    "sourceUrl": "https://www.mof.gov.sg/news-resources/newsroom/second-reading-opening-speech-on-the-finance--income-taxes--bill---2m-jeffrey-siow/",
+    "sourceName": "MOF Singapore – Second Reading Opening Speech on the Finance (Income Taxes) Bill, 6 Oct 2026",
+    "sourceType": "official",
+    "secondarySourceUrl": "https://www.channelnewsasia.com/singapore/speakers-pay-parliament-in-brief-oct-6-6436476",
+    "secondarySourceName": "CNA, 'Parliament in brief' 6 Oct 2026 (secondary, confirms passage)",
+    "affectsCalc": "unknown",
+    "impactNote": "Rule-pack review needed: the SG pack still describes the SbS Safe Harbour and the Finance (Income Taxes) Bill as pending/announced. DTT (QDMTT) routing is unchanged. Whether to model the MTT exemption for US-parented groups from FY2026 is a reviewer decision. Do not edit rules or calc without sign-off.",
+    "status": "needs-rule-change",
+    "verified": true,
+    "verificationNote": "MOF speech fetched and read (6 Oct 2026). Passage confirmed by CNA; the Parliament Hansard and the gazetted Act were not fetched. Commencement dates taken from Bill No. 22/2026 as tabled on SSO."
+  },
+  {
     "id": "oecd-2026-09-11-administrative-guidance",
     "date": "2026-09-11",
     "jurisdiction": "OECD",
