@@ -72,6 +72,24 @@ export interface PackTcsh {
   extension: SourcedFact & TcshPeriod & { status: 'enacted' | 'announced' | 'not-announced' }
 }
 
+/** Legal status of a measure, used with the legislative status basis (v0.5). */
+export type LegalStatus = 'enacted' | 'passed-not-enacted' | 'announced'
+
+/**
+ * Side-by-Side Safe Harbour (OECD SbS package, Jan 2026) as adopted locally (v0.5: SG only).
+ * Exempts qualifying (US-parented) groups from the local IIR; the domestic top-up tax is unaffected.
+ */
+export interface PackSideBySide extends SourcedFact {
+  legalStatus: LegalStatus
+  appliesTo: 'IIR'
+  /** First day of the first fiscal year covered ("FY commencing on or after"). */
+  effectiveFrom: string
+  bill: SourcedFact
+  effectiveDate: SourcedFact
+  qualifyingGroups: SourcedFact
+  domesticUnaffected: SourcedFact
+}
+
 export interface JurisdictionPack {
   packId: string
   jurisdiction: PackCode
@@ -87,6 +105,8 @@ export interface JurisdictionPack {
   filing: FilingObligation[]
   registration: SourcedFact[]
   safeHarbours: SourcedFact
+  /** Only present where the pack sources a local Side-by-Side adoption (SG from 1.2.0). */
+  sideBySideSafeHarbour?: PackSideBySide
   transitionalCbcrSafeHarbour: PackTcsh
   portal: SourcedFact
   localFeatures: LocalFeature[]
@@ -174,6 +194,14 @@ export function listFacts(pack: JurisdictionPack): FactRef[] {
   pack.filing.forEach((f) => push(`filing.${f.id}`, f))
   pack.registration.forEach((r, i) => push(`registration[${i}]`, r))
   push('safeHarbours', pack.safeHarbours)
+  const sbs = pack.sideBySideSafeHarbour
+  if (sbs) {
+    push('sideBySideSafeHarbour', sbs)
+    push('sideBySideSafeHarbour.bill', sbs.bill)
+    push('sideBySideSafeHarbour.effectiveDate', sbs.effectiveDate)
+    push('sideBySideSafeHarbour.qualifyingGroups', sbs.qualifyingGroups)
+    push('sideBySideSafeHarbour.domesticUnaffected', sbs.domesticUnaffected)
+  }
   const t = pack.transitionalCbcrSafeHarbour
   push('transitionalCbcrSafeHarbour.appliesToIir', t.appliesToIir)
   push('transitionalCbcrSafeHarbour.appliesToDomestic', t.appliesToDomestic)
@@ -210,6 +238,12 @@ export function validatePack(pack: JurisdictionPack): string[] {
     for (const [k, per] of [['enactedPeriod', t.enactedPeriod], ['extension', t.extension]] as const) {
       if (!ISO_DATE.test(per.fyBeginsOnOrBefore) || !ISO_DATE.test(per.fyEndsOnOrBefore)) errors.push(`transitionalCbcrSafeHarbour.${k}: dates must be YYYY-MM-DD`)
     }
+  const sbs = pack.sideBySideSafeHarbour
+  if (sbs) {
+    if (!['enacted', 'passed-not-enacted', 'announced'].includes(sbs.legalStatus)) errors.push(`sideBySideSafeHarbour: bad legalStatus ${sbs.legalStatus}`)
+    if (!ISO_DATE.test(sbs.effectiveFrom)) errors.push('sideBySideSafeHarbour.effectiveFrom must be YYYY-MM-DD')
+    if (sbs.appliesTo !== 'IIR') errors.push('sideBySideSafeHarbour.appliesTo must be IIR')
+  }
   const ids = new Set<string>()
   for (const f of pack.filing) {
     if (ids.has(f.id)) errors.push(`duplicate filing id ${f.id}`)
@@ -223,7 +257,20 @@ export function validatePack(pack: JurisdictionPack): string[] {
   return errors
 }
 
+/**
+ * Legislative status basis (named "TCSH basis" before v0.5; the stored field is still `tcshBasis`).
+ * - enacted: only enacted local law;
+ * - announced: also measures passed by the legislature or officially announced but not yet law;
+ * - oecd: OECD terms for every jurisdiction.
+ * Applies to the TCSH transition period (v0.4) and Singapore's Side-by-Side Safe Harbour (v0.5).
+ */
 export type TcshBasis = 'enacted' | 'announced' | 'oecd'
+export type LegislativeBasis = TcshBasis
+
+/** Whether a measure with this legal status counts under the basis. */
+export function measureCounts(status: LegalStatus, basis: LegislativeBasis): boolean {
+  return status === 'enacted' || basis !== 'enacted'
+}
 
 /**
  * Local TCSH transition period for a pack under a given basis:
