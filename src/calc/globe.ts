@@ -1,13 +1,14 @@
 /**
- * Entity-level GloBE engine (oecd-asia-v0.4). Pure functions only.
- * OECD parameters: src/rules/globe-params.v0.4.json. HK / SG / JP rule timing and local TCSH adoption: jurisdiction packs.
+ * Entity-level GloBE engine (oecd-asia-v0.5). Pure functions only.
+ * OECD parameters: src/rules/globe-params.v0.5.json. HK / SG / JP rule timing, local TCSH adoption and
+ * Singapore's Side-by-Side Safe Harbour (US-parented groups, MTT/IIR only): jurisdiction packs.
  * Simplified projection: not tax advice, not a GIR, not a claim of full OECD / IRD / IRAS / NTA compliance.
  */
-import paramsJson from '../rules/globe-params.v0.4.json'
-import { getPack, localTcshPeriod, ruleAppliesForFy } from '../rules/jurisdictions'
-import type { JurisdictionPack, TcshBasis } from '../rules/jurisdictions'
+import paramsJson from '../rules/globe-params.v0.5.json'
+import { getPack, localTcshPeriod, measureCounts, ruleAppliesForFy } from '../rules/jurisdictions'
+import type { JurisdictionPack, LegalStatus, LegislativeBasis, TcshBasis } from '../rules/jurisdictions'
 
-export type { TcshBasis }
+export type { LegislativeBasis, TcshBasis }
 
 export type GlobeParams = typeof paramsJson
 export const GLOBE_PARAMS: GlobeParams = paramsJson
@@ -49,10 +50,13 @@ export interface GroupInputV3 {
   fiscalYearStart: string
   applyTransitionalSafeHarbour: boolean
   /**
-   * Which TCSH transition period to apply (v0.4). Default 'enacted': the collecting jurisdiction's enacted law.
-   * 'announced' also counts officially announced extensions; 'oecd' applies the OECD period everywhere.
+   * Legislative status basis (v0.5; field name kept from v0.4 for saved data). Default 'enacted': only enacted law.
+   * 'announced' also counts measures passed or officially announced but not yet law; 'oecd' applies OECD terms everywhere.
+   * Drives the TCSH transition period (v0.4) and Singapore's Side-by-Side Safe Harbour (v0.5).
    */
   tcshBasis?: TcshBasis
+  /** v0.5: the UPE is a US entity (US-parented group), the proxy for a qualified side-by-side regime. Default false. */
+  usParented?: boolean
   entities: EntityInput[]
   cbcr: CbcrInput[]
 }
@@ -97,7 +101,7 @@ export interface TcshLaw {
   sourceUrl: string
 }
 
-export type Collector = 'QDMTT' | 'IIR' | 'UTPR residual' | 'None'
+export type Collector = 'QDMTT' | 'IIR' | 'UTPR residual' | 'SbS exempt' | 'None'
 
 export interface EntityAllocation {
   entityId: string
@@ -138,6 +142,8 @@ export interface JurisdictionResultV3 {
   iirParentJurisdiction: string | null
   minorityNotCollected: number
   utprResidual: number
+  /** v0.5: residual top-up not charged because Singapore's Side-by-Side Safe Harbour exempts the SG IIR (excluded from topUp). */
+  sbsExempt: number
   collectors: Collector[]
   allocations: EntityAllocation[]
   notes: string[]
@@ -151,10 +157,35 @@ export interface ProjectionV3 {
   fiscalYearEnd: string
   inScope: boolean
   upe: { name: string; jurisdiction: string } | null
-  totals: { topUp: number; domestic: number; iir: number; utprResidual: number; minorityNotCollected: number }
+  totals: { topUp: number; domestic: number; iir: number; utprResidual: number; minorityNotCollected: number; sbsExempt: number }
   utprInForceIn: string[]
+  /** v0.5: Singapore Side-by-Side Safe Harbour outcome for the group. */
+  sideBySide: SideBySideOutcome
   jurisdictions: JurisdictionResultV3[]
   warnings: string[]
+}
+
+/**
+ * - 'n/a': not US-parented, FY before the effective date, or no SG parent applies the IIR;
+ * - 'applied': the SG IIR is not charged (basis includes passed / announced law, or the measure is enacted);
+ * - 'pending': enacted-only basis and the measure is not yet law, so the SG IIR is still charged;
+ * - 'ignored': flagged US-parented but the UPE is located in HK / SG / JP.
+ */
+export type SideBySideStatus = 'n/a' | 'applied' | 'pending' | 'ignored'
+
+export interface SideBySideOutcome {
+  status: SideBySideStatus
+  legalStatus: LegalStatus | null
+  /** SG parent whose IIR is exempt (or would be, when pending). */
+  exemptParent: string | null
+  /** Non-SG IPE that applies the IIR instead, if any. */
+  fallbackParent: string | null
+  /** Top-up the SG IIR would otherwise have collected and that no other modelled parent collects. */
+  exempt: number
+  /** IIR still charged at the SG parent because the measure is not yet law (status 'pending'). */
+  chargedPending: number
+  text: string | null
+  sourceUrl: string | null
 }
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/
@@ -319,6 +350,22 @@ const LABELS: Record<string, string> = { HK: 'Hong Kong SAR', SG: 'Singapore', J
 const pct = (n: number | null, dp = 2) => (n === null ? '—' : `${(n * 100).toFixed(dp)}%`)
 const num = (n: number) => n.toLocaleString('en-US', { maximumFractionDigits: 0 })
 
+const LEGAL_STATUS_TEXT: Record<LegalStatus, string> = { enacted: 'enacted', 'passed-not-enacted': 'passed, not yet law', announced: 'announced, not yet law' }
+
+/**
+ * Singapore Side-by-Side Safe Harbour (v0.5). Pure: decides whether the SG IIR is exempt for this group and FY.
+ * Qualifying test used: group flagged US-parented, UPE outside HK / SG / JP, IIR parent located in SG,
+ * FY beginning on or after the pack's effective date, and the measure counts under the legislative status basis.
+ */
+export function sgSideBySide(group: GroupInputV3, upe: EntityInput | null, iirParent: EntityInput | null, basis: LegislativeBasis): { status: SideBySideStatus; legalStatus: LegalStatus | null; reason: string | null; sourceUrl: string | null } {
+  const sbs = getPack('SG')?.sideBySideSafeHarbour
+  if (!group.usParented || !sbs) return { status: 'n/a', legalStatus: sbs?.legalStatus ?? null, reason: null, sourceUrl: null }
+  if (upe && getPack(upe.jurisdiction)) return { status: 'ignored', legalStatus: sbs.legalStatus, reason: `The group is flagged as US-parented, but the UPE (${upe.name}) is located in ${upe.jurisdiction}. The Side-by-Side exemption is not applied. Locate the US UPE in "Other".`, sourceUrl: sbs.sourceUrl }
+  if (!iirParent || iirParent.jurisdiction !== 'SG') return { status: 'n/a', legalStatus: sbs.legalStatus, reason: null, sourceUrl: sbs.sourceUrl }
+  if (group.fiscalYearStart < sbs.effectiveFrom) return { status: 'n/a', legalStatus: sbs.legalStatus, reason: `Singapore's Side-by-Side exemption covers ${sbs.effectiveDate.value.toLowerCase()}. This FY begins earlier, so the SG IIR applies.`, sourceUrl: sbs.sourceUrl }
+  return { status: measureCounts(sbs.legalStatus, basis) ? 'applied' : 'pending', legalStatus: sbs.legalStatus, reason: null, sourceUrl: sbs.sourceUrl }
+}
+
 /* ---------- main projection ---------- */
 
 export function projectGlobe(group: GroupInputV3, params: GlobeParams = GLOBE_PARAMS): ProjectionV3 {
@@ -341,6 +388,27 @@ export function projectGlobe(group: GroupInputV3, params: GlobeParams = GLOBE_PA
     iirParent = group.entities.find((e) => e.role === 'IPE' && iirInForce(e.jurisdiction, fyStart)) ?? null
     if (iirParent) warnings.push(`The UPE's jurisdiction has no IIR in force for this FY. ${iirParent.name} (IPE, ${iirParent.jurisdiction}) applies the IIR. Simplification: its inclusion ratio is taken as the UPE ownership %.`)
   }
+
+  // v0.5: Singapore Side-by-Side Safe Harbour (MTT/IIR only; DTT unaffected).
+  const basis: LegislativeBasis = group.tcshBasis ?? 'enacted'
+  const sgSbs = sgSideBySide(group, upe, iirParent, basis)
+  const sbsFact = getPack('SG')?.sideBySideSafeHarbour
+  const sbsLabel = sgSbs.legalStatus ? LEGAL_STATUS_TEXT[sgSbs.legalStatus] : ''
+  const exemptParent = sgSbs.status === 'applied' || sgSbs.status === 'pending' ? iirParent : null
+  let fallbackParent: EntityInput | null = null
+  if (sgSbs.status === 'applied') {
+    // The SG IPE no longer applies the IIR, so drop the "IPE applies the IIR" warning; the SbS warning explains.
+    const ipeIdx = warnings.findIndex((w) => w.startsWith("The UPE's jurisdiction has no IIR in force"))
+    if (ipeIdx >= 0) warnings.splice(ipeIdx, 1)
+    fallbackParent = group.entities.find((e) => e.role === 'IPE' && e.jurisdiction !== 'SG' && iirInForce(e.jurisdiction, fyStart)) ?? null
+    warnings.push(`SG IIR exempt under the Side-by-Side package (${sbsLabel}): ${iirParent?.name} does not charge Singapore's MTT for this US-parented group.${fallbackParent ? ` ${fallbackParent.name} (IPE, ${fallbackParent.jurisdiction}) applies its IIR instead.` : ''} Singapore's DTT still applies.`)
+  } else if (sgSbs.status === 'pending') {
+    warnings.push(`The SG IIR at ${iirParent?.name} is still charged under enacted law. It would be exempt once Singapore's Side-by-Side amendments are enacted (Finance (Income Taxes) Bill 2026: ${sbsLabel}). Choose the "enacted + passed / announced" basis to see the effect.`)
+  } else if (sgSbs.reason) warnings.push(sgSbs.reason)
+  // Parent that actually applies the IIR after the exemption (null = nobody modelled).
+  const effParent: EntityInput | null = sgSbs.status === 'applied' ? fallbackParent : iirParent
+  if (group.usParented && effParent && effParent.jurisdiction === 'JP' && iirInForce('JP', fyStart)) warnings.push(`Japan's Side-by-Side exemption for its IIR (FY2026 reform; the US designation is reported in the JP pack) is not modelled in v0.5, so the IIR at ${effParent.name} is still shown.`)
+  if (group.usParented && effParent && effParent.jurisdiction === 'HK') warnings.push(`No Hong Kong Side-by-Side equivalent is sourced in the HK pack, so the IIR at ${effParent.name} is still shown.`)
 
   const codes = [...new Set(group.entities.map((e) => e.jurisdiction))]
   const jurisdictions: JurisdictionResultV3[] = codes.map((code) => {
@@ -380,8 +448,10 @@ export function projectGlobe(group: GroupInputV3, params: GlobeParams = GLOBE_PA
 
     const cb = group.cbcr.find((c) => c.jurisdiction === code)
     const q = qdmttStatus(pack, fyStart)
-    const parentJur = iirParent && iirParent.jurisdiction !== code ? iirParent.jurisdiction : null
-    const law = resolveTcshLaw(pack, q.inForce, parentJur, group.tcshBasis ?? 'enacted', params, iirParent?.name)
+    // TCSH law: the parent that collects after the SbS exemption; if nobody does, the original parent's law.
+    const tcshParent = effParent ?? iirParent
+    const parentJur = tcshParent && tcshParent.jurisdiction !== code ? tcshParent.jurisdiction : null
+    const law = resolveTcshLaw(pack, q.inForce, parentJur, basis, params, tcshParent?.name)
     const sh = evaluateTcsh(cb, sbie, fyStart, group.applyTransitionalSafeHarbour, params, law)
     const shText = sh.available
       ? `de minimis ${sh.tests.deMinimis}, simplified ETR ${pct(sh.simplifiedEtr)} vs ${pct(sh.transitionRate, 0)} ${sh.tests.simplifiedEtr}, routine profits ${sh.tests.routineProfits}. Basis: ${sh.basisLabel}, FY beginning ≤ ${sh.period.fyBeginsOnOrBefore} and ending ≤ ${sh.period.fyEndsOnOrBefore}`
@@ -389,7 +459,7 @@ export function projectGlobe(group: GroupInputV3, params: GlobeParams = GLOBE_PA
     trail.push({ step: 'Transitional CbCR safe harbour', formula: shText, value: sh.passed ? 'Passed: top-up deemed zero' : 'Not passed', sourceRef: 'Safe Harbours (Dec 2022) box 1.1; SbS Package ch. 3', sourceUrl: R('tcsh') })
     if (sh.basisLabel && !sh.basisLabel.startsWith('OECD')) trail.push({ step: 'TCSH local adoption', formula: `${sh.basisLabel}: transition period FY beginning ≤ ${sh.period.fyBeginsOnOrBefore}, ending ≤ ${sh.period.fyEndsOnOrBefore}${law.periodNote && !sh.available ? `. ${law.periodNote}` : ''}`, value: law.blocked ? 'Not available' : 'Applied', sourceRef: 'Rule pack: transitionalCbcrSafeHarbour', sourceUrl: sh.sourceUrl })
     if (sh.assumption && group.applyTransitionalSafeHarbour) notes.push(sh.assumption)
-    const topUp = sh.passed ? 0 : topUpBeforeSafeHarbour
+    let topUp = sh.passed ? 0 : topUpBeforeSafeHarbour
 
     // 1) Domestic top-up tax
     let domestic = 0
@@ -407,24 +477,43 @@ export function projectGlobe(group: GroupInputV3, params: GlobeParams = GLOBE_PA
     let iir = 0
     let minorityNotCollected = 0
     let utprResidual = 0
+    let sbsExempt = 0
+    const sgWouldApply = !!exemptParent && exemptParent.jurisdiction !== code
+    if (code === 'SG' && (sgSbs.status === 'applied' || sgSbs.status === 'pending') && sbsFact) {
+      trail.push({ step: 'Side-by-Side: DTT unaffected', formula: sbsFact.domesticUnaffected.value, value: num(domestic), sourceRef: `${pack?.packId} sideBySideSafeHarbour`, sourceUrl: sbsFact.domesticUnaffected.sourceUrl })
+    }
+    if (residual > 0 && sgWouldApply && sbsFact) {
+      if (sgSbs.status === 'applied') {
+        trail.push({ step: `SG IIR exempt under the Side-by-Side package (${sbsLabel})`, formula: `US-parented group; ${exemptParent?.name} (SG) would apply the IIR for ${sbsFact.effectiveDate.value.toLowerCase()}. Finance (Income Taxes) Bill 2026 cl. 38 / 49(b); conditions to follow in regulations.${fallbackParent ? ` The IIR passes to ${fallbackParent.name} (${fallbackParent.jurisdiction}).` : ' No other modelled parent applies an IIR.'}`, value: fallbackParent ? 'SG IIR: 0' : num(residual), sourceRef: `${pack?.packId ?? 'sg.v1'} → sg.v1 sideBySideSafeHarbour`, sourceUrl: sbsFact.sourceUrl })
+        if (!fallbackParent) notes.push(`Top-up of ${num(residual)} is not charged: the SG IIR is exempt under the Side-by-Side package (${sbsLabel}). The OECD Side-by-Side Safe Harbour also switches off the UTPR where it is adopted. Other jurisdictions' UTPR is not modelled.`)
+      } else {
+        trail.push({ step: 'Side-by-Side exemption (not applied)', formula: `US-parented group: the SG IIR at ${exemptParent?.name} would be exempt once enacted (Finance (Income Taxes) Bill 2026: ${sbsLabel}). Basis: enacted law only.`, value: 'SG IIR still charged', sourceRef: 'sg.v1 sideBySideSafeHarbour', sourceUrl: sbsFact.sourceUrl })
+        notes.push(`The SG IIR on this jurisdiction would be exempt once Singapore's Side-by-Side amendments are enacted (${sbsLabel}). It is still charged on the enacted-law basis.`)
+      }
+    }
+    if (residual > 0 && sgSbs.status === 'applied' && sgWouldApply && !fallbackParent) {
+      sbsExempt = residual
+      topUp -= residual
+      residual = 0
+    }
     if (residual > 0) {
       const positive = included.filter((e) => e.globeIncome > 0)
       const totalPositive = positive.reduce((s, e) => s + e.globeIncome, 0)
-      const parentApplies = !!iirParent && iirParent.jurisdiction !== code
+      const parentApplies = !!effParent && effParent.jurisdiction !== code
       for (const e of positive) {
         const ceTopUp = totalPositive > 0 ? residual * (e.globeIncome / totalPositive) : 0
-        const ratio = parentApplies && e.id !== iirParent?.id ? Math.min(1, Math.max(0, e.ownershipPct / 100)) : 0
+        const ratio = parentApplies && e.id !== effParent?.id ? Math.min(1, Math.max(0, e.ownershipPct / 100)) : 0
         const share = ceTopUp * ratio
         allocations.push({ entityId: e.id, name: e.name, topUp: ceTopUp, inclusionRatio: ratio, iir: share, minorityShare: parentApplies ? ceTopUp - share : 0 })
       }
       if (parentApplies) {
         iir = allocations.reduce((s, a) => s + a.iir, 0)
         minorityNotCollected = allocations.reduce((s, a) => s + a.minorityShare, 0)
-        trail.push({ step: `IIR at ${iirParent?.name} (${iirParent?.jurisdiction})`, formula: 'Σ CE top-up (pro rata GloBE income) × inclusion ratio (ownership %)', value: num(iir), sourceRef: 'Art. 2.1 / 2.2 / 5.2.4', sourceUrl: getPack(iirParent?.jurisdiction ?? '')?.rules.IIR.sourceUrl ?? MODEL_RULES_URL })
+        trail.push({ step: `IIR at ${effParent?.name} (${effParent?.jurisdiction})`, formula: 'Σ CE top-up (pro rata GloBE income) × inclusion ratio (ownership %)', value: num(iir), sourceRef: 'Art. 2.1 / 2.2 / 5.2.4', sourceUrl: getPack(effParent?.jurisdiction ?? '')?.rules.IIR.sourceUrl ?? MODEL_RULES_URL })
         if (minorityNotCollected > 0.005) notes.push(`Minority owners' share (${num(minorityNotCollected)}) is outside the parent's Allocable Share. Art. 2.5.2 reduces the UTPR to zero where the UPE's interests are held by parents applying a Qualified IIR, so this amount is shown as not collected.`)
       } else {
         utprResidual = residual
-        const why = !iirParent ? 'no parent entity has an IIR in force for this FY' : `the IIR parent is in the same jurisdiction (Art. 2.1.6 applies the IIR only to CEs outside it)`
+        const why = !effParent ? 'no parent entity has an IIR in force for this FY' : `the IIR parent is in the same jurisdiction (Art. 2.1.6 applies the IIR only to CEs outside it)`
         trail.push({ step: 'UTPR residual (flagged)', formula: `Top-up not collected by a domestic top-up tax or the IIR because ${why}`, value: num(utprResidual), sourceRef: 'Art. 2.5 (allocation under Art. 2.6 out of scope)', sourceUrl: R('ordering') })
         notes.push('UTPR residual shown for information only. Allocation across UTPR jurisdictions (Art. 2.6) is out of scope.')
       }
@@ -434,6 +523,7 @@ export function projectGlobe(group: GroupInputV3, params: GlobeParams = GLOBE_PA
     if (domestic > 0) collectors.push('QDMTT')
     if (iir > 0) collectors.push('IIR')
     if (utprResidual > 0) collectors.push('UTPR residual')
+    if (sbsExempt > 0) collectors.push('SbS exempt')
     if (!collectors.length) collectors.push('None')
 
     return {
@@ -462,10 +552,11 @@ export function projectGlobe(group: GroupInputV3, params: GlobeParams = GLOBE_PA
       qdmttInForce: q.inForce,
       qdmttSafeHarbour: q.safeHarbour,
       iir,
-      iirParent: iir > 0 ? iirParent?.name ?? null : null,
-      iirParentJurisdiction: iir > 0 ? iirParent?.jurisdiction ?? null : null,
+      iirParent: iir > 0 ? effParent?.name ?? null : null,
+      iirParentJurisdiction: iir > 0 ? effParent?.jurisdiction ?? null : null,
       minorityNotCollected,
       utprResidual,
+      sbsExempt,
       collectors,
       allocations,
       notes,
@@ -487,8 +578,18 @@ export function projectGlobe(group: GroupInputV3, params: GlobeParams = GLOBE_PA
     fiscalYearEnd: fyEnd,
     inScope,
     upe: upe ? { name: upe.name, jurisdiction: upe.jurisdiction } : null,
-    totals: { topUp: sum((j) => j.topUp), domestic: sum((j) => j.domestic), iir: sum((j) => j.iir), utprResidual: sum((j) => j.utprResidual), minorityNotCollected: sum((j) => j.minorityNotCollected) },
+    totals: { topUp: sum((j) => j.topUp), domestic: sum((j) => j.domestic), iir: sum((j) => j.iir), utprResidual: sum((j) => j.utprResidual), minorityNotCollected: sum((j) => j.minorityNotCollected), sbsExempt: sum((j) => j.sbsExempt) },
     utprInForceIn,
+    sideBySide: {
+      status: sgSbs.status,
+      legalStatus: sgSbs.legalStatus,
+      exemptParent: exemptParent?.name ?? null,
+      fallbackParent: fallbackParent?.name ?? null,
+      exempt: sum((j) => j.sbsExempt),
+      chargedPending: sgSbs.status === 'pending' ? sum((j) => (j.iirParentJurisdiction === 'SG' ? j.iir : 0)) : 0,
+      text: sgSbs.status === 'applied' ? `SG IIR exempt under the Side-by-Side package (${sbsLabel})` : sgSbs.status === 'pending' ? `SG IIR still charged under enacted law; would be exempt once enacted (${sbsLabel})` : sgSbs.reason,
+      sourceUrl: sgSbs.sourceUrl,
+    },
     jurisdictions,
     warnings,
   }

@@ -17,7 +17,7 @@ import { href } from '../router'
 
 const PACKS = PACK_CODES.map((c) => JURISDICTION_PACKS[c])
 const RAG_LABEL: Record<Rag, string> = { red: 'Red', amber: 'Amber', green: 'Green', grey: 'n/a' }
-const BASIS_LABEL: Record<string, string> = { enacted: 'enacted local law', announced: 'enacted + announced', oecd: 'OECD terms' }
+const BASIS_LABEL: Record<string, string> = { enacted: 'enacted law only', announced: 'enacted + passed / announced', oecd: 'OECD terms' }
 
 function eurShort(n: number): string {
   const a = Math.abs(n)
@@ -59,6 +59,7 @@ function collectedBy(j: JurisdictionResultV3): string {
   if (j.domestic > 0) parts.push(j.domesticLabel ?? 'Domestic')
   if (j.iir > 0) parts.push(`IIR (${j.iirParentJurisdiction})`)
   if (j.utprResidual > 0) parts.push('UTPR residual')
+  if (j.sbsExempt > 0) parts.push('SG IIR exempt (SbS)')
   return parts.length ? parts.join(' + ') : '—'
 }
 
@@ -229,7 +230,7 @@ export function DashboardPage(props: { current: GroupInputV3; scenarios: SavedSc
           <h2>Pillar Two at a glance: {p.groupName}</h2>
           <p className="dash-meta">
             FY {formatDate(p.fiscalYearStart)} – {formatDate(p.fiscalYearEnd)} · source: <strong>{source.name}</strong>
-            {cmp && <> · compared with <strong>{cmp.name}</strong></>} · safe harbour basis: {BASIS_LABEL[model.basis]} · engine <code>{GLOBE_VERSION}</code>
+            {cmp && <> · compared with <strong>{cmp.name}</strong></>} · legislative status basis: {BASIS_LABEL[model.basis]} · engine <code>{GLOBE_VERSION}</code>
           </p>
         </div>
         <div className="dash-controls no-print">
@@ -345,7 +346,7 @@ export function DashboardPage(props: { current: GroupInputV3; scenarios: SavedSc
               <ul className="risks">
                 {risksTop.map((r, i) => (
                   <li key={i} className={`risk-${r.kind}`}>
-                    <Tag tone={r.kind === 'assumption' || r.kind === 'basis' ? 'warn' : r.kind === 'warning' ? 'danger' : 'info'}>{r.kind === 'unverified' ? 'Unverified' : r.kind === 'assumption' ? 'Assumption' : r.kind === 'basis' ? 'Basis' : 'Warning'}</Tag>
+                    <Tag tone={r.kind === 'assumption' || r.kind === 'basis' || r.kind === 'legislative' ? 'warn' : r.kind === 'warning' ? 'danger' : 'info'}>{r.kind === 'unverified' ? 'Unverified' : r.kind === 'assumption' ? 'Assumption' : r.kind === 'basis' ? 'Basis' : r.kind === 'legislative' ? 'Not yet law' : 'Warning'}</Tag>
                     {r.url ? <a href={r.url} target="_blank" rel="noopener noreferrer">{r.text}<span className="sr-only"> (opens in a new tab)</span></a> : <span>{r.text}</span>}
                   </li>
                 ))}

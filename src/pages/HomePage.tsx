@@ -97,7 +97,7 @@ export function HomePage({ result }: { result: ProjectionV3 }) {
             <li>Chapter 3 / 4 adjustments (GloBE income and covered taxes are inputs)</li>
             <li>Additional Current Top-up Tax, Art. 5.6 minority-owned blending, POPEs, IIR offset</li>
             <li>UTPR allocation across jurisdictions (Art. 2.6)</li>
-            <li>Side-by-Side, UPE and Simplified ETR safe harbours; special entities (Art. 7.4)</li>
+            <li>UPE and Simplified ETR safe harbours; Side-by-Side other than Singapore's MTT exemption for US-parented groups; special entities (Art. 7.4)</li>
             <li>Local-law deviations beyond what the rule packs record</li>
           </ul>
         </section>

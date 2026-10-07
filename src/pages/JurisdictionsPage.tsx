@@ -163,6 +163,22 @@ function PackView(props: { pack: JurisdictionPack }) {
         </dl>
       </section>
 
+      {p.sideBySideSafeHarbour ? (
+        <section className="panel">
+          <h3>Side-by-Side Safe Harbour (US-parented groups) <Tag tone="warn">{p.sideBySideSafeHarbour.legalStatus === 'enacted' ? 'Enacted' : p.sideBySideSafeHarbour.legalStatus === 'passed-not-enacted' ? 'Passed, not yet law' : 'Announced, not yet law'}</Tag></h3>
+          <p className="fine">Used by the GloBE engine (v0.5) when the group is flagged as US-parented and a {p.name} parent would apply the IIR. Applied only on the "enacted + passed / announced" or OECD legislative status basis until it is enacted.</p>
+          <dl className="facts">
+            <Fact label="Exemption" fact={p.sideBySideSafeHarbour} />
+            <Fact label="Bill status" fact={p.sideBySideSafeHarbour.bill} />
+            <Fact label="Effective date" fact={p.sideBySideSafeHarbour.effectiveDate} />
+            <Fact label="Who qualifies" fact={p.sideBySideSafeHarbour.qualifyingGroups} />
+            <Fact label={p.domesticTopUpTax.shortName} fact={p.sideBySideSafeHarbour.domesticUnaffected} />
+          </dl>
+        </section>
+      ) : (
+        p.jurisdiction !== 'SG' && <p className="fine">Side-by-Side: {p.jurisdiction === 'JP' ? "Japan's IIR exemption for groups with a UPE in a designated jurisdiction is described under Safe harbours and Local features, but the engine does not model it (v0.5)." : 'no Hong Kong Side-by-Side equivalent is sourced in this pack, so none is modelled.'}</p>
+      )}
+
       <section className="panel">
         <h3>Sources</h3>
         <ul className="sources">

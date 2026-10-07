@@ -9,8 +9,8 @@ const JURS = [
   { code: 'OTHER', label: 'Other (non-QDMTT)' },
 ]
 const BASES: { value: TcshBasis; label: string }[] = [
-  { value: 'enacted', label: 'Enacted local law (default)' },
-  { value: 'announced', label: 'Enacted + officially announced extensions' },
+  { value: 'enacted', label: 'Enacted law only (default)' },
+  { value: 'announced', label: 'Enacted + passed / announced, not yet law' },
   { value: 'oecd', label: 'OECD terms for all jurisdictions' },
 ]
 const ROLES: { value: EntityRole; label: string }[] = [
@@ -96,11 +96,17 @@ export function GroupPage({ group, setGroup, resetSample, savedLocally }: GroupP
           <span className="fine">Uses the CbCR data below. Only available in the Transition Period.</span>
         </label>
         <label className="field">
-          Safe harbour transition period basis
-          <select value={group.tcshBasis ?? 'enacted'} onChange={(e) => setGroup((g) => ({ ...g, tcshBasis: e.target.value as TcshBasis }))} disabled={!group.applyTransitionalSafeHarbour}>
+          Legislative status basis
+          <select value={group.tcshBasis ?? 'enacted'} onChange={(e) => setGroup((g) => ({ ...g, tcshBasis: e.target.value as TcshBasis }))}>
             {BASES.map((b) => <option key={b.value} value={b.value}>{b.label}</option>)}
           </select>
-          <span className="fine">The OECD extended the safe harbour to FYs beginning in 2027. Japan has enacted the extension, Singapore has announced it, and Hong Kong has not adopted it (see Jurisdictions).</span>
+          <span className="fine">Which law counts. It sets the safe harbour transition period (the OECD extended it to FYs beginning in 2027: Japan has enacted this, Singapore has announced it, Hong Kong has not adopted it) and whether Singapore's Side-by-Side exemption applies (passed 6 Oct 2026, not yet law). See Jurisdictions.</span>
+        </label>
+        <label className="field check-field">
+          <span>
+            <input type="checkbox" checked={group.usParented === true} onChange={(e) => setGroup((g) => ({ ...g, usParented: e.target.checked }))} /> Ultimate parent is a US entity (US-parented group, Side-by-Side)
+          </span>
+          <span className="fine">Off by default. When on, Singapore's MTT (IIR) at a Singapore parent is exempt from FYs commencing on or after 1 Jan 2026, but only on the "passed / announced" or OECD basis, because the law is passed but not yet enacted. The DTT still applies. Put the US UPE in "Other". Japan's equivalent is not modelled, and Hong Kong has no sourced equivalent.</span>
         </label>
       </div>
 

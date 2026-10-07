@@ -25,7 +25,7 @@ export function AboutPage() {
         <h3>Not modelled (yet)</h3>
         <ul>
           <li>Chapter 3 / 4 adjustments (GloBE income and covered taxes are direct inputs), Additional Current Top-up Tax, Art. 5.6 minority-owned blending, IIR offset, POPE / split ownership, UTPR allocation</li>
-          <li>Detailed deferred tax rules (recapture, exclusions, elections), special entities (Art. 7.4), Side-by-Side / UPE / Simplified ETR safe harbours, Pillar One</li>
+          <li>Detailed deferred tax rules (recapture, exclusions, elections), special entities (Art. 7.4), UPE / Simplified ETR safe harbours and Side-by-Side safe harbours other than Singapore's MTT exemption for US-parented groups (v0.5: passed, not yet law; applied only on the passed / announced or OECD basis), Pillar One</li>
           <li>HK gale-warning / black-rainstorm deadline extensions; public holidays beyond 2027 (later calendar dates get the weekend rule only and are flagged)</li>
         </ul>
         <h3>Method</h3>

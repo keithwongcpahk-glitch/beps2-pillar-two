@@ -31,7 +31,7 @@ describe('exports', () => {
   it('results CSV carries version, disclaimer, one row per jurisdiction and reconciled totals', () => {
     const rows = resultsCsvRows(p)
     const csv = toCsv(rows)
-    expect(csv).toContain('oecd-asia-v0.4')
+    expect(csv).toContain('oecd-asia-v0.5')
     expect(csv).toContain(DISCLAIMER_ROW)
     const header = rows.findIndex((r) => r[0] === 'Jurisdiction')
     expect(rows.slice(header + 1, header + 5).map((r) => r[0])).toEqual(['HK', 'SG', 'JP', 'OTHER'])

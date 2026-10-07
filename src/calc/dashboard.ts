@@ -19,7 +19,7 @@ export const MIN_RATE = GLOBE_PARAMS.minimumRate.value
 /** RAG rule, shown verbatim in the UI legend so the classification is never a black box. */
 export const RAG_RULES: Record<Rag, string> = {
   red: 'Top-up tax due (any collector).',
-  amber: `No top-up, but only via an assumed, announced-not-enacted or OECD-terms safe harbour; or GloBE ETR below ${pct(MIN_RATE + ETR_BUFFER, 0)} (within ${ETR_BUFFER * 100}pp of 15%, or under 15% and covered by the substance carve-out).`,
+  amber: `No top-up, but only via an assumed, announced-not-enacted or OECD-terms safe harbour, or SG's Side-by-Side exemption (not yet law); or GloBE ETR below ${pct(MIN_RATE + ETR_BUFFER, 0)} (within ${ETR_BUFFER * 100}pp of 15%, or under 15% and covered by the substance carve-out).`,
   green: `No top-up: safe harbour passes under enacted local law with no assumption, or GloBE ETR ${pct(MIN_RATE + ETR_BUFFER, 0)} or more.`,
   grey: 'No net GloBE income (loss or nil), or the group is out of scope.',
 }
@@ -51,6 +51,7 @@ export function ragFor(j: JurisdictionResultV3, enactedPass?: boolean): RagResul
     if (/^OECD terms/.test(sh.basisLabel)) return { code, rag: 'amber', reason: 'Safe harbour pass on OECD terms (local adoption not modelled)' }
     return { code, rag: 'green', reason: 'Safe harbour passed under enacted local law' }
   }
+  if (j.sbsExempt > 0) return { code, rag: 'amber', reason: 'No top-up charged only because the SG IIR is exempt under the Side-by-Side package (passed, not yet law)' }
   if (j.etr === null) return { code, rag: 'grey', reason: 'No net GloBE income' }
   if (comfortable) return { code, rag: 'green', reason: `ETR ${pct(j.etr)} ≥ ${pct(MIN_RATE + ETR_BUFFER, 0)}` }
   if (j.etr < MIN_RATE) return { code, rag: 'amber', reason: `ETR ${pct(j.etr)} below 15%; no top-up only because of the substance carve-out` }
@@ -171,7 +172,7 @@ export function dataReadiness(g: GroupInputV3): ReadinessCheck[] {
 }
 
 export interface RiskItem {
-  kind: 'assumption' | 'unverified' | 'basis' | 'warning' | 'simplification'
+  kind: 'assumption' | 'unverified' | 'basis' | 'legislative' | 'warning' | 'simplification'
   text: string
   url?: string
 }
@@ -192,8 +193,8 @@ export const MAIN_SIMPLIFICATIONS = [
 
 const BASIS_TEXT: Record<TcshBasis, string> = {
   enacted: '',
-  announced: 'Safe harbour basis is "enacted + announced": results count extensions that are announced but not yet law.',
-  oecd: 'Safe harbour basis is "OECD terms": local adoption is ignored, so results may be more favourable than local law.',
+  announced: 'Legislative status basis is "enacted + passed / announced": results count measures that are passed or announced but not yet law.',
+  oecd: 'Legislative status basis is "OECD terms": local adoption is ignored, so results may be more favourable than local law.',
 }
 
 /** Unverified facts that matter, assumptions the engine made, and the main simplifications. */
@@ -201,6 +202,13 @@ export function keyRisks(p: ProjectionV3, basis: TcshBasis, packs: readonly Juri
   const out: RiskItem[] = []
   for (const j of p.jurisdictions) {
     if (j.safeHarbour.assumption && j.safeHarbour.passed && j.topUpBeforeSafeHarbour > 0) out.push({ kind: 'assumption', text: `${j.code}: no top-up only because of an assumption. ${j.safeHarbour.assumption}`, url: j.safeHarbour.sourceUrl })
+  }
+  const sbs = p.sideBySide
+  if (sbs?.status === 'applied') {
+    const amt = Math.round(sbs.exempt).toLocaleString('en-US')
+    out.push({ kind: 'legislative', text: `Relies on passed-not-yet-enacted law: SG IIR exempt under the Side-by-Side package${sbs.exempt > 0 ? `; ${amt} not charged` : ''}${sbs.fallbackParent ? `; IIR passes to ${sbs.fallbackParent}` : ''}. Bill passed 6 Oct 2026; assent, gazetting and regulations pending.`, url: sbs.sourceUrl ?? undefined })
+  } else if (sbs?.status === 'pending') {
+    out.push({ kind: 'basis', text: `US-parented group: the SG IIR (${Math.round(sbs.chargedPending).toLocaleString('en-US')}) is still charged under enacted law. It would be exempt once Singapore's Side-by-Side amendments are enacted (passed 6 Oct 2026).`, url: sbs.sourceUrl ?? undefined })
   }
   if (BASIS_TEXT[basis]) out.push({ kind: 'basis', text: BASIS_TEXT[basis] })
   const present = new Set(p.jurisdictions.map((j) => j.code))
@@ -216,7 +224,8 @@ export function keyRisks(p: ProjectionV3, basis: TcshBasis, packs: readonly Juri
     const other = unv.length - material.length
     if (other > 0) out.push({ kind: 'unverified', text: `${pack.jurisdiction}: ${other} descriptive field${other > 1 ? 's' : ''} unverified (no effect on amounts)` })
   }
-  p.warnings.forEach((w) => out.push({ kind: 'warning', text: w }))
+  // SG Side-by-Side warnings are already summarised above.
+  p.warnings.filter((w) => !(sbs && (sbs.status === 'applied' || sbs.status === 'pending') && /^(SG IIR exempt under the Side-by-Side|The SG IIR at )/.test(w))).forEach((w) => out.push({ kind: 'warning', text: w }))
   MAIN_SIMPLIFICATIONS.forEach((t) => out.push({ kind: 'simplification', text: t }))
   return out
 }

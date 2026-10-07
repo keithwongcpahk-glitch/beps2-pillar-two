@@ -115,7 +115,7 @@ export function ScenariosPage({ scenarios, setScenarios, current, saveCurrent, l
           <div className="table-wrap">
             <table className="table">
               <thead>
-                <tr><th scope="col">Name</th><th scope="col">FY beginning</th><th scope="col">TCSH basis</th><th scope="col" className="num">Total top-up</th><th scope="col">Saved</th><th scope="col">Actions</th></tr>
+                <tr><th scope="col">Name</th><th scope="col">FY beginning</th><th scope="col">Legislative basis</th><th scope="col" className="num">Total top-up</th><th scope="col">Saved</th><th scope="col">Actions</th></tr>
               </thead>
               <tbody>
                 {scenarios.map((s) => {
@@ -142,7 +142,7 @@ export function ScenariosPage({ scenarios, setScenarios, current, saveCurrent, l
                         )}
                       </td>
                       <td>{formatDate(s.input.fiscalYearStart)}</td>
-                      <td className="fine">{s.input.applyTransitionalSafeHarbour ? s.input.tcshBasis ?? 'enacted' : 'TCSH off'}</td>
+                      <td className="fine">{s.input.tcshBasis ?? 'enacted'}{s.input.applyTransitionalSafeHarbour ? '' : ' · TCSH off'}{s.input.usParented ? ' · US-parented' : ''}</td>
                       <td className="num">{p ? eur(p.totals.topUp) : <span className="neg">Invalid inputs</span>}</td>
                       <td className="fine">{savedLabel(s.savedAt)}</td>
                       <td>

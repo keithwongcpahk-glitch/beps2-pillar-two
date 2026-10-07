@@ -34,22 +34,23 @@ export function resultsCsvRows(p: ProjectionV3): Cell[][] {
     ['Fiscal year', `${p.fiscalYearStart} to ${p.fiscalYearEnd}`],
     ['Engine version', p.version],
     ['In scope', p.inScope ? 'yes' : 'no'],
+    ['SG Side-by-Side (US-parented)', p.sideBySide.status === 'n/a' ? 'not applicable' : `${p.sideBySide.status}${p.sideBySide.text ? `: ${p.sideBySide.text}` : ''}`],
     ['Disclaimer', DISCLAIMER_ROW],
     [],
     [
       'Jurisdiction', 'Entities', 'Net GloBE income', 'Adjusted covered taxes', 'Deferred tax adjustment', 'ETR', 'SBIE payroll rate', 'SBIE tangible rate', 'SBIE',
       'Excess profit', 'Top-up %', 'Top-up before safe harbour', 'TCSH de minimis', 'TCSH simplified ETR', 'TCSH routine profits', 'Top-up after safe harbour',
-      'Domestic top-up tax', 'Domestic label', 'IIR', 'IIR parent', 'Minority share not collected', 'UTPR residual (flagged)',
+      'Domestic top-up tax', 'Domestic label', 'IIR', 'IIR parent', 'Minority share not collected', 'UTPR residual (flagged)', 'SG IIR exempt (Side-by-Side)',
     ],
   ]
   for (const j of p.jurisdictions) {
     rows.push([
       j.code, j.entityCount, j.netGlobeIncome, j.adjustedCoveredTaxes, j.deferredTaxAdjustment, ratio(j.etr), j.payrollRate, j.tangibleRate, j.sbie,
       j.excessProfit, ratio(j.topUpPct), j.topUpBeforeSafeHarbour, j.safeHarbour.tests.deMinimis, j.safeHarbour.tests.simplifiedEtr, j.safeHarbour.tests.routineProfits, j.topUp,
-      j.domestic, j.domesticLabel, j.iir, j.iirParent, j.minorityNotCollected, j.utprResidual,
+      j.domestic, j.domesticLabel, j.iir, j.iirParent, j.minorityNotCollected, j.utprResidual, j.sbsExempt,
     ])
   }
-  rows.push(['TOTAL', null, null, null, null, null, null, null, null, null, null, null, null, null, null, p.totals.topUp, p.totals.domestic, null, p.totals.iir, null, p.totals.minorityNotCollected, p.totals.utprResidual])
+  rows.push(['TOTAL', null, null, null, null, null, null, null, null, null, null, null, null, null, null, p.totals.topUp, p.totals.domestic, null, p.totals.iir, null, p.totals.minorityNotCollected, p.totals.utprResidual, p.totals.sbsExempt])
   rows.push([])
   rows.push(['Explanation trail'])
   rows.push(['Jurisdiction', 'Step', 'Formula / basis', 'Value', 'Rule reference', 'Source URL'])

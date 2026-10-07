@@ -20,6 +20,7 @@ function CollectedBy({ j }: { j: JurisdictionResultV3 }) {
       {j.domestic > 0 && <Tag tone="ok">{j.domesticLabel}</Tag>}
       {j.iir > 0 && <Tag tone="info">IIR · {j.iirParentJurisdiction}</Tag>}
       {j.utprResidual > 0 && <Tag tone="warn">UTPR residual (flagged)</Tag>}
+      {j.sbsExempt > 0 && <Tag tone="warn">SG IIR exempt (Side-by-Side, not yet law)</Tag>}
       {j.minorityNotCollected > 0.5 && <Tag tone="muted">Minority share not collected</Tag>}
       {j.topUp === 0 && <Tag tone="muted">No top-up</Tag>}
     </span>
@@ -52,7 +53,7 @@ export interface ResultsPageProps {
   saveScenario: () => string
 }
 
-const BASIS_LABEL: Record<string, string> = { enacted: 'enacted local law', announced: 'enacted + announced extensions', oecd: 'OECD terms for all' }
+const BASIS_LABEL: Record<string, string> = { enacted: 'enacted law only', announced: 'enacted + passed / announced, not yet law', oecd: 'OECD terms for all' }
 
 /** Opens every explanation-trail section so the browser's print / "Save as PDF" includes all steps. */
 function openAllTrails() {
@@ -98,6 +99,7 @@ export function ResultsPage({ result, input, saveScenario }: ResultsPageProps) {
     { label: 'IIR', cell: (j) => (j.iir > 0 ? <>{eur(j.iir)} <span className="fine">at {j.iirParent}</span></> : '—') },
     { label: 'Minority share (not collected)', cell: (j) => (j.minorityNotCollected > 0.5 ? eur(j.minorityNotCollected) : '—') },
     { label: 'UTPR residual (out of scope)', cell: (j) => (j.utprResidual > 0 ? eur(j.utprResidual) : '—') },
+    ...(result.totals.sbsExempt > 0 ? [{ label: 'SG IIR exempt (Side-by-Side)', cell: (j: JurisdictionResultV3) => (j.sbsExempt > 0 ? eur(j.sbsExempt) : '—') }] : []),
     { label: 'Collected by', cell: (j) => <CollectedBy j={j} /> },
   ]
   const t = result.totals
@@ -118,7 +120,7 @@ export function ResultsPage({ result, input, saveScenario }: ResultsPageProps) {
         }
       />
       <div className="print-only print-meta">
-        <strong>Pillar Two Asia: GloBE results</strong> · {result.groupName} · FY {result.fiscalYearStart} to {result.fiscalYearEnd} · engine {result.version} · TCSH basis: {BASIS_LABEL[input.tcshBasis ?? 'enacted']}
+        <strong>Pillar Two Asia: GloBE results</strong> · {result.groupName} · FY {result.fiscalYearStart} to {result.fiscalYearEnd} · engine {result.version} · legislative status basis: {BASIS_LABEL[input.tcshBasis ?? 'enacted']}{input.usParented ? ' · US-parented group' : ''}
         <br />
         {GLOBE_PARAMS.disclaimer}
       </div>
@@ -139,6 +141,17 @@ export function ResultsPage({ result, input, saveScenario }: ResultsPageProps) {
         <div className="kpi"><span className="kpi-label">UTPR residual (flagged)</span><strong>{eur(t.utprResidual)}</strong></div>
         <div className="kpi"><span className="kpi-label">Minority share not collected</span><strong>{eur(t.minorityNotCollected)}</strong></div>
       </div>
+      {(result.sideBySide.status === 'applied' || result.sideBySide.status === 'pending') && (
+        <Callout tone="warn">
+          <strong>{result.sideBySide.status === 'applied' ? 'Relies on passed-not-yet-enacted law.' : 'Side-by-Side exemption not applied (enacted law only).'}</strong>{' '}
+          {result.sideBySide.text}.{' '}
+          {result.sideBySide.status === 'applied'
+            ? `Excluded from the total top-up: ${eur(result.totals.sbsExempt)}.`
+            : `SG IIR still charged: ${eur(result.sideBySide.chargedPending)}.`}{' '}
+          Finance (Income Taxes) Bill 2026 (Bill No. 22/2026) passed Parliament on 6 Oct 2026; presidential assent, gazetting and the regulations are pending. Singapore's DTT is unaffected.{' '}
+          {result.sideBySide.sourceUrl && <SourceLink url={result.sideBySide.sourceUrl} label="MOF second reading speech, 6 Oct 2026" />}
+        </Callout>
+      )}
       {!result.inScope && <Callout tone="warn">The group is below the EUR 750m threshold, so it is out of scope and every top-up amount is zero.</Callout>}
       {result.warnings.length > 0 && (
         <Callout tone="warn">
@@ -227,9 +240,9 @@ export function ResultsPage({ result, input, saveScenario }: ResultsPageProps) {
           <li><SourceLink url={SOURCE_URLS.tcshExtension} label="Extension to FYs beginning by 31 Dec 2027: Side-by-Side Package (Jan 2026), ch. 3" /></li>
           <li><SourceLink url={SOURCE_URLS.deferredTax} label="Deferred tax recast: Model Rules Art. 4.4.1" /></li>
         </ul>
-        <p className="fine">{sb.localAdoptionNote} Current basis: <strong>{BASIS_LABEL[input.tcshBasis ?? 'enacted']}</strong> (change it on the Group & entities page).</p>
+        <p className="fine">{sb.localAdoptionNote} Current legislative status basis: <strong>{BASIS_LABEL[input.tcshBasis ?? 'enacted']}</strong> (change it on the Group & entities page). The same basis decides whether Singapore's Side-by-Side exemption for US-parented groups applies (v0.5).</p>
         <p className="fine">{GLOBE_PARAMS.deferredTax.simplification} {GLOBE_PARAMS.investmentEntities.simplification}</p>
-        <p className="fine">Not modelled: Additional Current Top-up Tax, Art. 5.6 minority-owned blending, POPE / split ownership, IIR offset (Art. 2.3), UTPR allocation (Art. 2.6), Side-by-Side / UPE safe harbours, the Simplified ETR Safe Harbour, and local deviations in HK / SG / JP law.</p>
+        <p className="fine">Not modelled: Additional Current Top-up Tax, Art. 5.6 minority-owned blending, POPE / split ownership, IIR offset (Art. 2.3), UTPR allocation (Art. 2.6), the UPE safe harbour, Side-by-Side safe harbours other than Singapore's MTT exemption for US-parented groups (Japan's is sourced in its pack but not modelled; Hong Kong has none sourced), the Simplified ETR Safe Harbour, and local deviations in HK / SG / JP law.</p>
       </section>
     </>
   )
