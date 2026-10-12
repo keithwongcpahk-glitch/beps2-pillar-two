@@ -1,11 +1,11 @@
 {
-  "lastRefreshed": "2026-10-08T08:58:00+08:00",
+  "lastRefreshed": "2026-10-12T09:05:00+08:00",
   "windowDays": 30,
-  "method": "Manual research run: WebSearch plus fetching the primary page for each item. Items are only included when the date and content were confirmed against a fetched source.",
+  "method": "Scheduled Pillar Two 30-day news refresh (12 Oct 2026): WebSearch plus fetching primary official pages for OECD, HK IRD, SG IRAS/MOF/SSO, and JP NTA/e-Tax. Items added only when date and content were confirmed against a fetched source.",
   "coverage": {
-    "OECD": "Checked 8 Oct 2026: OECD global minimum tax and GloBE Model Rules pages (latest publications still the 11 Sep 2026 package). No new OECD Pillar Two releases since 7 Oct.",
-    "HK": "Checked 8 Oct 2026: IRD What's New (latest entry 30 Sep 2026) and the IRD global minimum tax page. No new Pillar Two items; Phase 2 of the Pillar Two Portal (top-up tax returns) still stated as Q4 2026.",
-    "SG": "Checked 8 Oct 2026: IRAS GloBE/DTT page and SSO Bill No. 22/2026. No presidential assent or gazetting of the Finance (Income Taxes) Act 2026 found yet; nothing new since the 6 Oct passage.",
-    "JP": "Checked 8 Oct 2026: NTA global minimum tax page and schedules (beppyou) pages, EY Japan alerts. Nothing new since the 7 Aug NTA guidance and 14 Sep e-Tax GIR update."
+    "OECD": "Checked 12 Oct 2026: OECD Global Minimum Tax and GloBE Model Rules pages (latest substantive package still 11 Sep 2026 Administrative Guidance / GIR / Full Legislative Review). No new OECD Pillar Two releases since the 8 Oct refresh.",
+    "HK": "Checked 12 Oct 2026: IRD What's New (latest entries 8 Oct address-change notice and 30 Sep fraud alert — neither Pillar Two) and the IRD global minimum tax / HKMTT page. No new Pillar Two items; Phase 2 of the Pillar Two Portal still stated as Q4 2026.",
+    "SG": "Checked 12 Oct 2026: IRAS GloBE/DTT page, MOF newsroom, SSO Bill No. 22/2026, and secondary tracker confirmation. No presidential assent or gazetting of the Finance (Income Taxes) Act 2026 found; nothing new since the 6 Oct parliamentary passage already catalogued.",
+    "JP": "Checked 12 Oct 2026: NTA 新着情報, NTA global minimum tax site, and e-Tax 多国籍企業情報の報告コーナー. Added NTA 趣旨説明 for the 7 Aug 2026 IIR/QDMTT circular, published 9 Oct 2026. e-Tax GIR recording guidelines still show the September 2026 update already catalogued; no further GIR schema change."
   }
 }

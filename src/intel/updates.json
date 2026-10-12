@@ -1,5 +1,24 @@
 [
   {
+    "id": "jp-2026-10-09-nta-shushi-setsumei-aug7-circular",
+    "date": "2026-10-09",
+    "dateNote": "NTA news page lists the publication date as 令和8年10月9日 (9 Oct 2026). The 趣旨説明 itself states it is based on the law as at 7 Aug 2026 (the date of the underlying circular).",
+    "jurisdiction": "JP",
+    "title": "NTA publishes 趣旨説明 (explanatory notes) for the 7 Aug 2026 corporate-tax circular on IIR and QDMTT amendments",
+    "summary": "On 9 October 2026 the NTA published 趣旨説明 for its 7 August 2026 circular amending the Basic Circular on Corporation Tax for the FY2026 Pillar Two reforms. The notes explain newly added paragraphs on IIR (国際最低課税額) — including depreciation of specified assets and the special tax-credit-equivalent amount — and on QDMTT (国内最低課税額) — including FX conversion for group domestic top-up tax — plus transitional application timing (1 Jan 2026 for the special tax-credit measure; 1 Apr 2026 otherwise). This elaborates the Aug 2026 administrative guidance already catalogued; it does not change the statutory start dates.",
+    "topic": "Administrative guidance",
+    "sourceUrl": "https://www.nta.go.jp/law/joho-zeikaishaku/hojin/260807/index.htm",
+    "sourceName": "NTA – 趣旨説明 for 法人税基本通達等の一部改正 (7 Aug 2026 circular), published 9 Oct 2026",
+    "sourceType": "official",
+    "secondarySourceUrl": "https://www.nta.go.jp/information/news/news.htm",
+    "secondarySourceName": "NTA 新着情報 (9 Oct 2026 listing)",
+    "affectsCalc": "no",
+    "impactNote": "none for current engine. Confirms the Aug 2026 JP IIR/QDMTT guidance already reviewed; no new start dates or rate parameters.",
+    "status": "new",
+    "verified": true,
+    "verificationNote": "Primary NTA 趣旨説明 page fetched and read on 12 Oct 2026. Publication date confirmed from NTA 新着情報 listing (令和8年10月9日). Topics confirmed from the page TOC (国際最低課税額 / 国内最低課税額 / 経過的取扱い)."
+  },
+  {
     "id": "sg-2026-10-06-finance-income-taxes-bill-passed",
     "date": "2026-10-06",
     "jurisdiction": "SG",
