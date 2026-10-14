@@ -1,11 +1,11 @@
 {
-  "lastRefreshed": "2026-10-13T08:55:00+08:00",
+  "lastRefreshed": "2026-10-14T08:55:00+08:00",
   "windowDays": 30,
-  "method": "Scheduled Pillar Two 30-day news refresh (13 Oct 2026): WebSearch plus fetching primary official pages for OECD, HK IRD, SG IRAS/MOF/SSO/laws.sg, and JP NTA. Items added only when date and content were confirmed against a fetched source.",
+  "method": "Scheduled Pillar Two 30-day news refresh (14 Oct 2026): WebSearch plus fetching primary official pages for OECD, HK IRD, SG IRAS/MOF/SSO/laws.sg, and JP NTA. Items added only when date and content were confirmed against a fetched source.",
   "coverage": {
-    "OECD": "Checked 13 Oct 2026: OECD Global Minimum Tax / GloBE Model Rules pages and search for post-11 Sep releases. Latest substantive package remains 11 Sep 2026 Administrative Guidance / GIR / Full Legislative Review. No new OECD Pillar Two releases since the 12 Oct refresh.",
-    "HK": "Checked 13 Oct 2026: IRD global minimum tax / HKMTT page (Phase 2 of the Pillar Two Portal still stated as Q4 2026). Secondary Deloitte alert on Pillar Two vs enhanced R&D deduction (9 Oct) is analysis of existing rules plus the already-catalogued Sept 2026 GIR; not a new primary IRD development. No new official Pillar Two items.",
-    "SG": "Checked 13 Oct 2026: IRAS GloBE/DTT page, MOF newsroom, SSO Bill No. 22/2026, and laws.sg. SSO still hosts Bill No. 22/2026 only (no Acts-Supp assent/gazette page for a Finance (Income Taxes) Act 2026). laws.sg shows 'As enacted' metadata (page stamp Updated 13 Oct 2026) but without an SSO Acts-Supp or Gazette confirmation this is not treated as verified enactment. Nothing new since the 6 Oct parliamentary passage already catalogued.",
-    "JP": "Checked 13 Oct 2026: NTA 新着情報 and the 趣旨説明 page for the 7 Aug 2026 circular (still published; already catalogued as 9 Oct 2026). No further Pillar Two administrative guidance or GIR schema updates beyond items already in updates.json."
+    "OECD": "Checked 14 Oct 2026: OECD 11 Sep 2026 Inclusive Framework announcement page fetched and confirmed (Administrative Guidance / GIR / Full Legislative Review). OECD model-rules topic page still bot-blocked; search index shows no post-11 Sep Pillar Two releases. Latest substantive package remains 11 Sep 2026.",
+    "HK": "Checked 14 Oct 2026: IRD global minimum tax / HKMTT page fetched — Phase 2 of the Pillar Two Portal still stated as Q4 2026. IRD What's New (through 12 Oct fraud-alert entry) has no new Pillar Two items since the 8 Jun 2026 GIR XML update already catalogued. No new official Pillar Two developments.",
+    "SG": "Checked 14 Oct 2026: IRAS GloBE/DTT page, MOF newsroom, SSO Bill No. 22/2026, and laws.sg fetched. SSO still hosts Bill No. 22/2026 only (no Acts-Supp assent/gazette page for a Finance (Income Taxes) Act 2026). laws.sg still shows 'As enacted' metadata (page stamp Updated 14 Oct 2026) but without an SSO Acts-Supp or Gazette confirmation this is not treated as verified enactment. Nothing new since the 6 Oct parliamentary passage already catalogued.",
+    "JP": "Checked 14 Oct 2026: NTA 新着情報 fetched — newest entries (13 Oct 酒類輸出動向; 1 Oct 文書回答) are unrelated to Pillar Two. The 趣旨説明 for the 7 Aug 2026 circular remains listed as 令和8年10月9日 (already catalogued). No further Pillar Two administrative guidance or GIR schema updates."
   }
 }
