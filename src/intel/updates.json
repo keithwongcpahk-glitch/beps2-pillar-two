@@ -37,6 +37,22 @@
     "verificationNote": "MOF speech fetched and read (6 Oct 2026). Passage confirmed by CNA; the Parliament Hansard and the gazetted Act were not fetched. Commencement dates taken from Bill No. 22/2026 as tabled on SSO. Bill text read on SSO on 7 Oct 2026: cl.38 amends s.20 so stateless entities can use the GloBE safe harbours, with effect for FYs beginning on or after 1 Jan 2026; cl.49(b) inserts s.84(3), letting safe harbour regulations refer to an OECD webpage (qualified side-by-side regimes) and apply from FYs beginning on or after 1 Jan 2026."
   },
   {
+    "id": "oecd-2026-10-02-romania-sttr-ratification",
+    "date": "2026-10-02",
+    "jurisdiction": "OECD",
+    "title": "Romania deposits instrument of ratification for the STTR Multilateral Convention (in force for Romania from 1 February 2027)",
+    "summary": "On 2 October 2026 Romania deposited its instrument of ratification for the Multilateral Convention to Facilitate the Implementation of the Pillar Two Subject to Tax Rule (the STTR Convention). The Convention will enter into force for Romania on 1 February 2027. This follows Albania's 15 September 2026 ratification, which already triggered the Convention's general entry into force on 1 January 2027. The STTR remains a treaty-based rule on certain cross-border intragroup payments taxed below 9% in the recipient jurisdiction; no covered tax treaties are yet in practical effect solely from this deposit.",
+    "topic": "STTR",
+    "sourceUrl": "https://www.oecd.org/en/about/news/announcements/2026/10/romania-deposits-its-instrument-of-ratification-for-the-multilateral-convention-implementing-the-subject-to-tax-rule.html",
+    "sourceName": "OECD – Romania deposits instrument of ratification for the STTR Multilateral Convention, 2 Oct 2026",
+    "sourceType": "official",
+    "affectsCalc": "no",
+    "impactNote": "none. STTR is treaty-based and not modelled. Follow-on to the Albania entry-into-force item already catalogued.",
+    "status": "new",
+    "verified": true,
+    "verificationNote": "Official OECD announcement page fetched and read on 16 Oct 2026. Date (2 October 2026) and Romania in-force date (1 February 2027) confirmed from the page body."
+  },
+  {
     "id": "oecd-2026-09-11-administrative-guidance",
     "date": "2026-09-11",
     "jurisdiction": "OECD",
