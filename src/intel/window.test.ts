@@ -71,10 +71,12 @@ describe('intel dataset integrity', () => {
     for (const i of INTEL_ITEMS) expect(i.date <= w.end).toBe(true)
   })
 
-  it('HK has no items in the window (verified empty state)', () => {
+  it('window coverage includes OECD/HK/SG/JP after the Nov 2026 refresh', () => {
     const counts = countByJurisdiction(filterByWindow(INTEL_ITEMS, w), INTEL_JURISDICTIONS)
-    expect(counts.HK).toBe(0)
     expect(counts.OECD).toBeGreaterThan(0)
+    expect(counts.HK).toBeGreaterThan(0)
+    expect(counts.SG).toBeGreaterThan(0)
+    expect(counts.JP).toBeGreaterThan(0)
   })
 })
 
