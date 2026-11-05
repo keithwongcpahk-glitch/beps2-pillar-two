@@ -1,5 +1,24 @@
 [
   {
+    "id": "sg-2026-10-30-iras-etax-guide-mtt-dtt-third-edition",
+    "date": "2026-10-30",
+    "dateNote": "IRAS PDF cover states 'Published on 30 Oct 2026'. First edition 31 Dec 2024; Second edition 7 Jan 2026. Bloomberg Tax and PwC Singapore Tax News dated the update 30 Oct / reported 4 Nov 2026 as secondary discovery.",
+    "jurisdiction": "SG",
+    "title": "IRAS publishes Multinational Enterprise Top-up Tax and Domestic Top-up Tax e-Tax Guide (Third Edition)",
+    "summary": "On 30 October 2026 IRAS published the Third Edition of its MTT and DTT e-Tax Guide. Section 13 lists the amendments: a new paragraph on the Inclusive Framework's 5 January 2026 Side-by-Side package and which safe harbours Singapore will adopt (SbS Safe Harbour and SBTI for FYs beginning on or after 1 Jan 2026; Simplified ETR SH from FYs beginning on or after 31 Dec 2026; Transitional CbCR SH extended; UPE SH not needed because Singapore has no UTPR); changes to the Local Financial Accounting Standards (LFAS) rule for DTT for FYs beginning on or after 1 January 2026 (aligning Condition 2 with OECD AG on mismatching fiscal periods) plus elections for early application from FYs beginning on or after 1 January 2025, with MMT Regulations expected by December 2026; Singapore's 14 April 2026 signing of the GIR MCAA and when a GIR notification replaces local GIR filing; local GIR filing where central filing is unavailable; and clarified income-tax treatment of GMT recharges (tax-neutral; excluded from GloBE income/loss and adjusted covered taxes).",
+    "topic": "Administrative guidance",
+    "sourceUrl": "https://www.iras.gov.sg/docs/default-source/e-tax/e-tax-guide-mtt-and-dtt.pdf",
+    "sourceName": "IRAS – Multinational Enterprise Top-up Tax and Domestic Top-up Tax (Third Edition) e-Tax Guide, published 30 Oct 2026",
+    "sourceType": "official",
+    "secondarySourceUrl": "https://www.pwc.com/sg/en/services/tax/news.html",
+    "secondarySourceName": "PwC Singapore Tax News, 30 Oct 2026 entry on IRAS Third Edition e-Tax Guide (secondary)",
+    "affectsCalc": "no",
+    "impactNote": "none for current engine rates/start dates. Side-by-Side US-parent MTT exemption already modelled from the 6 Oct Bill item (oecd-asia-v0.5 / SG pack 1.2.0). LFAS period-mismatch rule and GMT-recharge accounting are not modelled; watch MMT Regulations expected by Dec 2026. GIR MCAA / local-filing mechanics are filing-only.",
+    "status": "new",
+    "verified": true,
+    "verificationNote": "Official IRAS PDF fetched and read on 5 Nov 2026. Cover date (Published on 30 Oct 2026), edition history, and §13 amendment bullets (SbS para 3.6 / 6.4; LFAS 8.7.5; GIR MCAA 10.13/10.16; local filing 10.18; FAQ Q15 GMT recharges) confirmed from the PDF. PwC Singapore Tax News 30 Oct 2026 and Bloomberg Tax 4 Nov 2026 used only as secondary discovery."
+  },
+  {
     "id": "oecd-2026-10-30-inclusive-framework-plenary",
     "date": "2026-10-30",
     "dateNote": "OECD announcement dated 30 October 2026 for the 18th Inclusive Framework Plenary held 28–30 October 2026 in Paris. KPMG TaxNewsFlash dated 2 November 2026 is secondary discovery only.",
@@ -178,23 +197,6 @@
     "verified": true
   },
   {
-    "id": "oecd-2026-09-11-administrative-guidance",
-    "date": "2026-09-11",
-    "jurisdiction": "OECD",
-    "title": "Inclusive Framework releases September 2026 Administrative Guidance (Explicitly Conditional Taxes; QDMTT local accounts with mismatched periods)",
-    "summary": "New Administrative Guidance says an 'Explicitly Conditional Tax' (one that only bites when a Qualified IIR/UTPR applies, or switches off under the Side-by-Side Safe Harbour) is not a Covered Tax, and a DMTT with that feature cannot be a QDMTT. It also clarifies that a QDMTT can still use local financial accounting standards for the QDMTT Safe Harbour where a local entity's accounting period differs from the UPE's year, provided the same period is used for that entity in the consolidated accounts. The document was approved by the Inclusive Framework on 2 September 2026 and published on 11 September 2026.",
-    "topic": "Administrative guidance",
-    "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/administrative-guidance-on-the-global-anti-base-erosion-model-rules-pillar-two-september-2026.pdf",
-    "sourceName": "OECD – Administrative Guidance on the GloBE Model Rules, September 2026 (PDF)",
-    "sourceType": "official",
-    "secondarySourceUrl": "https://globaltaxnews.ey.com/news/2026-2059-oecd-g20-inclusive-framework-releases-package-of-global-minimum-tax-documents",
-    "secondarySourceName": "EY Global Tax Alert, 25 Sep 2026 (secondary)",
-    "affectsCalc": "no",
-    "impactNote": "No engine parameter changes. Covered-taxes input should exclude any Explicitly Conditional Tax; add input guidance.",
-    "status": "new",
-    "verified": true
-  },
-  {
     "id": "oecd-2026-09-11-gir-update",
     "date": "2026-09-11",
     "jurisdiction": "OECD",
@@ -224,6 +226,23 @@
     "sourceType": "official",
     "affectsCalc": "no",
     "impactNote": "Watch item: a future loss of qualified status for HK/SG/JP would change hasQdmtt in the packs.",
+    "status": "new",
+    "verified": true
+  },
+  {
+    "id": "oecd-2026-09-11-administrative-guidance",
+    "date": "2026-09-11",
+    "jurisdiction": "OECD",
+    "title": "Inclusive Framework releases September 2026 Administrative Guidance (Explicitly Conditional Taxes; QDMTT local accounts with mismatched periods)",
+    "summary": "New Administrative Guidance says an 'Explicitly Conditional Tax' (one that only bites when a Qualified IIR/UTPR applies, or switches off under the Side-by-Side Safe Harbour) is not a Covered Tax, and a DMTT with that feature cannot be a QDMTT. It also clarifies that a QDMTT can still use local financial accounting standards for the QDMTT Safe Harbour where a local entity's accounting period differs from the UPE's year, provided the same period is used for that entity in the consolidated accounts. The document was approved by the Inclusive Framework on 2 September 2026 and published on 11 September 2026.",
+    "topic": "Administrative guidance",
+    "sourceUrl": "https://www.oecd.org/content/dam/oecd/en/topics/policy-sub-issues/global-minimum-tax/administrative-guidance-on-the-global-anti-base-erosion-model-rules-pillar-two-september-2026.pdf",
+    "sourceName": "OECD – Administrative Guidance on the GloBE Model Rules, September 2026 (PDF)",
+    "sourceType": "official",
+    "secondarySourceUrl": "https://globaltaxnews.ey.com/news/2026-2059-oecd-g20-inclusive-framework-releases-package-of-global-minimum-tax-documents",
+    "secondarySourceName": "EY Global Tax Alert, 25 Sep 2026 (secondary)",
+    "affectsCalc": "no",
+    "impactNote": "No engine parameter changes. Covered-taxes input should exclude any Explicitly Conditional Tax; add input guidance.",
     "status": "new",
     "verified": true
   },
