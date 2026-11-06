@@ -1,5 +1,24 @@
 [
   {
+    "id": "sg-2026-11-04-finance-income-taxes-act-gazetted",
+    "date": "2026-11-04",
+    "dateNote": "SSO status line: 'Published in Acts Supplement on 04 Nov 2026'. Assent 29 October 2026 (President Tharman Shanmugaratnam). Government Gazette Acts Supplement No. 25 is headed Friday, 6 November 2026. Singapore Law Watch lists the Act as published 4 Nov 2026.",
+    "jurisdiction": "SG",
+    "title": "Finance (Income Taxes) Act 2026 (Act 23 of 2026) assented and published: Side-by-Side MTT exemption now law",
+    "summary": "The Finance (Income Taxes) Act 2026 (No. 23 of 2026) was assented to by the President on 29 October 2026 and published in the Acts Supplement on 4 November 2026 (Gazette Acts Supplement No. 25, Friday 6 November 2026). This enacts the Bill passed on 6 October 2026. Part 2 amends the Multinational Enterprise (Minimum Tax) Act 2024: sections 38 and 49(b) — the Side-by-Side package provisions that exempt qualifying US-parented groups from Singapore's Multinational Enterprise Top-up Tax (IIR) while leaving Domestic Top-up Tax in place — are deemed to have come into operation on 1 January 2026. Other MMT amendments largely commence on 4 November 2026; sections 37, 39, 49(d) and 50 (including some regulation-making powers) commence on a date the Minister appoints by Gazette notification. Safe-harbour detail still depends on forthcoming MMT Regulations.",
+    "topic": "Side-by-side",
+    "sourceUrl": "https://sso.agc.gov.sg/Acts-Supp/23-2026/Published/20261104?DocDate=20261104",
+    "sourceName": "Singapore Statutes Online – Finance (Income Taxes) Act 2026 (No. 23 of 2026), Acts Supplement published 4 Nov 2026",
+    "sourceType": "official",
+    "secondarySourceUrl": "https://www.singaporelawwatch.sg/Legislation/PgrID/407/PageID/6/pid/407/authorid/1/authorname/superuser-account",
+    "secondarySourceName": "Singapore Law Watch – Legislation listing: Finance (Income Taxes) Act 2026 (Act 23 of 2026), Published 04 Nov 2026",
+    "affectsCalc": "yes",
+    "impactNote": "needs-rule-change: Act is now law. Engine oecd-asia-v0.5 / SG pack 1.2.0 already models the US-parent MTT exemption under the 'enacted + passed / announced' legislative-status toggle, but the enacted-only default still charges MTT with a 'would be exempt once enacted' note. Flip enacted-only so US-parent MTT is exempt for FYs beginning on/after 1 Jan 2026; DTT unchanged. Do not auto-edit rules — human review + golden tests. Watch Ministerial commencement of ss.37, 39, 49(d), 50 and MMT Regulations for safe harbours.",
+    "status": "needs-rule-change",
+    "verified": true,
+    "verificationNote": "Official SSO Acts Supplement HTML fetched and read on 6 Nov 2026 HKT. Confirmed: Act No. 23 of 2026; Parliament 6 Oct 2026; assent 29 Oct 2026; Published in Acts Supplement on 04 Nov 2026; Gazette Acts Supplement No. 25 headed Friday 6 Nov 2026; s.1(4) deems ss.14(1)(a),(2), 38 and 49(b) in operation from 1 Jan 2026; s.1(7) leaves ss.37, 39, 49(d), 50 to Ministerial Gazette commencement. SLW legislation list fetched as secondary confirmation of Act 23 / Published 04 Nov 2026."
+  },
+  {
     "id": "sg-2026-10-30-iras-etax-guide-mtt-dtt-third-edition",
     "date": "2026-10-30",
     "dateNote": "IRAS PDF cover states 'Published on 30 Oct 2026'. First edition 31 Dec 2024; Second edition 7 Jan 2026. Bloomberg Tax and PwC Singapore Tax News dated the update 30 Oct / reported 4 Nov 2026 as secondary discovery.",
