@@ -1,5 +1,24 @@
 [
   {
+    "id": "hk-2026-11-05-legco-subsidiary-legislation-briefing",
+    "date": "2026-11-05",
+    "dateNote": "Official paper is signed 'Financial Services and the Treasury Bureau / Inland Revenue Department October 2026' with no day. PDF XMP CreateDate is 2 November 2026 14:48 HKT; ModDate 14:56 HKT the same day. HTTP Last-Modified on the LegCo file is 5 November 2026 02:56:52 GMT (10:56 HKT). PwC Hong Kong Tax News Flash Issue 19, dated 5 November 2026, is the earliest dated public report confirmed.",
+    "jurisdiction": "HK",
+    "title": "Government briefs LegCo on subsidiary legislation to incorporate 2026 OECD GloBE documents, including the Side-by-Side package",
+    "summary": "In LC Paper No. CB(1)1388/2026(01), issued to the Legislative Council Panel on Financial Affairs for information, the Financial Services and the Treasury Bureau and the Inland Revenue Department set out plans to make subsidiary legislation under section 26AG(1) of the Inland Revenue Ordinance to incorporate the January 2026 Side-by-Side Administrative Guidance, the May 2026 transitional UTPR safe-harbour AG (clarifying that the harbour ends on 3 January 2027 rather than 31 December 2026 for 53-week years), the May 2026 Consolidated Commentary, and the September 2026 AG (including QDMTT local-accounts period mismatches). The paper states that the United States is currently the only Qualified Side-by-Side Regime (from 1 January 2026) and that the Side-by-Side Safe Harbour will not affect HKMTT, which is modelled on QDMTT. Proposed elections include the Substance-based Tax Incentive Safe Harbour for fiscal years commencing on or after 1 January 2026; the Simplified ETR Safe Harbour for fiscal years commencing on or after 31 December 2025 (one year earlier than the general OECD start); and the Transitional CbCR Safe Harbour for fiscal years beginning on or before 31 December 2027. Miscellaneous administration amendments (Chinese definition of non-profit organisation, joint-venture objection effects, IRD information-gathering powers, currency translation, and Tax Reserve Certificate forms) are also proposed. The Gazette notice is planned for negative vetting in December 2026, with commencement in February 2027. The legislation has not yet been gazetted.",
+    "topic": "Side-by-side",
+    "sourceUrl": "https://www.legco.gov.hk/yr2026/english/panels/fa/papers/facb1-1388-1-e.pdf",
+    "sourceName": "LegCo Panel on Financial Affairs – LC Paper No. CB(1)1388/2026(01), Subsidiary Legislation relating to Implementation of Global Minimum Tax (FSTB/IRD, October 2026)",
+    "sourceType": "official",
+    "secondarySourceUrl": "https://www.pwchk.com/en/hk-tax-news/2026q4/hongkongtax-news-nov2026-19.pdf",
+    "secondarySourceName": "PwC Hong Kong Tax News Flash, 5 Nov 2026, Issue 19 (secondary; earliest dated public report)",
+    "affectsCalc": "no",
+    "impactNote": "Proposal only — not yet gazetted. Do not auto-edit rules. HKMTT/QDMTT routing unchanged. Watch December 2026 gazettal and February 2027 commencement: if enacted, a US-parent Side-by-Side Safe Harbour may switch off Hong Kong IIR (and UTPR once commenced) while HKMTT continues, and the Simplified ETR, SBTI and extended Transitional CbCR safe harbours would need modelling. Those harbours are not in the current engine.",
+    "status": "new",
+    "verified": true,
+    "verificationNote": "Official LegCo PDF fetched and read on 16 Nov 2026. Paper number, October 2026 FSTB/IRD sign-off, the four OECD documents to be incorporated, safe-harbour start dates (Simplified ETR from FY commencing on or after 31 Dec 2025; SBTI from 1 Jan 2026; Transitional CbCR for FY beginning on or before 31 Dec 2027), the United States as the sole Qualified SbS Regime from 1 Jan 2026, HKMTT unaffected, and December 2026 negative vetting / February 2027 commencement confirmed from paras 5–15. PDF CreateDate (2 Nov 2026 14:48 HKT) and HTTP Last-Modified (5 Nov 2026 02:56:52 GMT) taken from the official file. PwC Issue 19 used only as secondary discovery."
+  },
+  {
     "id": "sg-2026-11-04-finance-income-taxes-act-gazetted",
     "date": "2026-11-04",
     "dateNote": "SSO status line: 'Published in Acts Supplement on 04 Nov 2026'. Assent 29 October 2026 (President Tharman Shanmugaratnam). Government Gazette Acts Supplement No. 25 is headed Friday, 6 November 2026. Singapore Law Watch lists the Act as published 4 Nov 2026.",
